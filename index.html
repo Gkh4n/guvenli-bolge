@@ -85,8 +85,8 @@ button,input{font:inherit}button{cursor:pointer}.hidden{display:none!important}
   .stat b{font-size:14px}
   .gameactions{gap:5px}
   .gameactions button{height:34px;padding:0 8px;font-size:10px}
-  .gamewrap{width:100%;min-height:0;margin:0;border-radius:13px}
-  .gamewrap canvas{width:100%;height:auto;max-height:calc(100dvh - 92px);aspect-ratio:auto}
+  .gamewrap{width:100%;min-height:0;margin:0;border-radius:13px;flex:0 0 auto}
+  .gamewrap canvas{width:100%;height:auto;max-height:calc(100dvh - 92px);aspect-ratio:760/620}
   .gamestatus{height:18px;min-height:18px;font-size:10px;padding:3px 2px 0}
 }
 
@@ -204,8 +204,7 @@ const $=s=>document.querySelector(s);
 const screens=['authScreen','homeScreen','accountScreen','gameScreen','resultScreen'];
 let currentUser=null,currentProfile=null,currentBoard=[],allBoardRows=[],myStats=null,recoveryUsername='';
 let running=false,paused=false,elapsed=0,wave=0,raf=0,last=0,cycle=0,collapseAt=3.2,revealAt=2.15,safeIndex=-1,decoyIndex=-1,flash=0,shake=0,zones=[];
-const MOBILE_GAME=window.matchMedia('(max-width:600px)').matches;
-const W=MOBILE_GAME?600:760,H=MOBILE_GAME?900:620,PLAYER_R=10,canvas=$('#gameCanvas'),ctx=canvas.getContext('2d');
+const W=760,H=620,PLAYER_R=10,canvas=$('#gameCanvas'),ctx=canvas.getContext('2d');
 canvas.width=W;canvas.height=H;
 let player={x:W/2,y:H/2,tx:W/2,ty:H/2,moving:false,progress:0,sx:W/2,sy:H/2,targetZone:null,attachedZone:null};
 const rand=(a,b)=>a+Math.random()*(b-a),clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
@@ -325,7 +324,7 @@ function createZones(){const next=[];for(let i=0;i<zoneCount();i++){const r=rand
 function prepareCycle(){cycle=0;collapseAt=cycleDuration();revealAt=collapseAt-revealLead();safeIndex=Math.floor(Math.random()*zones.length);decoyIndex=-1;if(wave>=7&&zones.length>2&&Math.random()<Math.min(.72,.18+wave*.035)){do{decoyIndex=Math.floor(Math.random()*zones.length)}while(decoyIndex===safeIndex);zones[decoyIndex].fakePulse=.24}$('#gameStatus').textContent=wave>=10?'Hazır ol… güvenli bölge artık daha hızlı.':'Hazır ol… güvenli bölge birazdan belli olacak.'}
 function resetGame(){elapsed=0;wave=0;cycle=0;flash=0;shake=0;player.moving=false;player.targetZone=null;player.attachedZone=null;createZones();prepareCycle();updateHud()}
 function updateHud(){$('#timeLabel').textContent=elapsed.toFixed(2)+'s';$('#waveLabel').textContent=wave}
-function startGame(){if(!currentUser||!currentProfile)return;cancelAnimationFrame(raf);resetGame();running=true;paused=false;$('#pauseBtn').textContent='Duraklat';$('#gameUsername').textContent=currentProfile.username;show('gameScreen');last=performance.now();raf=requestAnimationFrame(loop)}
+function startGame(){if(!currentUser||!currentProfile)return;cancelAnimationFrame(raf);resetGame();running=true;paused=false;$('#pauseBtn').textContent='Duraklat';$('#gameUsername').textContent=currentProfile.username;show('gameScreen');draw();last=performance.now();raf=requestAnimationFrame(loop)}
 function stopGameToHome(){running=false;paused=false;cancelAnimationFrame(raf);show('homeScreen');loadLeaderboard()}
 function togglePause(){if(!running)return;paused=!paused;$('#pauseBtn').textContent=paused?'Devam Et':'Duraklat';if(!paused){last=performance.now();raf=requestAnimationFrame(loop)}else draw()}
 function pointInZone(x,y,z,m=0){const dx=x-z.x,dy=y-z.y;return dx*dx+dy*dy<=Math.pow(z.r-m,2)}
@@ -339,10 +338,12 @@ function drawZone(z,i){const revealed=cycle>=revealAt,isSafe=revealed&&i===safeI
 function draw(){ctx.clearRect(0,0,W,H);const ox=shake?(Math.random()-.5)*shake:0,oy=shake?(Math.random()-.5)*shake:0;ctx.save();ctx.translate(ox,oy);ctx.fillStyle='#05070b';ctx.fillRect(-30,-30,W+60,H+60);const g=ctx.createRadialGradient(W/2,H/2,40,W/2,H/2,520);g.addColorStop(0,'rgba(25,38,55,.36)');g.addColorStop(1,'rgba(2,6,23,0)');ctx.fillStyle=g;ctx.fillRect(0,0,W,H);for(let x=0;x<W;x+=38){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.strokeStyle='rgba(255,255,255,.025)';ctx.stroke()}for(let y=0;y<H;y+=38){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.strokeStyle='rgba(255,255,255,.025)';ctx.stroke()}zones.forEach(drawZone);if(player.moving){ctx.beginPath();ctx.moveTo(player.sx,player.sy);ctx.lineTo(player.x,player.y);ctx.strokeStyle='rgba(255,255,255,.18)';ctx.lineWidth=4;ctx.stroke()}ctx.beginPath();ctx.arc(player.x,player.y,PLAYER_R+6,0,Math.PI*2);ctx.fillStyle='rgba(255,255,255,.08)';ctx.fill();ctx.beginPath();ctx.arc(player.x,player.y,PLAYER_R,0,Math.PI*2);ctx.fillStyle='#fff';ctx.fill();if(running&&cycle>=revealAt){const remaining=Math.max(0,collapseAt-cycle),progress=remaining/revealLead();ctx.beginPath();ctx.arc(W/2,H/2,31,-Math.PI/2,-Math.PI/2+Math.PI*2*progress);ctx.strokeStyle=remaining<.35?'#fb7185':'rgba(255,255,255,.9)';ctx.lineWidth=6;ctx.stroke();ctx.textAlign='center';ctx.fillStyle='#fff';ctx.font='700 18px system-ui';ctx.fillText(remaining.toFixed(1),W/2,H/2+6)}if(paused){ctx.fillStyle='rgba(0,0,0,.56)';ctx.fillRect(0,0,W,H);ctx.textAlign='center';ctx.fillStyle='#fff';ctx.font='700 30px system-ui';ctx.fillText('DURAKLATILDI',W/2,H/2)}if(flash>0){ctx.fillStyle=`rgba(255,255,255,${flash*.28})`;ctx.fillRect(0,0,W,H)}ctx.restore()}
 function loop(now){if(!running||paused)return;const dt=Math.min(.033,Math.max(0,(now-last)/1000));last=now;update(dt);draw();if(running)raf=requestAnimationFrame(loop)}
 
-function requestStartGame(){if(!currentUser||!currentProfile)return;if(currentProfile.tutorial_seen){startGame();return}$('#tutorialModal').classList.remove('hidden')}
+function tutorialStorageKey(){return currentUser?'safe_zone_tutorial_seen_'+currentUser.id:'safe_zone_tutorial_seen'}
+function hasSeenTutorial(){return !!currentProfile?.tutorial_seen||localStorage.getItem(tutorialStorageKey())==='1'}
+function requestStartGame(){if(!currentUser||!currentProfile)return;if(hasSeenTutorial()){startGame();return}$('#tutorialModal').classList.remove('hidden')}
 $('#playBtn').onclick=requestStartGame;
 $('#tutorialLaterBtn').onclick=()=>$('#tutorialModal').classList.add('hidden');
-$('#tutorialStartBtn').onclick=()=>{if(!currentUser||!currentProfile)return;$('#tutorialModal').classList.add('hidden');currentProfile.tutorial_seen=true;sb.from('safe_zone_profiles').update({tutorial_seen:true,updated_at:new Date().toISOString()}).eq('user_id',currentUser.id).then(()=>{});startGame()};
+$('#tutorialStartBtn').onclick=async()=>{if(!currentUser||!currentProfile)return;$('#tutorialModal').classList.add('hidden');currentProfile.tutorial_seen=true;localStorage.setItem(tutorialStorageKey(),'1');try{await sb.from('safe_zone_profiles').update({tutorial_seen:true,updated_at:new Date().toISOString()}).eq('user_id',currentUser.id)}catch{}startGame()};
 $('#pauseBtn').onclick=togglePause;$('#quitBtn').onclick=stopGameToHome;$('#retryBtn').onclick=startGame;$('#resultHomeBtn').onclick=()=>{show('homeScreen');loadLeaderboard()};
 const mobileGate=$('#mobileGate');if(!window.matchMedia('(max-width:820px)').matches)document.body.classList.add('mobile-entered');$('#mobileEnterBtn').onclick=()=>document.body.classList.add('mobile-entered');
 
