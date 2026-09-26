@@ -571,7 +571,7 @@ window.addEventListener('online',()=>{updateConnectionState();showToast('Bağlan
 window.addEventListener('offline',updateConnectionState);
 updateConnectionState();
 function setMsg(el,text,type=''){el.textContent=text;el.className='msg'+(type?' '+type:'')}
-function setBusy(btn,busy,label){if(!btn)return;btn.disabled=busy;if(label)btn.textContent=busy?'İşleniyor…':label}
+function setBusy(btn,busy,label,busyLabel='İşleniyor…'){if(!btn)return;btn.disabled=busy;if(label)btn.textContent=busy?busyLabel:label}
 function validUsername(v){return /^[A-Za-z0-9_]{3,16}$/.test(v)}
 function normalized(v){return String(v||'').trim().toLowerCase()}
 function friendlyAuthError(err){const c=err?.code||'';if(c==='weak_password')return'Şifre yeterince güçlü değil.';return err?.message||'İşlem tamamlanamadı.'}
@@ -987,7 +987,7 @@ async function callRunService(body){
 async function startGame(){
   if(!currentUser||!currentProfile||startGamePending)return;
   startGamePending=true;
-  setBusy($('#playBtn'),true,'OYUNA BAŞLA');setBusy($('#retryBtn'),true,'TEKRAR OYNA');
+  setBusy($('#playBtn'),true,'OYUNA BAŞLA','HAZIR OL…');setBusy($('#retryBtn'),true,'TEKRAR OYNA','HAZIR OL…');
   try{
     const run=await callRunService({action:'start',client_version:'web-1.0-polish'});
     if(!run?.session_id)throw new Error('Oyun oturumu başlatılamadı.');
