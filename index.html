@@ -1515,6 +1515,38 @@ body::-webkit-scrollbar,
   }
 }
 
+
+/* v27 pause konumu + devam geri sayımı */
+.gameactions{
+  grid-column:3!important;
+  justify-self:end!important;
+}
+#recordChase{
+  grid-column:2!important;
+  justify-self:center;
+}
+.pause-countdown{
+  position:absolute;
+  inset:0;
+  display:grid;
+  place-items:center;
+  pointer-events:none;
+  font-family:"Sora",Inter,system-ui,sans-serif;
+  font-size:clamp(64px,18vw,92px);
+  font-weight:800;
+  line-height:1;
+  color:#f4fbff;
+  text-shadow:0 0 26px rgba(99,231,255,.34),0 12px 34px rgba(0,0,0,.42);
+}
+.pause-countdown.count-pop{
+  animation:pauseCountPop .34s cubic-bezier(.18,1.15,.32,1) both;
+}
+@keyframes pauseCountPop{
+  0%{opacity:.25;transform:scale(.72)}
+  55%{opacity:1;transform:scale(1.08)}
+  100%{opacity:1;transform:scale(1)}
+}
+
 </style>
 </head>
 <body>
@@ -1760,11 +1792,12 @@ body::-webkit-scrollbar,
     <div class="gamewrap">
       <canvas id="gameCanvas" width="760" height="620"></canvas>
       <div id="pauseOverlay" class="game-overlay hidden">
-        <div class="game-overlay-card">
+        <div id="pauseMenuCard" class="game-overlay-card">
           <div class="game-overlay-kicker">OYUN DURAKLATILDI</div>
           <button id="pauseContinueBtn" class="primary overlay-action" type="button">DEVAM ET</button>
           <button id="pauseExitBtn" class="secondary overlay-action" type="button">ÇIKIŞ</button>
         </div>
+        <div id="pauseCountdown" class="pause-countdown hidden" aria-live="assertive">3</div>
       </div>
     </div>
     <div id="gameStatus" class="gamestatus">Hazır ol…</div>
@@ -1941,7 +1974,7 @@ if(HAS_NATIVE_INSETS)document.body.classList.add('native-webview');
 if(IS_ANDROID_WEBVIEW&&!HAS_NATIVE_INSETS)document.body.classList.add('legacy-webview-insets');
 const screens=['authScreen','homeScreen','leaderboardScreen','profileScreen','achievementsScreen','settingsScreen','gameScreen','resultScreen'];
 let currentUser=null,currentProfile=null,myStats=null,trendRows=[],achievementMetrics={record_breaks:0,max_streak_15s:0},activeRunSession=null,startGamePending=false,achievementSnapshot=new Set(),guestMode=false,leaderboardOffset=0,leaderboardTotal=0,leaderboardLoading=false;
-let running=false,paused=false,dying=false,elapsed=0,wave=0,raf=0,last=0,cycle=0,collapseAt=3.2,revealAt=2.15,safeIndex=-1,decoyIndex=-1,flash=0,shake=0,zones=[],lastSafeZone=null,revealCuePlayed=false,dangerCuePlayed=false,revealPulse=0,successPulse=0,deathPulse=0,bgPhase=0,particles=[],fxRings=[],lastHudSecond=-1,lastHudWave=0,deathTimer=0,recordCrossedAt=-1;
+let running=false,paused=false,dying=false,elapsed=0,wave=0,raf=0,last=0,cycle=0,collapseAt=3.2,revealAt=2.15,safeIndex=-1,decoyIndex=-1,flash=0,shake=0,zones=[],lastSafeZone=null,revealCuePlayed=false,dangerCuePlayed=false,revealPulse=0,successPulse=0,deathPulse=0,bgPhase=0,particles=[],fxRings=[],lastHudSecond=-1,lastHudWave=0,deathTimer=0,recordCrossedAt=-1,resumeCountdownTimer=0,resumeCountdownActive=false;
 const MOBILE_GAME=window.matchMedia('(max-width:600px)').matches;
 const REDUCED_MOTION=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 const MOBILE_STAGE_RATIO=MOBILE_GAME
@@ -2543,7 +2576,7 @@ async function startGame(){
       activeRunSession=run.session_id;
       achievementSnapshot=new Set(getAchievements().filter(a=>a.unlocked).map(a=>a.id));
     }
-    cancelAnimationFrame(raf);resetGame();running=true;paused=false;
+    cancelAnimationFrame(raf);cancelResumeCountdown();resetGame();running=true;paused=false;
     $('#pauseOverlay').classList.add('hidden');
     startAmbientSound();
     $('#resultAchievement').classList.add('hidden');
@@ -2558,14 +2591,63 @@ async function startGame(){
     const guestBtn=$('#guestPlayBtn');if(guestBtn){guestBtn.disabled=false;const gb=guestBtn.querySelector('b');if(gb)gb.textContent=t('guestPlay')}
   }
 }
-function stopGameToHome(){running=false;paused=false;dying=false;activeRunSession=null;clearTimeout(deathTimer);stopAmbientSound();cancelAnimationFrame(raf);$('#pauseOverlay').classList.add('hidden');if(guestMode){show('authScreen')}else{show('homeScreen');loadLeaderboard()}}
+function cancelResumeCountdown(showMenu=false){
+  clearTimeout(resumeCountdownTimer);
+  resumeCountdownTimer=0;
+  resumeCountdownActive=false;
+  const digit=$('#pauseCountdown'),menu=$('#pauseMenuCard');
+  if(digit){digit.classList.add('hidden');digit.classList.remove('count-pop');digit.textContent='3'}
+  if(showMenu&&paused){
+    menu?.classList.remove('hidden');
+    $('#pauseOverlay')?.classList.remove('hidden');
+  }
+}
+function beginResumeCountdown(){
+  if(!running||!paused||resumeCountdownActive)return;
+  resumeCountdownActive=true;
+  const overlay=$('#pauseOverlay'),menu=$('#pauseMenuCard'),digit=$('#pauseCountdown');
+  overlay.classList.remove('hidden');
+  menu.classList.add('hidden');
+  digit.classList.remove('hidden');
+  let count=3;
+  const tick=()=>{
+    if(!running||!paused){cancelResumeCountdown();return}
+    if(count===0){
+      resumeCountdownActive=false;
+      digit.classList.add('hidden');
+      digit.classList.remove('count-pop');
+      menu.classList.remove('hidden');
+      overlay.classList.add('hidden');
+      paused=false;
+      setAmbientPaused(false);
+      last=performance.now();
+      raf=requestAnimationFrame(loop);
+      return;
+    }
+    digit.textContent=String(count);
+    digit.classList.remove('count-pop');
+    void digit.offsetWidth;
+    digit.classList.add('count-pop');
+    if(soundEnabled)tone(520+(3-count)*120,.055,0,.018,'sine',620+(3-count)*120);
+    count--;
+    resumeCountdownTimer=setTimeout(tick,360);
+  };
+  tick();
+}
+function stopGameToHome(){cancelResumeCountdown();running=false;paused=false;dying=false;activeRunSession=null;clearTimeout(deathTimer);stopAmbientSound();cancelAnimationFrame(raf);$('#pauseOverlay').classList.add('hidden');if(guestMode){show('authScreen')}else{show('homeScreen');loadLeaderboard()}}
 function togglePause(){
-  if(!running)return;
-  paused=!paused;
-  $('#pauseOverlay').classList.toggle('hidden',!paused);
-  setAmbientPaused(paused);
-  if(paused){cancelAnimationFrame(raf);draw()}
-  else{last=performance.now();raf=requestAnimationFrame(loop)}
+  if(!running||resumeCountdownActive)return;
+  if(!paused){
+    paused=true;
+    $('#pauseMenuCard').classList.remove('hidden');
+    $('#pauseCountdown').classList.add('hidden');
+    $('#pauseOverlay').classList.remove('hidden');
+    setAmbientPaused(true);
+    cancelAnimationFrame(raf);
+    draw();
+    return;
+  }
+  beginResumeCountdown();
 }
 function pointInZone(x,y,z,m=0){const dx=x-z.x,dy=y-z.y;return dx*dx+dy*dy<=Math.pow(z.r-m,2)}
 function dashTo(z){if(!running||paused)return;player.sx=player.x;player.sy=player.y;player.tx=z.x;player.ty=z.y;player.targetZone=z;player.attachedZone=null;player.progress=0;player.moving=true}
@@ -2644,7 +2726,7 @@ function showNewAchievements(){
 }
 async function endGame(){
   if(!running)return;
-  running=false;paused=false;dying=false;clearTimeout(deathTimer);stopAmbientSound();cancelAnimationFrame(raf);
+  cancelResumeCountdown();running=false;paused=false;dying=false;clearTimeout(deathTimer);stopAmbientSound();cancelAnimationFrame(raf);
   const ms=Math.round(elapsed*1000),previousGames=Number(myStats?.games_played||0),previousBest=Number(myStats?.best_survival_ms||0);
   $('#finalTime').textContent=elapsed.toFixed(2)+'s';$('#finalWaves').textContent=wave;$('#finalUsername').textContent=guestMode?t('guest'):currentProfile.username;
   setMsg($('#resultMsg'),'');
