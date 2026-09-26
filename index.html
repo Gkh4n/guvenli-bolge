@@ -468,6 +468,25 @@ button:disabled{opacity:.55;cursor:not-allowed}
   .playbtn:before{display:none}
 }
 
+
+/* v14 misafir modu */
+.guest-divider{display:flex;align-items:center;gap:10px;margin:14px 0 10px;color:var(--muted);font-size:9px;text-transform:uppercase;letter-spacing:.08em}
+.guest-divider:before,.guest-divider:after{content:"";height:1px;background:var(--line);flex:1}
+.guest-play-btn{width:100%;min-height:54px;padding:10px 13px;border:1px solid rgba(146,243,255,.18);border-radius:13px;background:#0a1119;color:var(--text);text-align:left;transition:transform .14s ease,border-color .18s ease,background .18s ease}
+.guest-play-btn:hover{border-color:rgba(41,215,238,.34);background:#0c151f}
+.guest-play-btn:active{transform:scale(.985)}
+.guest-play-btn b{display:block;font-size:12px;letter-spacing:.035em}
+.guest-play-btn span{display:block;margin-top:3px;color:var(--muted);font-size:9px;line-height:1.35}
+.guest-play-btn:disabled{opacity:.55}
+.guest-result-box{margin:14px auto 0;width:min(100%,360px);padding:12px;border:1px solid rgba(41,215,238,.18);border-radius:14px;background:rgba(41,215,238,.035);text-align:left}
+.guest-result-box b{display:block;font-size:11px;color:var(--accent2)}
+.guest-result-box span{display:block;margin:4px 0 10px;color:var(--muted);font-size:9px;line-height:1.5}
+.guest-result-box button{width:100%}
+@media(max-width:600px){
+  .guest-play-btn{min-height:52px}
+  .guest-result-box{padding:11px}
+}
+
 </style>
 </head>
 <body>
@@ -501,6 +520,8 @@ button:disabled{opacity:.55;cursor:not-allowed}
           <div id="registerMsg" class="msg"></div>
           <div class="fine">E-posta gerekmez. Hesap oluşturulduğunda sana tek kullanımlık bir kurtarma kodu verilir; bu kodu güvenli bir yerde sakla.</div>
         </form>
+        <div class="guest-divider"><span>veya</span></div>
+        <button id="guestPlayBtn" class="guest-play-btn" type="button"><b>MİSAFİR OLARAK OYNA</b><span>Hesap açmadan hemen başla · skor sıralamaya kaydedilmez</span></button>
       </div>
     </div>
   </section>
@@ -678,6 +699,7 @@ button:disabled{opacity:.55;cursor:not-allowed}
       <div id="finalTime" class="resulttime">0.00s</div>
       <div class="resultmeta"><b id="finalUsername"></b> · <span id="finalWaves">0</span> çöküş</div>
       <div id="resultMsg" class="msg" style="margin-top:10px"></div>
+      <div id="guestResultBox" class="guest-result-box hidden"><b>Misafir skoru</b><span>Bu skor yalnızca bu tur için gösterilir. Skorlarını kaydetmek, başarımları açmak ve global sıralamaya katılmak için ücretsiz hesap oluştur.</span><button id="guestCreateAccountBtn" class="secondary" type="button">HESAP OLUŞTUR</button></div>
       <div class="resultactions"><button id="retryBtn" class="primary" type="button">TEKRAR OYNA</button><button id="resultHomeBtn" class="secondary" type="button">ANA MENÜ</button></div>
     </div>
   </section>
@@ -703,7 +725,7 @@ const IS_ANDROID_WEBVIEW=/\bwv\b/i.test(UA);
 const HAS_NATIVE_INSETS=/GuvenliBolgeApp\/2/i.test(UA);
 if(IS_ANDROID_WEBVIEW&&!HAS_NATIVE_INSETS)document.body.classList.add('legacy-webview-insets');
 const screens=['authScreen','homeScreen','profileScreen','achievementsScreen','settingsScreen','gameScreen','resultScreen'];
-let currentUser=null,currentProfile=null,currentBoard=[],allBoardRows=[],myStats=null,trendRows=[],achievementMetrics={record_breaks:0,max_streak_15s:0},activeRunSession=null,startGamePending=false,achievementSnapshot=new Set();
+let currentUser=null,currentProfile=null,currentBoard=[],allBoardRows=[],myStats=null,trendRows=[],achievementMetrics={record_breaks:0,max_streak_15s:0},activeRunSession=null,startGamePending=false,achievementSnapshot=new Set(),guestMode=false;
 let running=false,paused=false,dying=false,elapsed=0,wave=0,raf=0,last=0,cycle=0,collapseAt=3.2,revealAt=2.15,safeIndex=-1,decoyIndex=-1,flash=0,shake=0,zones=[],lastSafeZone=null,revealCuePlayed=false,dangerCuePlayed=false,revealPulse=0,successPulse=0,deathPulse=0,bgPhase=0,particles=[],fxRings=[],lastHudSecond=-1,lastHudWave=0,deathTimer=0;
 const MOBILE_GAME=window.matchMedia('(max-width:600px)').matches;
 const REDUCED_MOTION=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -1076,7 +1098,7 @@ async function refreshAuthState(){
   }
 }
 
-async function loginWithUsername(username,password){const r=await fetch(SUPABASE_URL+'/functions/v1/safe-zone-login',{method:'POST',headers:{'apikey':SUPABASE_KEY,'Content-Type':'application/json'},body:JSON.stringify({username,password})});const body=await r.json().catch(()=>({}));if(!r.ok)throw new Error(body.message||'Giriş yapılamadı.');const {error}=await sb.auth.setSession({access_token:body.access_token,refresh_token:body.refresh_token});if(error)throw error;const {data:{user}}=await sb.auth.getUser();currentUser=user;await enterAuthenticatedHome()}
+async function loginWithUsername(username,password){guestMode=false;const r=await fetch(SUPABASE_URL+'/functions/v1/safe-zone-login',{method:'POST',headers:{'apikey':SUPABASE_KEY,'Content-Type':'application/json'},body:JSON.stringify({username,password})});const body=await r.json().catch(()=>({}));if(!r.ok)throw new Error(body.message||'Giriş yapılamadı.');const {error}=await sb.auth.setSession({access_token:body.access_token,refresh_token:body.refresh_token});if(error)throw error;const {data:{user}}=await sb.auth.getUser();currentUser=user;await enterAuthenticatedHome()}
 
 $('#loginForm').addEventListener('submit',async e=>{e.preventDefault();const btn=$('#loginSubmit'),u=$('#loginUsername').value.trim(),p=$('#loginPassword').value;if(!validUsername(u)){setMsg($('#loginMsg'),'Kullanıcı adı 3-16 karakter olmalı; yalnızca harf, rakam ve _ kullan.','error');return}setBusy(btn,true,'GİRİŞ YAP');setMsg($('#loginMsg'),'');try{await loginWithUsername(u,p);$('#loginPassword').value=''}catch(err){setMsg($('#loginMsg'),err.message,'error')}finally{setBusy(btn,false,'GİRİŞ YAP')}});
 
@@ -1127,7 +1149,7 @@ function zoneCount(){if(MOBILE_GAME)return wave<5?5:wave<12?6:wave<22?7:8;return
 function cycleDuration(){return Math.max(1.55,3.2-wave*.085)}
 function revealLead(){return Math.max(.48,1.08-wave*.033)}
 function zoneSpeed(){return (MOBILE_GAME?40:34)+wave*3.5}
-function safeMultiplier(){return wave<10?1:wave<20?1.6:wave<30?1.95:2.2}
+function safeMultiplier(){return wave<13?1:wave<20?1.5:wave<30?1.9:2.15}
 function createZones(){
   const next=[],count=zoneCount();
   for(let i=0;i<count;i++){
@@ -1143,6 +1165,27 @@ function createZones(){
   }
   zones=next;lastSafeZone=null;
   if(wave===0&&zones.length){player.x=zones[0].x;player.y=zones[0].y;player.tx=player.x;player.ty=player.y;player.attachedZone=zones[0];player.targetZone=null}
+}
+function addChallengeZone(){
+  const r=rand(MOBILE_GAME?34:40,MOBILE_GAME?48:55);
+  let x=W/2,y=H/2,placed=false;
+  for(let a=0;a<90;a++){
+    const tx=rand(r+18,W-r-18),ty=rand(r+18,H-r-18);
+    const awayFromPlayer=Math.hypot(player.x-tx,player.y-ty)>r+70;
+    if(awayFromPlayer&&zones.every(z=>Math.hypot(z.x-tx,z.y-ty)>z.r+r+18)){x=tx;y=ty;placed=true;break}
+  }
+  if(!placed){
+    for(let a=0;a<50;a++){
+      const tx=rand(r+18,W-r-18),ty=rand(r+18,H-r-18);
+      if(Math.hypot(player.x-tx,player.y-ty)>r+55){x=tx;y=ty;placed=true;break}
+    }
+  }
+  const angle=rand(0,Math.PI*2),speed=zoneSpeed();
+  const z={x,y,r,vx:Math.cos(angle)*speed,vy:Math.sin(angle)*speed,pulse:rand(0,Math.PI*2),fakePulse:0};
+  zones.push(z);
+  addRing(z.x,z.y,z.r+4,'255,255,255',105,.55,3);
+  spawnParticles(z.x,z.y,6,'success');
+  showToast('Zorluk arttı · +1 daire');
 }
 function prepareCycle(){
   cycle=0;revealCuePlayed=false;dangerCuePlayed=false;revealPulse=0;collapseAt=cycleDuration();revealAt=collapseAt-revealLead();
@@ -1188,29 +1231,35 @@ async function callRunService(body){
   return data;
 }
 async function startGame(){
-  if(!currentUser||!currentProfile||startGamePending)return;
+  if((!guestMode&&(!currentUser||!currentProfile))||startGamePending)return;
   if(soundEnabled)getAudioCtx();
   startGamePending=true;
-  setBusy($('#playBtn'),true,'OYUNA BAŞLA','HAZIR OL…');setBusy($('#retryBtn'),true,'TEKRAR OYNA','HAZIR OL…');
+  setBusy($('#playBtn'),true,'OYUNA BAŞLA','HAZIR OL…');setBusy($('#retryBtn'),true,'TEKRAR OYNA','HAZIR OL…');setBusy($('#guestPlayBtn'),true,'MİSAFİR OLARAK OYNA','HAZIR OL…');
   try{
-    const run=await callRunService({action:'start',client_version:'web-1.0-polish'});
-    if(!run?.session_id)throw new Error('Oyun oturumu başlatılamadı.');
-    activeRunSession=run.session_id;
-    achievementSnapshot=new Set(getAchievements().filter(a=>a.unlocked).map(a=>a.id));
+    if(guestMode){
+      activeRunSession=null;
+      achievementSnapshot=new Set();
+    }else{
+      const run=await callRunService({action:'start',client_version:'web-1.0-polish'});
+      if(!run?.session_id)throw new Error('Oyun oturumu başlatılamadı.');
+      activeRunSession=run.session_id;
+      achievementSnapshot=new Set(getAchievements().filter(a=>a.unlocked).map(a=>a.id));
+    }
     cancelAnimationFrame(raf);resetGame();running=true;paused=false;
     $('#pauseOverlay').classList.add('hidden');
     startAmbientSound();
     $('#resultAchievement').classList.add('hidden');
+    $('#guestResultBox').classList.add('hidden');
     show('gameScreen');draw();last=performance.now();raf=requestAnimationFrame(loop);
   }catch(e){
     activeRunSession=null;
     showToast(e?.message||'Oyun başlatılamadı.','error');
   }finally{
     startGamePending=false;
-    setBusy($('#playBtn'),false,'OYUNA BAŞLA');setBusy($('#retryBtn'),false,'TEKRAR OYNA');
+    setBusy($('#playBtn'),false,'OYUNA BAŞLA');setBusy($('#retryBtn'),false,'TEKRAR OYNA');setBusy($('#guestPlayBtn'),false,'MİSAFİR OLARAK OYNA');
   }
 }
-function stopGameToHome(){running=false;paused=false;dying=false;activeRunSession=null;clearTimeout(deathTimer);stopAmbientSound();cancelAnimationFrame(raf);$('#pauseOverlay').classList.add('hidden');show('homeScreen');loadLeaderboard()}
+function stopGameToHome(){running=false;paused=false;dying=false;activeRunSession=null;clearTimeout(deathTimer);stopAmbientSound();cancelAnimationFrame(raf);$('#pauseOverlay').classList.add('hidden');if(guestMode){show('authScreen')}else{show('homeScreen');loadLeaderboard()}}
 function togglePause(){
   if(!running)return;
   paused=!paused;
@@ -1298,12 +1347,17 @@ async function endGame(){
   if(!running)return;
   running=false;paused=false;dying=false;clearTimeout(deathTimer);stopAmbientSound();cancelAnimationFrame(raf);
   const ms=Math.round(elapsed*1000),previousGames=Number(myStats?.games_played||0),previousBest=Number(myStats?.best_survival_ms||0);
-  $('#finalTime').textContent=elapsed.toFixed(2)+'s';$('#finalWaves').textContent=wave;$('#finalUsername').textContent=currentProfile.username;
+  $('#finalTime').textContent=elapsed.toFixed(2)+'s';$('#finalWaves').textContent=wave;$('#finalUsername').textContent=guestMode?'Misafir':currentProfile.username;
   setMsg($('#resultMsg'),'');
   const badge=$('#recordBadge');badge.classList.add('hidden');badge.textContent='';
   $('#resultAchievement').classList.add('hidden');
+  $('#guestResultBox').classList.toggle('hidden',!guestMode);
   show('resultScreen');
   const rc=$('.resultcard');if(rc&&!REDUCED_MOTION){rc.classList.remove('result-arrive');void rc.offsetWidth;rc.classList.add('result-arrive')}
+  if(guestMode){
+    setMsg($('#resultMsg'),'Skor kaydedilmedi · misafir modu');
+    return;
+  }
   try{
     await saveRun();
     if(previousGames===0){badge.textContent='İLK REKOR';badge.classList.remove('hidden');pulseHud(badge,'badge-pop')}
@@ -1365,6 +1419,7 @@ function collapse(){
   playPassSound();spawnSuccessFx(safe);
   wave++;
   player.x=safe.x;player.y=safe.y;player.tx=safe.x;player.ty=safe.y;player.moving=false;player.targetZone=null;player.attachedZone=safe;
+  if(wave===10)addChallengeZone();
   $('#gameStatus').textContent='GÜVENDESİN';
   prepareCycle()
 }
@@ -1486,13 +1541,14 @@ function draw(){
 }
 function loop(now){if(!running||paused)return;const dt=Math.min(.033,Math.max(0,(now-last)/1000));last=now;update(dt);draw();if(running)raf=requestAnimationFrame(loop)}
 
-function tutorialStorageKey(){return currentUser?'safe_zone_tutorial_seen_'+currentUser.id:'safe_zone_tutorial_seen'}
-function hasSeenTutorial(){return !!currentProfile?.tutorial_seen||localStorage.getItem(tutorialStorageKey())==='1'}
-function requestStartGame(){if(!currentUser||!currentProfile)return;if(hasSeenTutorial()){startGame();return}$('#tutorialModal').classList.remove('hidden')}
-$('#playBtn').onclick=requestStartGame;
+function tutorialStorageKey(){return guestMode?'safe_zone_tutorial_seen_guest':(currentUser?'safe_zone_tutorial_seen_'+currentUser.id:'safe_zone_tutorial_seen')}
+function hasSeenTutorial(){return (!guestMode&&!!currentProfile?.tutorial_seen)||localStorage.getItem(tutorialStorageKey())==='1'}
+function requestStartGame(){if(!guestMode&&(!currentUser||!currentProfile))return;if(hasSeenTutorial()){startGame();return}$('#tutorialModal').classList.remove('hidden')}
+$('#playBtn').onclick=()=>{guestMode=false;requestStartGame()};
+$('#guestPlayBtn').onclick=()=>{guestMode=true;currentUser=null;currentProfile=null;myStats=null;requestStartGame()};
 $('#tutorialLaterBtn').onclick=()=>$('#tutorialModal').classList.add('hidden');
-$('#tutorialStartBtn').onclick=async()=>{if(!currentUser||!currentProfile)return;$('#tutorialModal').classList.add('hidden');currentProfile.tutorial_seen=true;localStorage.setItem(tutorialStorageKey(),'1');try{await sb.from('safe_zone_profiles').update({tutorial_seen:true,updated_at:new Date().toISOString()}).eq('user_id',currentUser.id)}catch{}await startGame()};
-$('#pauseBtn').onclick=togglePause;$('#pauseContinueBtn').onclick=togglePause;$('#pauseExitBtn').onclick=stopGameToHome;$('#retryBtn').onclick=()=>startGame();$('#resultHomeBtn').onclick=()=>{show('homeScreen');loadLeaderboard()};
+$('#tutorialStartBtn').onclick=async()=>{if(!guestMode&&(!currentUser||!currentProfile))return;$('#tutorialModal').classList.add('hidden');localStorage.setItem(tutorialStorageKey(),'1');if(!guestMode){currentProfile.tutorial_seen=true;try{await sb.from('safe_zone_profiles').update({tutorial_seen:true,updated_at:new Date().toISOString()}).eq('user_id',currentUser.id)}catch{}}await startGame()};
+$('#pauseBtn').onclick=togglePause;$('#pauseContinueBtn').onclick=togglePause;$('#pauseExitBtn').onclick=stopGameToHome;$('#retryBtn').onclick=()=>startGame();$('#resultHomeBtn').onclick=()=>{if(guestMode)show('authScreen');else{show('homeScreen');loadLeaderboard()}};$('#guestCreateAccountBtn').onclick=()=>{guestMode=false;switchAuth('register');show('authScreen')};
 const mobileGate=$('#mobileGate');if(window.matchMedia('(max-width:820px)').matches){setTimeout(()=>document.body.classList.add('mobile-entered'),1050)}else{document.body.classList.add('mobile-entered')}
 
 
@@ -1507,7 +1563,8 @@ window.safeZoneHandleBack=()=>{
     if(open){setSettingsAccordion(open,false);return true}
     show('homeScreen');return true
   }
-  if(visible==='profileScreen'||visible==='achievementsScreen'||visible==='resultScreen'){show('homeScreen');return true}
+  if(visible==='resultScreen'){if(guestMode)show('authScreen');else show('homeScreen');return true}
+  if(visible==='profileScreen'||visible==='achievementsScreen'){show('homeScreen');return true}
   if(visible==='gameScreen'){
     if(paused){togglePause();return true}
     togglePause();return true
@@ -1515,7 +1572,7 @@ window.safeZoneHandleBack=()=>{
   return false
 };
 
-sb.auth.onAuthStateChange((event,session)=>{if(event==='SIGNED_OUT'){currentUser=null;currentProfile=null}else if(session?.user){currentUser=session.user}});
+sb.auth.onAuthStateChange((event,session)=>{if(event==='SIGNED_OUT'){currentUser=null;currentProfile=null}else if(session?.user){guestMode=false;currentUser=session.user}});
 refreshAuthState();
 })();
 </script>
