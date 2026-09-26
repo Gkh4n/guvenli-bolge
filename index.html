@@ -1439,6 +1439,82 @@ body::-webkit-scrollbar,
   }
 }
 
+
+/* v26 mobile HUD stabilizasyonu */
+.gamebar{
+  display:grid!important;
+  grid-template-columns:max-content minmax(0,1fr) 48px!important;
+  align-items:center!important;
+  justify-content:initial!important;
+  width:100%!important;
+}
+.gamestats{
+  min-width:0;
+}
+.gamebar .stat b{
+  font-variant-numeric:tabular-nums lining-nums;
+  font-feature-settings:"tnum" 1,"lnum" 1;
+}
+#timeLabel{
+  display:block;
+  min-width:5.15ch;
+}
+#waveLabel{
+  display:block;
+  min-width:2ch;
+}
+.gameactions{
+  width:48px!important;
+  min-width:48px!important;
+  max-width:48px!important;
+  height:48px!important;
+  display:grid!important;
+  place-items:center!important;
+  justify-self:end!important;
+  contain:layout paint;
+}
+#pauseBtn.pause-icon-btn{
+  width:48px!important;
+  min-width:48px!important;
+  max-width:48px!important;
+  height:48px!important;
+  min-height:48px!important;
+  margin:0!important;
+  flex:none!important;
+  transform:none!important;
+  transition:border-color .18s ease,background .18s ease,box-shadow .18s ease,filter .18s ease!important;
+  animation:none!important;
+  will-change:auto!important;
+  -webkit-transform:none!important;
+}
+#pauseBtn.pause-icon-btn:active{
+  transform:none!important;
+  -webkit-transform:none!important;
+}
+#pauseBtn .pause-glyph{
+  transform:none!important;
+  animation:none!important;
+}
+
+@media(max-width:600px){
+  .gamebar{
+    grid-template-columns:max-content minmax(0,1fr) 46px!important;
+  }
+  .gameactions{
+    width:46px!important;
+    min-width:46px!important;
+    max-width:46px!important;
+    height:46px!important;
+  }
+  #pauseBtn.pause-icon-btn{
+    width:46px!important;
+    min-width:46px!important;
+    max-width:46px!important;
+    height:46px!important;
+    min-height:46px!important;
+  }
+}
+
 </style>
 </head>
 <body>
