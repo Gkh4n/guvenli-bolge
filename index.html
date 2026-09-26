@@ -1153,7 +1153,8 @@ function prepareCycle(){
   safeIndex=pick.i;lastSafeZone=pick.z;
   decoyIndex=-1;
   if(wave>=7&&zones.length>2&&Math.random()<Math.min(.72,.18+wave*.035)){do{decoyIndex=Math.floor(Math.random()*zones.length)}while(decoyIndex===safeIndex);zones[decoyIndex].fakePulse=.24}
-  $('#gameStatus').textContent='Güvenli bölgeyi bekle…'
+  $('#gameStatus').textContent='Güvenli bölgeyi bekle…';
+  $('#gameStatus').classList.remove('active','danger')
 }
 function pulseHud(el,className='hud-pop'){if(!el||REDUCED_MOTION)return;el.classList.remove(className);void el.offsetWidth;el.classList.add(className)}
 function resetGame(){
@@ -1188,6 +1189,7 @@ async function callRunService(body){
 }
 async function startGame(){
   if(!currentUser||!currentProfile||startGamePending)return;
+  if(soundEnabled)getAudioCtx();
   startGamePending=true;
   setBusy($('#playBtn'),true,'OYUNA BAŞLA','HAZIR OL…');setBusy($('#retryBtn'),true,'TEKRAR OYNA','HAZIR OL…');
   try{
