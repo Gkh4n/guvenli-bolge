@@ -1606,6 +1606,53 @@ body::-webkit-scrollbar,
   .admin-player-metrics>span{text-align:left}
 }
 
+
+/* v29 ana sıralama sessiz yenileme */
+.home-refresh-icon-btn{
+  width:34px!important;
+  height:34px!important;
+  min-width:34px!important;
+  display:grid!important;
+  place-items:center!important;
+  padding:0!important;
+  border:1px solid transparent!important;
+  border-radius:10px!important;
+  color:#7f90a3!important;
+  background:transparent!important;
+  transition:color .18s ease,background .18s ease,border-color .18s ease!important;
+}
+.home-refresh-icon-btn:hover{
+  color:#dffbff!important;
+  background:rgba(99,231,255,.045)!important;
+  border-color:rgba(99,231,255,.10)!important;
+}
+.home-refresh-icon-btn:disabled{
+  opacity:1!important;
+  cursor:default!important;
+}
+.home-refresh-icon{
+  width:17px;
+  height:17px;
+  fill:none;
+  stroke:currentColor;
+  stroke-width:1.9;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+  transform-origin:50% 50%;
+}
+.home-refresh-icon-btn.is-refreshing{
+  color:#63e7ff!important;
+}
+.home-refresh-icon-btn.is-refreshing .home-refresh-icon{
+  animation:homeRefreshSpin .72s linear infinite;
+}
+@keyframes homeRefreshSpin{
+  to{transform:rotate(360deg)}
+}
+@media(prefers-reduced-motion:reduce){
+  .home-refresh-icon-btn.is-refreshing .home-refresh-icon{animation:none!important}
+}
+
 </style>
 </head>
 <body>
@@ -1676,7 +1723,7 @@ body::-webkit-scrollbar,
       </div>
 
       <div class="panel boardcard home-board">
-        <div class="cardtitle"><div><h3>GLOBAL SIRALAMA</h3><span class="board-subtitle">En iyi 5 oyuncu</span></div><button id="homeRefreshBoard" class="refresh" type="button">Yenile</button></div>
+        <div class="cardtitle"><div><h3>GLOBAL SIRALAMA</h3><span class="board-subtitle">En iyi 5 oyuncu</span></div><button id="homeRefreshBoard" class="refresh home-refresh-icon-btn" type="button" aria-label="Yenile" title="Yenile"><svg class="home-refresh-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6v5h-5"/><path d="M4 18v-5h5"/><path d="M18.2 9A7 7 0 0 0 6.4 6.4L4 9"/><path d="M5.8 15A7 7 0 0 0 17.6 17.6L20 15"/></svg></button></div>
         <div id="homeBoard" class="board"><div class="tiny">Skorlar yükleniyor…</div></div>
         <button id="leaderboardBtn" class="board-more-btn" type="button"><span>TÜM SIRALAMAYI GÖR</span><b aria-hidden="true">→</b></button>
       </div>
@@ -2100,7 +2147,7 @@ const HAS_NATIVE_INSETS=/GuvenliBolgeApp\/2/i.test(UA);
 if(HAS_NATIVE_INSETS)document.body.classList.add('native-webview');
 if(IS_ANDROID_WEBVIEW&&!HAS_NATIVE_INSETS)document.body.classList.add('legacy-webview-insets');
 const screens=['authScreen','homeScreen','adminScreen','leaderboardScreen','profileScreen','achievementsScreen','settingsScreen','gameScreen','resultScreen'];
-let currentUser=null,currentProfile=null,myStats=null,trendRows=[],achievementMetrics={record_breaks:0,max_streak_15s:0},activeRunSession=null,startGamePending=false,achievementSnapshot=new Set(),guestMode=false,leaderboardOffset=0,leaderboardTotal=0,leaderboardLoading=false,isAdmin=false,adminDashboardData=null,adminLoading=false;
+let currentUser=null,currentProfile=null,myStats=null,trendRows=[],achievementMetrics={record_breaks:0,max_streak_15s:0},activeRunSession=null,startGamePending=false,achievementSnapshot=new Set(),guestMode=false,leaderboardOffset=0,leaderboardTotal=0,leaderboardLoading=false,isAdmin=false,adminDashboardData=null,adminLoading=false,homeBoardRefreshing=false;
 let running=false,paused=false,dying=false,elapsed=0,wave=0,raf=0,last=0,cycle=0,collapseAt=3.2,revealAt=2.15,safeIndex=-1,decoyIndex=-1,flash=0,shake=0,zones=[],lastSafeZone=null,revealCuePlayed=false,dangerCuePlayed=false,revealPulse=0,successPulse=0,deathPulse=0,bgPhase=0,particles=[],fxRings=[],lastHudSecond=-1,lastHudWave=0,deathTimer=0,recordCrossedAt=-1,resumeCountdownTimer=0,resumeCountdownActive=false;
 const MOBILE_GAME=window.matchMedia('(max-width:600px)').matches;
 const REDUCED_MOTION=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -2601,10 +2648,17 @@ function renderBoard(target,rows,{append=false}={}){
     el.append(rankEl,center,score);target.appendChild(el)
   })
 }
-async function loadLeaderboard(){
-  const target=$('#homeBoard');
-  if(!currentUser)return;
-  if(target)target.innerHTML='<div class="tiny">'+t('scoresLoading')+'</div>';
+async function loadLeaderboard(soft=false){
+  const target=$('#homeBoard'),refresh=$('#homeRefreshBoard');
+  if(!currentUser||homeBoardRefreshing)return;
+  homeBoardRefreshing=true;
+  const hadRows=!!target?.querySelector('.row');
+  if(!soft&&!hadRows&&target)target.innerHTML='<div class="tiny">'+t('scoresLoading')+'</div>';
+  if(refresh){
+    refresh.disabled=true;
+    refresh.classList.add('is-refreshing');
+    refresh.setAttribute('aria-busy','true');
+  }
   try{
     const rows=await fetchLeaderboardPage(5,0);
     renderBoard(target,rows);
@@ -2612,8 +2666,16 @@ async function loadLeaderboard(){
     await loadMyStats();
     await loadHomeInsights();
   }catch(e){
-    if(target)target.innerHTML='<div class="tiny">'+t('leaderboardUnavailable')+'</div>';
+    if(!soft&&!hadRows&&target)target.innerHTML='<div class="tiny">'+t('leaderboardUnavailable')+'</div>';
+    else showToast(t('leaderboardToast'),'error');
     try{await loadMyStats()}catch{}
+  }finally{
+    homeBoardRefreshing=false;
+    if(refresh){
+      refresh.disabled=false;
+      refresh.classList.remove('is-refreshing');
+      refresh.removeAttribute('aria-busy');
+    }
   }
 }
 function updateLeaderboardSummary(){
@@ -2716,7 +2778,7 @@ $('#recoveryCodeForm').addEventListener('submit',async e=>{e.preventDefault();co
 $('#deleteForm').addEventListener('submit',async e=>{e.preventDefault();if($('#deleteConfirm').value.trim().toUpperCase()!=='SIL'){setMsg($('#deleteMsg'),t('deleteConfirmSil'),'error');return}const password=$('#deletePassword').value;setMsg($('#deleteMsg'),t('deletingAccount'));try{const {data,error}=await sb.functions.invoke('safe-zone-delete-account',{body:{password}});if(error)throw error;if(!data?.ok)throw new Error(currentLang==='tr'?(data?.message||t('deleteFailed')):t('deleteFailed'));currentUser=null;currentProfile=null;$('#deleteModal').classList.add('hidden');await sb.auth.signOut({scope:'local'}).catch(()=>{});switchAuth('login');show('authScreen');setMsg($('#loginMsg'),t('accountDeleted'),'ok')}catch(err){setMsg($('#deleteMsg'),currentLang==='tr'?(err.message||t('deleteFailed')):t('deleteFailed'),'error')}});
 
 function resetForgotModal(){$('#forgotUsername').value='';$('#forgotRecoveryCode').value='';$('#forgotNewPassword').value='';$('#forgotNewPassword2').value='';setMsg($('#forgotMsg'),'')}
-$('#loginTab').onclick=()=>switchAuth('login');$('#registerTab').onclick=()=>switchAuth('register');$('#forgotBtn').onclick=()=>{resetForgotModal();$('#forgotModal').classList.remove('hidden')};$('#closeForgot').onclick=()=>{resetForgotModal();$('#forgotModal').classList.add('hidden')};$('#copyRecoveryCode').onclick=async()=>{const code=$('#recoveryCodeValue').textContent;try{await navigator.clipboard.writeText(code);showToast(t('copyCode'),'ok')}catch{showToast(t('copyManual'),'error')}};$('#closeRecoveryCode').onclick=()=>$('#recoveryCodeModal').classList.add('hidden');$('#openDeleteBtn').onclick=()=>{setMsg($('#deleteMsg'),'');$('#deletePassword').value='';$('#deleteConfirm').value='';$('#deleteModal').classList.remove('hidden')};$('#closeDelete').onclick=()=>$('#deleteModal').classList.add('hidden');$('#profileBtn').onclick=()=>{show('profileScreen');resetSubscreenScroll('profileScreen');Promise.all([loadMyStats(),loadScoreTrend()]).catch(()=>{})};$('#profileBack').onclick=()=>show('homeScreen');$('#achievementsBtn').onclick=()=>{show('achievementsScreen');resetSubscreenScroll('achievementsScreen');renderAchievements()};$('#achievementsBack').onclick=()=>show('homeScreen');$('#adminBtn').onclick=async()=>{if(!isAdmin&&!(await refreshAdminAccess()))return;show('adminScreen');resetSubscreenScroll('adminScreen');loadAdminDashboard()};$('#adminBack').onclick=()=>show('homeScreen');$('#adminRefresh').onclick=loadAdminDashboard;$('#settingsBtn').onclick=()=>{closeAllSettingsAccordions();show('settingsScreen');resetSubscreenScroll('settingsScreen')};$('#settingsBack').onclick=()=>{closeAllSettingsAccordions();show('homeScreen')};$('#logoutBtn').onclick=async()=>{await sb.auth.signOut();currentUser=null;currentProfile=null;myStats=null;isAdmin=false;adminDashboardData=null;$('#adminBtn')?.classList.add('hidden');switchAuth('login');show('authScreen')};$('#homeRefreshBoard').onclick=loadLeaderboard;$('#leaderboardBtn').onclick=()=>{show('leaderboardScreen');resetSubscreenScroll('leaderboardScreen');loadFullLeaderboard(true)};$('#leaderboardBack').onclick=()=>show('homeScreen');$('#leaderboardRefresh').onclick=()=>loadFullLeaderboard(true);$('#leaderboardLoadMore').onclick=()=>loadFullLeaderboard(false);
+$('#loginTab').onclick=()=>switchAuth('login');$('#registerTab').onclick=()=>switchAuth('register');$('#forgotBtn').onclick=()=>{resetForgotModal();$('#forgotModal').classList.remove('hidden')};$('#closeForgot').onclick=()=>{resetForgotModal();$('#forgotModal').classList.add('hidden')};$('#copyRecoveryCode').onclick=async()=>{const code=$('#recoveryCodeValue').textContent;try{await navigator.clipboard.writeText(code);showToast(t('copyCode'),'ok')}catch{showToast(t('copyManual'),'error')}};$('#closeRecoveryCode').onclick=()=>$('#recoveryCodeModal').classList.add('hidden');$('#openDeleteBtn').onclick=()=>{setMsg($('#deleteMsg'),'');$('#deletePassword').value='';$('#deleteConfirm').value='';$('#deleteModal').classList.remove('hidden')};$('#closeDelete').onclick=()=>$('#deleteModal').classList.add('hidden');$('#profileBtn').onclick=()=>{show('profileScreen');resetSubscreenScroll('profileScreen');Promise.all([loadMyStats(),loadScoreTrend()]).catch(()=>{})};$('#profileBack').onclick=()=>show('homeScreen');$('#achievementsBtn').onclick=()=>{show('achievementsScreen');resetSubscreenScroll('achievementsScreen');renderAchievements()};$('#achievementsBack').onclick=()=>show('homeScreen');$('#adminBtn').onclick=async()=>{if(!isAdmin&&!(await refreshAdminAccess()))return;show('adminScreen');resetSubscreenScroll('adminScreen');loadAdminDashboard()};$('#adminBack').onclick=()=>show('homeScreen');$('#adminRefresh').onclick=loadAdminDashboard;$('#settingsBtn').onclick=()=>{closeAllSettingsAccordions();show('settingsScreen');resetSubscreenScroll('settingsScreen')};$('#settingsBack').onclick=()=>{closeAllSettingsAccordions();show('homeScreen')};$('#logoutBtn').onclick=async()=>{await sb.auth.signOut();currentUser=null;currentProfile=null;myStats=null;isAdmin=false;adminDashboardData=null;$('#adminBtn')?.classList.add('hidden');switchAuth('login');show('authScreen')};$('#homeRefreshBoard').onclick=()=>loadLeaderboard(true);$('#leaderboardBtn').onclick=()=>{show('leaderboardScreen');resetSubscreenScroll('leaderboardScreen');loadFullLeaderboard(true)};$('#leaderboardBack').onclick=()=>show('homeScreen');$('#leaderboardRefresh').onclick=()=>loadFullLeaderboard(true);$('#leaderboardLoadMore').onclick=()=>loadFullLeaderboard(false);
 
 function zoneCount(){if(MOBILE_GAME)return wave<5?5:wave<12?6:wave<22?7:8;return wave<5?4:wave<12?5:wave<24?6:7}
 function cycleDuration(){return Math.max(1.55,3.2-wave*.085)}
