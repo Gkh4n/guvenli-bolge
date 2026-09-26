@@ -1367,6 +1367,78 @@ body::-webkit-scrollbar,
   height:0!important;
 }
 
+
+/* v24 premium beceri başlığı */
+.home-title.skill-title{
+  width:100%!important;
+  max-width:none!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:flex-start!important;
+  gap:clamp(7px,1.5vw,14px)!important;
+  padding:4px 0 20px!important;
+  white-space:nowrap!important;
+  overflow:visible!important;
+  font-family:"Sora",Inter,system-ui,sans-serif!important;
+  font-size:clamp(15px,2.2vw,22px)!important;
+  font-weight:700!important;
+  line-height:1.2!important;
+  letter-spacing:.105em!important;
+  -webkit-text-fill-color:initial!important;
+  background:none!important;
+  filter:none!important;
+  color:#edf7fd!important;
+}
+.home-title.skill-title .hero-skill-word{
+  display:inline!important;
+  margin:0!important;
+  padding:0!important;
+  color:#edf7fd!important;
+  background:linear-gradient(180deg,#ffffff 0%,#d7e7f0 100%);
+  -webkit-background-clip:text;
+  background-clip:text;
+  -webkit-text-fill-color:transparent;
+  filter:drop-shadow(0 3px 12px rgba(0,0,0,.2));
+}
+.home-title.skill-title i{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  margin:0!important;
+  color:#59dff2;
+  font-style:normal;
+  font-size:.88em;
+  line-height:1;
+  text-shadow:0 0 10px rgba(89,223,242,.26);
+}
+.home-title.skill-title:after{
+  position:absolute!important;
+  left:0!important;
+  bottom:0!important;
+  width:68px!important;
+  height:3px!important;
+  margin:0!important;
+}
+
+@media(max-width:600px){
+  .home-title.skill-title{
+    gap:7px!important;
+    font-size:clamp(11.5px,3.65vw,15px)!important;
+    letter-spacing:.065em!important;
+    padding-bottom:17px!important;
+  }
+  .home-title.skill-title:after{
+    width:54px!important;
+  }
+}
+@media(max-width:360px){
+  .home-title.skill-title{
+    gap:5px!important;
+    font-size:11px!important;
+    letter-spacing:.045em!important;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -1426,7 +1498,7 @@ body::-webkit-scrollbar,
 
     <div class="home-dashboard">
       <div class="panel home-main">
-        <div class="home-title"><span>HAYATTA KAL</span><span>REKORUNU KIR</span></div>
+        <div class="home-title skill-title"><span class="hero-skill-word" data-skill="1">ODAK</span><i aria-hidden="true">•</i><span class="hero-skill-word" data-skill="2">REFLEKS</span><i aria-hidden="true">•</i><span class="hero-skill-word" data-skill="3">ZAMANLAMA</span></div>
         <div class="home-quick-stats">
           <div class="quick-stat"><span>EN İYİ</span><b id="myBest">0.00s</b></div>
           <div class="quick-stat"><span>GLOBAL</span><b id="myRank">-</b></div>
@@ -1708,9 +1780,10 @@ function updateLanguageTriggers(){
   const name=LANGUAGE_NAMES[currentLang]||LANGUAGE_NAMES.en;
   const a=$('#authLanguageLabel'),b=$('#settingsLanguageLabel');
   if(a)a.textContent=name;if(b)b.textContent=name;
-  const heroLines=document.querySelectorAll('.home-title span');
-  if(heroLines[0])heroLines[0].textContent=t('heroChallenge1');
-  if(heroLines[1])heroLines[1].textContent=t('heroChallenge2');
+  const heroWords=document.querySelectorAll('.hero-skill-word');
+  if(heroWords[0])heroWords[0].textContent=t('heroSkill1');
+  if(heroWords[1])heroWords[1].textContent=t('heroSkill2');
+  if(heroWords[2])heroWords[2].textContent=t('heroSkill3');
 }
 function renderLanguagePicker(){
   updateLanguageTriggers();
@@ -1779,11 +1852,11 @@ PLACEHOLDER_TR_KEYS['3-16 karakter, harf / rakam / _']='regUserPlaceholder';
 PLACEHOLDER_TR_KEYS['En az 8 karakter']='min8Placeholder';
 PLACEHOLDER_TR_KEYS['Şifreni tekrar yaz']='repeatPasswordPlaceholder';
 
-Object.assign(I18N.tr,{languagePickerKicker:'ARAYÜZ',languagePickerTitle:'Dil Seç',languagePickerDesc:'Uygulamada kullanmak istediğin dili seç.',heroChallenge1:'HAYATTA KAL',heroChallenge2:'REKORUNU KIR'});
-Object.assign(I18N.en,{languagePickerKicker:'INTERFACE',languagePickerTitle:'Choose Language',languagePickerDesc:'Choose the language you want to use in the app.',heroChallenge1:'STAY ALIVE',heroChallenge2:'BREAK YOUR RECORD'});
-Object.assign(I18N.de,{languagePickerKicker:'OBERFLÄCHE',languagePickerTitle:'Sprache wählen',languagePickerDesc:'Wähle die Sprache, die du in der App verwenden möchtest.',heroChallenge1:'ÜBERLEBE',heroChallenge2:'BRICH DEINEN REKORD'});
-Object.assign(I18N.fr,{languagePickerKicker:'INTERFACE',languagePickerTitle:'Choisir la langue',languagePickerDesc:'Choisis la langue que tu veux utiliser dans l’application.',heroChallenge1:'SURVIS',heroChallenge2:'BATS TON RECORD'});
-Object.assign(I18N.es,{languagePickerKicker:'INTERFAZ',languagePickerTitle:'Elegir idioma',languagePickerDesc:'Elige el idioma que quieres usar en la aplicación.',heroChallenge1:'SOBREVIVE',heroChallenge2:'SUPERA TU RÉCORD'});
+Object.assign(I18N.tr,{languagePickerKicker:'ARAYÜZ',languagePickerTitle:'Dil Seç',languagePickerDesc:'Uygulamada kullanmak istediğin dili seç.',heroSkill1:'ODAK',heroSkill2:'REFLEKS',heroSkill3:'ZAMANLAMA'});
+Object.assign(I18N.en,{languagePickerKicker:'INTERFACE',languagePickerTitle:'Choose Language',languagePickerDesc:'Choose the language you want to use in the app.',heroSkill1:'FOCUS',heroSkill2:'REFLEX',heroSkill3:'TIMING'});
+Object.assign(I18N.de,{languagePickerKicker:'OBERFLÄCHE',languagePickerTitle:'Sprache wählen',languagePickerDesc:'Wähle die Sprache, die du in der App verwenden möchtest.',heroSkill1:'FOKUS',heroSkill2:'REFLEX',heroSkill3:'TIMING'});
+Object.assign(I18N.fr,{languagePickerKicker:'INTERFACE',languagePickerTitle:'Choisir la langue',languagePickerDesc:'Choisis la langue que tu veux utiliser dans l’application.',heroSkill1:'FOCUS',heroSkill2:'RÉFLEXES',heroSkill3:'TIMING'});
+Object.assign(I18N.es,{languagePickerKicker:'INTERFAZ',languagePickerTitle:'Elegir idioma',languagePickerDesc:'Elige el idioma que quieres usar en la aplicación.',heroSkill1:'ENFOQUE',heroSkill2:'REFLEJOS',heroSkill3:'TIEMPO'});
 
 const UA=navigator.userAgent||'';
 const IS_ANDROID_WEBVIEW=/\bwv\b/i.test(UA);
