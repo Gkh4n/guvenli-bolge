@@ -1293,6 +1293,51 @@ body::-webkit-scrollbar,
   display:none!important;
 }
 
+
+/* v23 marka okunabilirliği + görünmez ana scrollbar */
+html,
+body,
+.app,
+#homeScreen{
+  scrollbar-width:none!important;
+  -ms-overflow-style:none!important;
+}
+html::-webkit-scrollbar,
+body::-webkit-scrollbar,
+.app::-webkit-scrollbar,
+#homeScreen::-webkit-scrollbar{
+  width:0!important;
+  height:0!important;
+  display:none!important;
+}
+
+/* Küçük marka adında Türkçe karakterler net kalsın */
+.home-brand-copy{
+  overflow:visible!important;
+}
+.home-brand-copy b{
+  display:inline-block;
+  overflow:visible!important;
+  padding-top:2px;
+  font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif!important;
+  font-weight:800!important;
+  line-height:1.25!important;
+  letter-spacing:.085em!important;
+  text-transform:none!important;
+  -webkit-text-fill-color:currentColor!important;
+  background:none!important;
+  filter:none!important;
+}
+
+/* Büyük ana kart artık oyun adı değil, meydan okuma mesajı */
+.home-title{
+  overflow:visible!important;
+}
+.home-title span{
+  display:block;
+  overflow:visible!important;
+}
+
 </style>
 </head>
 <body>
