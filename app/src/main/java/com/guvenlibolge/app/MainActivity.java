@@ -51,6 +51,11 @@ public class MainActivity extends Activity {
 
         webView = new WebView(this);
         webView.setBackgroundColor(Color.rgb(7, 10, 16));
+        webView.setVerticalScrollBarEnabled(false);
+        webView.setHorizontalScrollBarEnabled(false);
+        webView.setVerticalFadingEdgeEnabled(false);
+        webView.setHorizontalFadingEdgeEnabled(false);
+        webView.setOverScrollMode(WebView.OVER_SCROLL_NEVER);
         root.addView(webView, new FrameLayout.LayoutParams(
                 FrameLayout.LayoutParams.MATCH_PARENT,
                 FrameLayout.LayoutParams.MATCH_PARENT));
