@@ -1260,6 +1260,39 @@ body:not(.mobile-entered) .mobile-gate{
   .language-modal-card{animation:none!important}
 }
 
+
+/* v23 hero slogan + seamless scrolling */
+.home-title{
+  line-height:.91!important;
+  letter-spacing:-.058em!important;
+  padding-top:.08em;
+  overflow:visible!important;
+}
+.home-title span{display:block}
+.home-title span+span{margin-top:.02em}
+
+/* Keep Turkish/European accents fully visible in the premium font. */
+.brand,
+.mobile-gate h1{
+  line-height:.96!important;
+  padding-top:.10em;
+  overflow:visible!important;
+}
+
+/* Scroll remains functional, but no browser/WebView scrollbar is visible. */
+html,body,#homeScreen,.home-dashboard{
+  scrollbar-width:none!important;
+  -ms-overflow-style:none;
+}
+html::-webkit-scrollbar,
+body::-webkit-scrollbar,
+#homeScreen::-webkit-scrollbar,
+.home-dashboard::-webkit-scrollbar{
+  width:0!important;
+  height:0!important;
+  display:none!important;
+}
+
 </style>
 </head>
 <body>
@@ -1319,7 +1352,7 @@ body:not(.mobile-entered) .mobile-gate{
 
     <div class="home-dashboard">
       <div class="panel home-main">
-        <div class="home-title">GÜVENLİ<br>BÖLGE</div>
+        <div class="home-title"><span>HAYATTA KAL</span><span>REKORUNU KIR</span></div>
         <div class="home-quick-stats">
           <div class="quick-stat"><span>EN İYİ</span><b id="myBest">0.00s</b></div>
           <div class="quick-stat"><span>GLOBAL</span><b id="myRank">-</b></div>
@@ -1601,6 +1634,9 @@ function updateLanguageTriggers(){
   const name=LANGUAGE_NAMES[currentLang]||LANGUAGE_NAMES.en;
   const a=$('#authLanguageLabel'),b=$('#settingsLanguageLabel');
   if(a)a.textContent=name;if(b)b.textContent=name;
+  const heroLines=document.querySelectorAll('.home-title span');
+  if(heroLines[0])heroLines[0].textContent=t('heroChallenge1');
+  if(heroLines[1])heroLines[1].textContent=t('heroChallenge2');
 }
 function renderLanguagePicker(){
   updateLanguageTriggers();
@@ -1669,11 +1705,11 @@ PLACEHOLDER_TR_KEYS['3-16 karakter, harf / rakam / _']='regUserPlaceholder';
 PLACEHOLDER_TR_KEYS['En az 8 karakter']='min8Placeholder';
 PLACEHOLDER_TR_KEYS['Şifreni tekrar yaz']='repeatPasswordPlaceholder';
 
-Object.assign(I18N.tr,{languagePickerKicker:'ARAYÜZ',languagePickerTitle:'Dil Seç',languagePickerDesc:'Uygulamada kullanmak istediğin dili seç.'});
-Object.assign(I18N.en,{languagePickerKicker:'INTERFACE',languagePickerTitle:'Choose Language',languagePickerDesc:'Choose the language you want to use in the app.'});
-Object.assign(I18N.de,{languagePickerKicker:'OBERFLÄCHE',languagePickerTitle:'Sprache wählen',languagePickerDesc:'Wähle die Sprache, die du in der App verwenden möchtest.'});
-Object.assign(I18N.fr,{languagePickerKicker:'INTERFACE',languagePickerTitle:'Choisir la langue',languagePickerDesc:'Choisis la langue que tu veux utiliser dans l’application.'});
-Object.assign(I18N.es,{languagePickerKicker:'INTERFAZ',languagePickerTitle:'Elegir idioma',languagePickerDesc:'Elige el idioma que quieres usar en la aplicación.'});
+Object.assign(I18N.tr,{languagePickerKicker:'ARAYÜZ',languagePickerTitle:'Dil Seç',languagePickerDesc:'Uygulamada kullanmak istediğin dili seç.',heroChallenge1:'HAYATTA KAL',heroChallenge2:'REKORUNU KIR'});
+Object.assign(I18N.en,{languagePickerKicker:'INTERFACE',languagePickerTitle:'Choose Language',languagePickerDesc:'Choose the language you want to use in the app.',heroChallenge1:'STAY ALIVE',heroChallenge2:'BREAK YOUR RECORD'});
+Object.assign(I18N.de,{languagePickerKicker:'OBERFLÄCHE',languagePickerTitle:'Sprache wählen',languagePickerDesc:'Wähle die Sprache, die du in der App verwenden möchtest.',heroChallenge1:'ÜBERLEBE',heroChallenge2:'BRICH DEINEN REKORD'});
+Object.assign(I18N.fr,{languagePickerKicker:'INTERFACE',languagePickerTitle:'Choisir la langue',languagePickerDesc:'Choisis la langue que tu veux utiliser dans l’application.',heroChallenge1:'SURVIS',heroChallenge2:'BATS TON RECORD'});
+Object.assign(I18N.es,{languagePickerKicker:'INTERFAZ',languagePickerTitle:'Elegir idioma',languagePickerDesc:'Elige el idioma que quieres usar en la aplicación.',heroChallenge1:'SOBREVIVE',heroChallenge2:'SUPERA TU RÉCORD'});
 
 const UA=navigator.userAgent||'';
 const IS_ANDROID_WEBVIEW=/\bwv\b/i.test(UA);
