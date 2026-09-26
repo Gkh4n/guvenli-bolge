@@ -119,8 +119,20 @@ public class MainActivity extends Activity {
 
     @Override
     public void onBackPressed() {
-        if (webView != null && webView.canGoBack()) webView.goBack();
-        else super.onBackPressed();
+        if (webView == null) {
+            super.onBackPressed();
+            return;
+        }
+
+        webView.evaluateJavascript(
+                "(window.safeZoneHandleBack ? window.safeZoneHandleBack() : false)",
+                value -> {
+                    if (!"true".equals(value)) {
+                        if (webView.canGoBack()) webView.goBack();
+                        else MainActivity.super.onBackPressed();
+                    }
+                }
+        );
     }
 
     @Override
