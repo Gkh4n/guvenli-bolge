@@ -219,6 +219,26 @@ button,input{font:inherit}button{cursor:pointer}.hidden{display:none!important}
   #scoreTrendCanvas{min-height:260px}
 }
 
+
+/* v6 responsive profil trendi */
+.profile-page{min-height:0}
+.profile-stats{grid-template-columns:repeat(3,minmax(0,1fr))}
+.profile-stat:last-child{grid-column:auto}
+.trend-card{flex:none;min-height:0;height:auto;margin-top:16px;padding:15px}
+#scoreTrendCanvas{display:block;width:100%;height:270px;min-height:0;flex:none}
+.trend-empty{min-height:210px}
+@media(max-width:600px){
+  .profile-stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .profile-stat:last-child{grid-column:auto}
+  .trend-card{margin-top:10px;padding:12px;border-radius:15px}
+  .trend-head{margin-bottom:7px}
+  .trend-head b{font-size:12px}
+  .trend-head span{font-size:9px}
+  .trend-delta{font-size:11px;padding:6px 9px}
+  #scoreTrendCanvas{height:210px;min-height:0}
+  .trend-empty{min-height:180px}
+}
+
 </style>
 </head>
 <body>
@@ -294,13 +314,14 @@ button,input{font:inherit}button{cursor:pointer}.hidden{display:none!important}
       <div class="profile-stats">
         <div class="profile-stat"><b id="profileGames">0</b><span>Oyun sayısı</span></div>
         <div class="profile-stat"><b id="profileBest">0.00s</b><span>En iyi skor</span></div>
+        <div class="profile-stat"><b id="profileAverage">0.00s</b><span>Ortalama skor</span></div>
         <div class="profile-stat"><b id="profileWaves">0</b><span>En fazla çöküş</span></div>
         <div class="profile-stat"><b id="profileTotal">0 sn</b><span>Toplam oyun süresi</span></div>
         <div class="profile-stat"><b id="profileRank">-</b><span>Global sıra</span></div>
       </div>
       <div class="trend-card">
         <div class="trend-head">
-          <div><b>SON 10 OYUN</b><span>Skor gelişimi</span></div>
+          <div><b>SON 10 OYUN</b><span>Skor trendi · eski → yeni</span></div>
           <div id="trendDelta" class="trend-delta">-</div>
         </div>
         <div id="trendEmpty" class="trend-empty hidden">Grafik için en az 2 oyun gerekiyor.</div>
@@ -434,6 +455,7 @@ async function loadMyStats(){
   $('#myRank').textContent=rank;
   $('#profileGames').textContent=games;
   $('#profileBest').textContent=(best/1000).toFixed(2)+'s';
+  $('#profileAverage').textContent=games?((total/games)/1000).toFixed(2)+'s':'0.00s';
   $('#profileWaves').textContent=waves;
   $('#profileTotal').textContent=formatTotalTime(total);
   $('#profileRank').textContent=rank;
@@ -455,49 +477,112 @@ async function loadScoreTrend(){
 function renderScoreTrend(){
   const canvas=$('#scoreTrendCanvas'),empty=$('#trendEmpty'),deltaEl=$('#trendDelta');
   if(!canvas||!empty||!deltaEl)return;
+
   if(trendRows.length<2){
     canvas.classList.add('hidden');
     empty.classList.remove('hidden');
-    deltaEl.textContent='-';deltaEl.className='trend-delta';
+    deltaEl.textContent='-';
+    deltaEl.className='trend-delta';
     return;
   }
-  empty.classList.add('hidden');canvas.classList.remove('hidden');
+
+  empty.classList.add('hidden');
+  canvas.classList.remove('hidden');
+
   const scores=trendRows.map(r=>(Number(r.survival_ms)||0)/1000);
   const last=scores.at(-1),prev=scores.at(-2),delta=last-prev;
   deltaEl.textContent=(delta>=0?'+':'')+delta.toFixed(2)+'s';
   deltaEl.className='trend-delta '+(delta>0?'up':delta<0?'down':'');
-  const rect=canvas.getBoundingClientRect(),dpr=Math.min(window.devicePixelRatio||1,2);
-  const cssW=Math.max(300,Math.round(rect.width||680)),cssH=Math.max(230,Math.round(Math.min(320,cssW*.46)));
-  canvas.width=Math.round(cssW*dpr);canvas.height=Math.round(cssH*dpr);
-  const c=canvas.getContext('2d');c.setTransform(dpr,0,0,dpr,0,0);c.clearRect(0,0,cssW,cssH);
-  const pad={l:42,r:16,t:20,b:34},w=cssW-pad.l-pad.r,h=cssH-pad.t-pad.b;
-  const min=Math.min(...scores),max=Math.max(...scores),spread=Math.max(1,max-min);
-  const low=Math.max(0,min-spread*.18),high=max+spread*.18,range=Math.max(1,high-low);
+
+  const rect=canvas.getBoundingClientRect();
+  const dpr=Math.min(window.devicePixelRatio||1,2);
+  const cssW=Math.max(280,Math.round(rect.width||680));
+  const mobile=cssW<=520;
+  const cssH=mobile?210:270;
+
+  canvas.style.height=cssH+'px';
+  canvas.width=Math.round(cssW*dpr);
+  canvas.height=Math.round(cssH*dpr);
+
+  const c=canvas.getContext('2d');
+  c.setTransform(dpr,0,0,dpr,0,0);
+  c.clearRect(0,0,cssW,cssH);
+
+  const pad=mobile?{l:34,r:12,t:16,b:26}:{l:48,r:18,t:18,b:32};
+  const w=cssW-pad.l-pad.r,h=cssH-pad.t-pad.b;
+  const min=Math.min(...scores),max=Math.max(...scores);
+  const spread=Math.max(1,max-min);
+  const low=Math.max(0,min-spread*.12);
+  const high=max+spread*.12;
+  const range=Math.max(1,high-low);
   const x=i=>pad.l+(scores.length===1?w/2:(i/(scores.length-1))*w);
   const y=v=>pad.t+h-((v-low)/range)*h;
 
-  c.font='11px system-ui';c.textBaseline='middle';c.lineWidth=1;
-  for(let g=0;g<=3;g++){
-    const yy=pad.t+(h/3)*g,val=high-(range/3)*g;
-    c.strokeStyle='rgba(255,255,255,.07)';c.beginPath();c.moveTo(pad.l,yy);c.lineTo(cssW-pad.r,yy);c.stroke();
-    c.fillStyle='#718096';c.textAlign='right';c.fillText(val.toFixed(1)+'s',pad.l-8,yy);
-  }
-  const grad=c.createLinearGradient(0,pad.t,0,pad.t+h);
-  grad.addColorStop(0,'rgba(41,215,238,.20)');grad.addColorStop(1,'rgba(41,215,238,0)');
-  c.beginPath();c.moveTo(x(0),y(scores[0]));
-  scores.forEach((v,i)=>{if(i)c.lineTo(x(i),y(v))});
-  c.lineTo(x(scores.length-1),pad.t+h);c.lineTo(x(0),pad.t+h);c.closePath();c.fillStyle=grad;c.fill();
+  const gridCount=mobile?2:3;
+  c.lineWidth=1;
+  c.textBaseline='middle';
+  c.font=(mobile?'9px':'10px')+' system-ui';
 
-  c.beginPath();scores.forEach((v,i)=>{if(i===0)c.moveTo(x(i),y(v));else c.lineTo(x(i),y(v))});
-  c.strokeStyle='#29d7ee';c.lineWidth=3;c.lineJoin='round';c.lineCap='round';c.stroke();
+  for(let g=0;g<=gridCount;g++){
+    const yy=pad.t+(h/gridCount)*g;
+    const val=high-(range/gridCount)*g;
+    c.strokeStyle='rgba(255,255,255,.055)';
+    c.beginPath();c.moveTo(pad.l,yy);c.lineTo(cssW-pad.r,yy);c.stroke();
+
+    c.fillStyle='#657286';
+    c.textAlign='right';
+    c.fillText((mobile?val.toFixed(0):val.toFixed(1))+'s',pad.l-7,yy);
+  }
+
+  const grad=c.createLinearGradient(0,pad.t,0,pad.t+h);
+  grad.addColorStop(0,'rgba(41,215,238,.16)');
+  grad.addColorStop(1,'rgba(41,215,238,0)');
+
+  c.beginPath();
+  c.moveTo(x(0),y(scores[0]));
+  for(let i=1;i<scores.length;i++)c.lineTo(x(i),y(scores[i]));
+  c.lineTo(x(scores.length-1),pad.t+h);
+  c.lineTo(x(0),pad.t+h);
+  c.closePath();
+  c.fillStyle=grad;
+  c.fill();
+
+  c.beginPath();
+  scores.forEach((v,i)=>{if(i===0)c.moveTo(x(i),y(v));else c.lineTo(x(i),y(v))});
+  c.strokeStyle='#29d7ee';
+  c.lineWidth=mobile?2.25:2.75;
+  c.lineJoin='round';
+  c.lineCap='round';
+  c.stroke();
 
   scores.forEach((v,i)=>{
-    c.beginPath();c.arc(x(i),y(v),4.5,0,Math.PI*2);c.fillStyle=i===scores.length-1?'#ffffff':'#92f3ff';c.fill();
-    c.strokeStyle='#0a1018';c.lineWidth=2;c.stroke();
-    c.fillStyle='#78869a';c.textAlign='center';c.font='10px system-ui';c.fillText(String(i+1),x(i),cssH-12);
+    const isLast=i===scores.length-1;
+    c.beginPath();
+    c.arc(x(i),y(v),isLast?(mobile?4.8:5.2):(mobile?3.2:3.8),0,Math.PI*2);
+    c.fillStyle=isLast?'#ffffff':'#92f3ff';
+    c.fill();
+    c.strokeStyle='#0a1018';
+    c.lineWidth=2;
+    c.stroke();
   });
-}
 
+  const labelIndexes=mobile
+    ? [...new Set([0,Math.floor((scores.length-1)/2),scores.length-1])]
+    : scores.map((_,i)=>i);
+
+  c.fillStyle='#657286';
+  c.textAlign='center';
+  c.textBaseline='alphabetic';
+  c.font=(mobile?'9px':'10px')+' system-ui';
+  labelIndexes.forEach(i=>c.fillText(String(i+1),x(i),cssH-7));
+
+  if(!mobile){
+    c.font='600 10px system-ui';
+    c.fillStyle='#9aa7b8';
+    c.textAlign='center';
+    c.fillText(last.toFixed(2)+'s',x(scores.length-1),Math.max(12,y(last)-12));
+  }
+}
 let trendResizeTimer=0;
 window.addEventListener('resize',()=>{clearTimeout(trendResizeTimer);trendResizeTimer=setTimeout(()=>{if(!$('#profileScreen').classList.contains('hidden'))renderScoreTrend()},120)});
 async function loadLeaderboard(){
