@@ -5,9 +5,6 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover" />
 <meta name="theme-color" content="#070a10" />
 <title>Güvenli Bölge</title>
-<script>
-try{document.documentElement.dataset.theme=localStorage.getItem('safe_zone_theme')==='light'?'light':'dark'}catch(e){document.documentElement.dataset.theme='dark'}
-</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Sora:wght@600;700;800&display=swap" rel="stylesheet">
@@ -1442,244 +1439,6 @@ body::-webkit-scrollbar,
   }
 }
 
-
-/* v25 light/dark theme */
-.theme-setting-row{align-items:center}
-.theme-segmented{
-  flex:0 0 auto;
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:4px;
-  padding:4px;
-  border:1px solid var(--premium-line);
-  border-radius:13px;
-  background:#0a1119;
-}
-.theme-choice{
-  min-width:82px;height:34px;
-  display:flex;align-items:center;justify-content:center;gap:6px;
-  padding:0 10px;
-  border:0;border-radius:9px;
-  background:transparent;color:#7f90a3;
-  font-size:9px;font-weight:900;
-  transition:background .18s ease,color .18s ease,box-shadow .18s ease,transform .14s ease;
-}
-.theme-choice:active{transform:scale(.97)}
-.theme-choice.active{
-  color:#ddfbff;
-  background:rgba(41,215,238,.10);
-  box-shadow:inset 0 0 0 1px rgba(99,231,255,.24);
-}
-.theme-choice-icon{font-size:9px;color:#63e7ff}
-.theme-choice-icon.sun{font-size:13px}
-
-html[data-theme="light"]{
-  --bg:#eef3f7;
-  --panel:#ffffff;
-  --panel2:#f5f8fa;
-  --panel3:#e9f0f4;
-  --text:#0d1823;
-  --muted:#667789;
-  --line:#d9e3ea;
-  --accent:#0aa9c4;
-  --accent2:#087f97;
-  --danger:#d84b64;
-  --success:#208f52;
-  --warning:#a86f00;
-  --shadow:0 18px 55px rgba(52,74,92,.11);
-  --premium-line:rgba(57,94,119,.14);
-  --premium-line-strong:rgba(10,169,196,.34);
-  --premium-panel-top:#ffffff;
-  --premium-panel-bottom:#f7fafc;
-  --premium-glow:rgba(10,169,196,.09);
-}
-
-html[data-theme="light"],
-html[data-theme="light"] body,
-html[data-theme="light"] .app,
-html[data-theme="light"] .screen,
-html[data-theme="light"] #homeScreen,
-html[data-theme="light"] .app-subscreen,
-html[data-theme="light"] .gameScreen,
-html[data-theme="light"] .result,
-html[data-theme="light"] .home-dashboard,
-html[data-theme="light"] .home-masthead,
-html[data-theme="light"] .subscreen-header,
-html[data-theme="light"] .subscreen-scroll{
-  background:#eef3f7!important;
-  background-image:none!important;
-  color:#0d1823;
-}
-
-html[data-theme="light"] .panel{
-  background:linear-gradient(180deg,#ffffff 0%,#f8fbfd 100%)!important;
-  border-color:#dbe5ec!important;
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.95),0 13px 35px rgba(55,77,94,.08)!important;
-}
-html[data-theme="light"] .quick-stat,
-html[data-theme="light"] .profile-stat,
-html[data-theme="light"] .setting-row,
-html[data-theme="light"] .row,
-html[data-theme="light"] .trend-card,
-html[data-theme="light"] .achievement-card,
-html[data-theme="light"] .achievement-mini,
-html[data-theme="light"] .profile-summary,
-html[data-theme="light"] .tutorial-step{
-  background:#f6f9fb!important;
-  border-color:#dce6ed!important;
-}
-html[data-theme="light"] .tabs,
-html[data-theme="light"] .theme-segmented{
-  background:#e7eef3!important;
-  border-color:#d5e0e8!important;
-}
-html[data-theme="light"] .tab.active{
-  background:#ffffff!important;
-  color:#101b25!important;
-  box-shadow:0 3px 12px rgba(52,74,92,.08);
-}
-html[data-theme="light"] .input{
-  background:#ffffff!important;
-  border-color:#d6e1e8!important;
-  color:#101b25!important;
-}
-html[data-theme="light"] .input::placeholder{color:#91a0ad!important}
-html[data-theme="light"] .secondary,
-html[data-theme="light"] .board-more-btn,
-html[data-theme="light"] .subscreen-back,
-html[data-theme="light"] .settings-btn,
-html[data-theme="light"] .pause-icon-btn{
-  background:linear-gradient(180deg,#ffffff,#edf3f6)!important;
-  border-color:#d6e2e9!important;
-  color:#17232e!important;
-}
-html[data-theme="light"] .home-profile-btn{
-  background:rgba(255,255,255,.74)!important;
-  border-color:#d7e2e9!important;
-  color:#17232e!important;
-}
-html[data-theme="light"] .home-brand-mark,
-html[data-theme="light"] .avatar{
-  background:linear-gradient(145deg,#e6f8fb,#d6edf2)!important;
-  border-color:rgba(10,169,196,.25)!important;
-  color:#086d80!important;
-}
-html[data-theme="light"] .home-brand-copy b{
-  color:#15212c!important;
-  -webkit-text-fill-color:#15212c!important;
-}
-html[data-theme="light"] .home-profile-meta span{color:#718190!important}
-html[data-theme="light"] .home-profile-meta b{color:#12313a!important}
-html[data-theme="light"] .home-title.skill-title .hero-skill-word{
-  background:linear-gradient(180deg,#12212d 0%,#485d6b 100%)!important;
-  -webkit-background-clip:text!important;
-  background-clip:text!important;
-  -webkit-text-fill-color:transparent!important;
-}
-html[data-theme="light"] .home-title.skill-title i{color:#0aa9c4!important}
-html[data-theme="light"] .tiny,
-html[data-theme="light"] .label,
-html[data-theme="light"] .eyebrow,
-html[data-theme="light"] .sub,
-html[data-theme="light"] .fine,
-html[data-theme="light"] .stat,
-html[data-theme="light"] .gamestatus,
-html[data-theme="light"] .resultmeta,
-html[data-theme="light"] .leaderboard-summary,
-html[data-theme="light"] .board-subtitle,
-html[data-theme="light"] .setting-row span,
-html[data-theme="light"] .settings-block-head p{
-  color:#667789!important;
-}
-html[data-theme="light"] .theme-choice{color:#687988!important}
-html[data-theme="light"] .theme-choice.active{
-  color:#075f70!important;
-  background:#ffffff!important;
-  box-shadow:inset 0 0 0 1px rgba(10,169,196,.28),0 3px 10px rgba(52,74,92,.07)!important;
-}
-html[data-theme="light"] .language-picker-trigger{
-  background:linear-gradient(180deg,#ffffff,#edf3f6)!important;
-  border-color:#d5e1e8!important;
-  color:#16232e!important;
-}
-html[data-theme="light"] .language-trigger-chevron{color:#718291!important}
-html[data-theme="light"] .modalback{
-  background:rgba(35,50,62,.35)!important;
-}
-html[data-theme="light"] .modal,
-html[data-theme="light"] .language-modal-card{
-  background:
-    radial-gradient(circle at 85% -15%,rgba(10,169,196,.08),transparent 34%),
-    linear-gradient(180deg,#ffffff 0%,#f5f9fb 100%)!important;
-  border-color:#d8e4eb!important;
-  color:#101b25!important;
-}
-html[data-theme="light"] .language-option{
-  background:#f7fafc!important;
-  border-color:#dbe5ec!important;
-  color:#15212c!important;
-}
-html[data-theme="light"] .language-option-code{
-  background:#edf4f7!important;
-  border-color:#d7e2e9!important;
-  color:#617484!important;
-}
-html[data-theme="light"] .language-option.selected{
-  background:linear-gradient(90deg,rgba(10,169,196,.10),rgba(10,169,196,.035))!important;
-  border-color:rgba(10,169,196,.35)!important;
-}
-html[data-theme="light"] .language-modal-close{
-  background:#f2f6f8!important;
-  border-color:#d7e2e9!important;
-  color:#506270!important;
-}
-html[data-theme="light"] .connection-pill{
-  background:#ffffff!important;
-  color:#415461!important;
-  border-color:#d9e3ea!important;
-}
-html[data-theme="light"] .loading{
-  background:#eef3f7!important;
-}
-html[data-theme="light"] .loader{
-  border-color:#d6e1e8!important;
-  border-top-color:#0aa9c4!important;
-}
-/* The playfield remains a dark arena for contrast and fairness. */
-html[data-theme="light"] .gamewrap{
-  background:#05070b!important;
-  border-color:#cfdce4!important;
-}
-html[data-theme="light"] .gamebar .stat b{color:#12202b!important}
-html[data-theme="light"] .record-chase{
-  background:rgba(255,255,255,.82)!important;
-  border-color:#d7e3ea!important;
-  color:#526675!important;
-}
-html[data-theme="light"] .record-chase.approaching,
-html[data-theme="light"] .record-chase.record-hit,
-html[data-theme="light"] .record-chase.record-ahead{
-  color:#08778e!important;
-  border-color:rgba(10,169,196,.30)!important;
-  background:rgba(10,169,196,.07)!important;
-}
-html[data-theme="light"] body:not(.mobile-entered) .mobile-gate{
-  background:#eef3f7!important;
-  background-image:none!important;
-}
-html[data-theme="light"] .mobile-gate h1{
-  background:linear-gradient(180deg,#172631,#516571)!important;
-  -webkit-background-clip:text!important;
-  background-clip:text!important;
-  -webkit-text-fill-color:transparent!important;
-}
-
-@media(max-width:600px){
-  .theme-setting-row{align-items:flex-start;flex-direction:column}
-  .theme-segmented{width:100%;margin-top:2px}
-  .theme-choice{min-width:0}
-}
-
 </style>
 </head>
 <body>
@@ -1873,18 +1632,6 @@ html[data-theme="light"] .mobile-gate h1{
       </div>
 
       <div class="settings-separator"></div>
-      <div class="settings-static-block">
-        <div class="settings-block-head"><div><h2 id="themeSectionTitle" class="sectiontitle">Görünüm</h2><p id="themeSectionDesc">Uygulamanın görünümünü seç.</p></div></div>
-        <div class="setting-row compact-setting-row theme-setting-row">
-          <div><b id="themeSettingTitle">Tema</b><span id="themeSettingDesc">Aydınlık ve karanlık görünüm arasında geçiş yap.</span></div>
-          <div class="theme-segmented" role="group" aria-label="Tema">
-            <button id="themeDarkBtn" class="theme-choice" type="button" data-theme-choice="dark"><span class="theme-choice-icon" aria-hidden="true">●</span><span id="themeDarkLabel">Karanlık</span></button>
-            <button id="themeLightBtn" class="theme-choice" type="button" data-theme-choice="light"><span class="theme-choice-icon sun" aria-hidden="true">◌</span><span id="themeLightLabel">Aydınlık</span></button>
-          </div>
-        </div>
-      </div>
-
-      <div class="settings-separator"></div>
 
       <div class="settings-accordion" id="passwordAccordion">
         <button id="passwordAccordionBtn" class="settings-accordion-trigger" type="button" aria-expanded="false" aria-controls="passwordAccordionBody">
@@ -2029,40 +1776,6 @@ function collectStaticI18n(){
   document.querySelectorAll('[aria-label]').forEach(el=>{const key=ARIA_TR_KEYS[el.getAttribute('aria-label')];if(key)i18nAttrBindings.push({el,attr:'aria-label',key})});
 }
 const LANGUAGE_NAMES={tr:'Türkçe',en:'English',de:'Deutsch',fr:'Français',es:'Español'};
-let currentTheme=document.documentElement.dataset.theme==='light'?'light':'dark';
-function syncNativeTheme(){
-  try{if(window.SafeZoneNative&&typeof window.SafeZoneNative.setTheme==='function')window.SafeZoneNative.setTheme(currentTheme)}catch{}
-}
-function updateThemeUI(){
-  const title=$('#themeSectionTitle'),desc=$('#themeSectionDesc'),setting=$('#themeSettingTitle'),settingDesc=$('#themeSettingDesc');
-  const darkLabel=$('#themeDarkLabel'),lightLabel=$('#themeLightLabel');
-  if(title)title.textContent=t('themeSectionTitle');
-  if(desc)desc.textContent=t('themeSectionDesc');
-  if(setting)setting.textContent=t('themeSettingTitle');
-  if(settingDesc)settingDesc.textContent=t('themeSettingDesc');
-  if(darkLabel)darkLabel.textContent=t('themeDark');
-  if(lightLabel)lightLabel.textContent=t('themeLight');
-  document.querySelectorAll('[data-theme-choice]').forEach(btn=>{
-    const active=btn.dataset.themeChoice===currentTheme;
-    btn.classList.toggle('active',active);
-    btn.setAttribute('aria-pressed',String(active));
-  });
-}
-function applyTheme(theme,save=true){
-  currentTheme=theme==='light'?'light':'dark';
-  document.documentElement.dataset.theme=currentTheme;
-  if(save)localStorage.setItem('safe_zone_theme',currentTheme);
-  const color=currentTheme==='light'?'#eef3f7':'#070a10';
-  const meta=document.querySelector('meta[name="theme-color"]');
-  if(meta)meta.setAttribute('content',color);
-  updateThemeUI();
-  syncNativeTheme();
-}
-function initThemeUI(){
-  $('#themeDarkBtn')?.addEventListener('click',()=>applyTheme('dark'));
-  $('#themeLightBtn')?.addEventListener('click',()=>applyTheme('light'));
-  applyTheme(currentTheme,false);
-}
 function updateLanguageTriggers(){
   const name=LANGUAGE_NAMES[currentLang]||LANGUAGE_NAMES.en;
   const a=$('#authLanguageLabel'),b=$('#settingsLanguageLabel');
@@ -2071,7 +1784,6 @@ function updateLanguageTriggers(){
   if(heroWords[0])heroWords[0].textContent=t('heroSkill1');
   if(heroWords[1])heroWords[1].textContent=t('heroSkill2');
   if(heroWords[2])heroWords[2].textContent=t('heroSkill3');
-  updateThemeUI();
 }
 function renderLanguagePicker(){
   updateLanguageTriggers();
@@ -2140,11 +1852,11 @@ PLACEHOLDER_TR_KEYS['3-16 karakter, harf / rakam / _']='regUserPlaceholder';
 PLACEHOLDER_TR_KEYS['En az 8 karakter']='min8Placeholder';
 PLACEHOLDER_TR_KEYS['Şifreni tekrar yaz']='repeatPasswordPlaceholder';
 
-Object.assign(I18N.tr,{languagePickerKicker:'ARAYÜZ',languagePickerTitle:'Dil Seç',languagePickerDesc:'Uygulamada kullanmak istediğin dili seç.',heroSkill1:'ODAK',heroSkill2:'REFLEKS',heroSkill3:'ZAMANLAMA',themeSectionTitle:'Görünüm',themeSectionDesc:'Uygulamanın görünümünü seç.',themeSettingTitle:'Tema',themeSettingDesc:'Aydınlık ve karanlık görünüm arasında geçiş yap.',themeDark:'Karanlık',themeLight:'Aydınlık'});
-Object.assign(I18N.en,{languagePickerKicker:'INTERFACE',languagePickerTitle:'Choose Language',languagePickerDesc:'Choose the language you want to use in the app.',heroSkill1:'FOCUS',heroSkill2:'REFLEX',heroSkill3:'TIMING',themeSectionTitle:'Appearance',themeSectionDesc:'Choose the app appearance.',themeSettingTitle:'Theme',themeSettingDesc:'Switch between light and dark appearance.',themeDark:'Dark',themeLight:'Light'});
-Object.assign(I18N.de,{languagePickerKicker:'OBERFLÄCHE',languagePickerTitle:'Sprache wählen',languagePickerDesc:'Wähle die Sprache, die du in der App verwenden möchtest.',heroSkill1:'FOKUS',heroSkill2:'REFLEX',heroSkill3:'TIMING',themeSectionTitle:'Darstellung',themeSectionDesc:'Wähle das Erscheinungsbild der App.',themeSettingTitle:'Design',themeSettingDesc:'Wechsle zwischen hellem und dunklem Design.',themeDark:'Dunkel',themeLight:'Hell'});
-Object.assign(I18N.fr,{languagePickerKicker:'INTERFACE',languagePickerTitle:'Choisir la langue',languagePickerDesc:'Choisis la langue que tu veux utiliser dans l’application.',heroSkill1:'FOCUS',heroSkill2:'RÉFLEXES',heroSkill3:'TIMING',themeSectionTitle:'Apparence',themeSectionDesc:'Choisis l’apparence de l’application.',themeSettingTitle:'Thème',themeSettingDesc:'Passe du thème clair au thème sombre.',themeDark:'Sombre',themeLight:'Clair'});
-Object.assign(I18N.es,{languagePickerKicker:'INTERFAZ',languagePickerTitle:'Elegir idioma',languagePickerDesc:'Elige el idioma que quieres usar en la aplicación.',heroSkill1:'ENFOQUE',heroSkill2:'REFLEJOS',heroSkill3:'TIEMPO',themeSectionTitle:'Apariencia',themeSectionDesc:'Elige la apariencia de la aplicación.',themeSettingTitle:'Tema',themeSettingDesc:'Cambia entre el modo claro y oscuro.',themeDark:'Oscuro',themeLight:'Claro'});
+Object.assign(I18N.tr,{languagePickerKicker:'ARAYÜZ',languagePickerTitle:'Dil Seç',languagePickerDesc:'Uygulamada kullanmak istediğin dili seç.',heroSkill1:'ODAK',heroSkill2:'REFLEKS',heroSkill3:'ZAMANLAMA'});
+Object.assign(I18N.en,{languagePickerKicker:'INTERFACE',languagePickerTitle:'Choose Language',languagePickerDesc:'Choose the language you want to use in the app.',heroSkill1:'FOCUS',heroSkill2:'REFLEX',heroSkill3:'TIMING'});
+Object.assign(I18N.de,{languagePickerKicker:'OBERFLÄCHE',languagePickerTitle:'Sprache wählen',languagePickerDesc:'Wähle die Sprache, die du in der App verwenden möchtest.',heroSkill1:'FOKUS',heroSkill2:'REFLEX',heroSkill3:'TIMING'});
+Object.assign(I18N.fr,{languagePickerKicker:'INTERFACE',languagePickerTitle:'Choisir la langue',languagePickerDesc:'Choisis la langue que tu veux utiliser dans l’application.',heroSkill1:'FOCUS',heroSkill2:'RÉFLEXES',heroSkill3:'TIMING'});
+Object.assign(I18N.es,{languagePickerKicker:'INTERFAZ',languagePickerTitle:'Elegir idioma',languagePickerDesc:'Elige el idioma que quieres usar en la aplicación.',heroSkill1:'ENFOQUE',heroSkill2:'REFLEJOS',heroSkill3:'TIEMPO'});
 
 const UA=navigator.userAgent||'';
 const IS_ANDROID_WEBVIEW=/\bwv\b/i.test(UA);
@@ -3086,7 +2798,6 @@ window.safeZoneHandleBack=()=>{
 
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('#languageModal').classList.contains('hidden'))closeLanguagePicker()});
 initLanguageUI();
-initThemeUI();
 sb.auth.onAuthStateChange((event,session)=>{if(event==='SIGNED_OUT'){currentUser=null;currentProfile=null}else if(session?.user){guestMode=false;currentUser=session.user}});
 refreshAuthState();
 })();
