@@ -347,6 +347,32 @@ button:disabled{opacity:.55;cursor:not-allowed}
   .app-toast{font-size:10px;padding:9px 12px}
 }
 
+
+/* v10 tam boy mobil oyun sahnesi */
+@media(max-width:600px){
+  .gameScreen{min-height:calc(100dvh - 18px)}
+  .gamewrap{
+    flex:0 0 auto!important;
+    width:100%;
+    height:auto!important;
+    min-height:0;
+    margin:0;
+    align-items:stretch;
+    justify-content:stretch;
+    background:#05070b;
+  }
+  .gamewrap canvas{
+    display:block;
+    width:100%;
+    height:auto;
+    max-height:none!important;
+    aspect-ratio:auto!important;
+  }
+  .gamestatus{
+    margin-top:2px;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -551,7 +577,10 @@ const screens=['authScreen','homeScreen','profileScreen','achievementsScreen','s
 let currentUser=null,currentProfile=null,currentBoard=[],allBoardRows=[],myStats=null,recoveryUsername='',trendRows=[],achievementMetrics={record_breaks:0,max_streak_15s:0},activeRunSession=null,startGamePending=false,achievementSnapshot=new Set();
 let running=false,paused=false,elapsed=0,wave=0,raf=0,last=0,cycle=0,collapseAt=3.2,revealAt=2.15,safeIndex=-1,decoyIndex=-1,flash=0,shake=0,zones=[],lastSafeZone=null,revealCuePlayed=false;
 const MOBILE_GAME=window.matchMedia('(max-width:600px)').matches;
-const W=MOBILE_GAME?620:760,H=MOBILE_GAME?1000:620,PLAYER_R=10,canvas=$('#gameCanvas'),ctx=canvas.getContext('2d');
+const MOBILE_STAGE_RATIO=MOBILE_GAME
+  ? Math.max(1.62,Math.min(2.00,(window.innerHeight-118)/Math.max(320,window.innerWidth-20)))
+  : 620/760;
+const W=MOBILE_GAME?620:760,H=MOBILE_GAME?Math.round(620*MOBILE_STAGE_RATIO):620,PLAYER_R=10,canvas=$('#gameCanvas'),ctx=canvas.getContext('2d');
 canvas.width=W;canvas.height=H;canvas.style.aspectRatio=W+'/'+H;
 let player={x:W/2,y:H/2,tx:W/2,ty:H/2,moving:false,progress:0,sx:W/2,sy:H/2,targetZone:null,attachedZone:null};
 const rand=(a,b)=>a+Math.random()*(b-a),clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
