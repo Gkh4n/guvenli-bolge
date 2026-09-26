@@ -1864,7 +1864,7 @@ const HAS_NATIVE_INSETS=/GuvenliBolgeApp\/2/i.test(UA);
 if(HAS_NATIVE_INSETS)document.body.classList.add('native-webview');
 if(IS_ANDROID_WEBVIEW&&!HAS_NATIVE_INSETS)document.body.classList.add('legacy-webview-insets');
 const screens=['authScreen','homeScreen','leaderboardScreen','profileScreen','achievementsScreen','settingsScreen','gameScreen','resultScreen'];
-let currentUser=null,currentProfile=null,myStats=null,trendRows=[],achievementMetrics={record_breaks:0,max_streak_15s:0},activeRunSession=null,startGamePending=false,achievementSnapshot=new Set(),guestMode=false,leaderboardOffset=0,leaderboardTotal=0,leaderboardLoading=false;
+let currentUser=null,currentProfile=null,myStats=null,trendRows=[],achievementMetrics={record_breaks:0,max_streak_15s:0},activeRunSession=null,startGamePending=false,achievementSnapshot=new Set(),guestMode=false,leaderboardOffset=0,leaderboardTotal=0,leaderboardLoading=false,leaderboardRealtimeChannel=null,leaderboardRealtimeTimer=0;
 let running=false,paused=false,dying=false,elapsed=0,wave=0,raf=0,last=0,cycle=0,collapseAt=3.2,revealAt=2.15,safeIndex=-1,decoyIndex=-1,flash=0,shake=0,zones=[],lastSafeZone=null,revealCuePlayed=false,dangerCuePlayed=false,revealPulse=0,successPulse=0,deathPulse=0,bgPhase=0,particles=[],fxRings=[],lastHudSecond=-1,lastHudWave=0,deathTimer=0,recordCrossedAt=-1;
 const MOBILE_GAME=window.matchMedia('(max-width:600px)').matches;
 const REDUCED_MOTION=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -1879,6 +1879,8 @@ const rand=(a,b)=>a+Math.random()*(b-a),clamp=(v,a,b)=>Math.max(a,Math.min(b,v))
 function show(id){
   screens.forEach(x=>$('#'+x).classList.toggle('hidden',x!==id));
   document.body.classList.toggle('game-active',id==='gameScreen');
+  if(id==='leaderboardScreen')startLeaderboardRealtime();
+  else stopLeaderboardRealtime();
   const el=$('#'+id);
   if(el&&!REDUCED_MOTION){el.classList.remove('screen-enter');void el.offsetWidth;el.classList.add('screen-enter')}
 }
@@ -1899,6 +1901,11 @@ function updateConnectionState(){
 }
 window.addEventListener('online',()=>{updateConnectionState();showToast(t('connectionBack'),'ok')});
 window.addEventListener('offline',updateConnectionState);
+window.addEventListener('pagehide',stopLeaderboardRealtime);
+document.addEventListener('visibilitychange',()=>{
+  if(document.hidden)stopLeaderboardRealtime();
+  else if($('#leaderboardScreen')&&!$('#leaderboardScreen').classList.contains('hidden'))startLeaderboardRealtime();
+});
 updateConnectionState();
 function setMsg(el,text,type=''){el.textContent=text;el.className='msg'+(type?' '+type:'')}
 function setBusy(btn,busy,label,busyLabel=null){if(!btn)return;btn.disabled=busy;if(label)btn.textContent=busy?(busyLabel||t('processing')):label}
@@ -2265,6 +2272,44 @@ async function loadFullLeaderboard(reset=false){
     refresh.disabled=false;more.disabled=false;leaderboardLoading=false;
   }
 }
+
+function scheduleLeaderboardRealtimeRefresh(){
+  clearTimeout(leaderboardRealtimeTimer);
+  leaderboardRealtimeTimer=setTimeout(async()=>{
+    if($('#leaderboardScreen')?.classList.contains('hidden'))return;
+    if(leaderboardLoading){scheduleLeaderboardRealtimeRefresh();return}
+    await loadFullLeaderboard(true);
+  },220);
+}
+function startLeaderboardRealtime(){
+  if(!currentUser||leaderboardRealtimeChannel)return;
+  leaderboardRealtimeChannel=sb
+    .channel('safe-zone-leaderboard-'+currentUser.id)
+    .on('postgres_changes',{
+      event:'INSERT',
+      schema:'public',
+      table:'safe_zone_runs'
+    },scheduleLeaderboardRealtimeRefresh)
+    .subscribe(status=>{
+      if(status==='CHANNEL_ERROR'||status==='TIMED_OUT'||status==='CLOSED'){
+        if($('#leaderboardScreen')&&!$('#leaderboardScreen').classList.contains('hidden')){
+          clearTimeout(leaderboardRealtimeTimer);
+          leaderboardRealtimeTimer=setTimeout(()=>{
+            stopLeaderboardRealtime();
+            startLeaderboardRealtime();
+          },1800);
+        }
+      }
+    });
+}
+function stopLeaderboardRealtime(){
+  clearTimeout(leaderboardRealtimeTimer);
+  leaderboardRealtimeTimer=0;
+  const channel=leaderboardRealtimeChannel;
+  leaderboardRealtimeChannel=null;
+  if(channel)sb.removeChannel(channel).catch(()=>{});
+}
+
 async function enterAuthenticatedHome(){await loadProfile();await loadLeaderboard();show('homeScreen')}
 async function refreshAuthState(){
   try{
