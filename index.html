@@ -778,6 +778,135 @@ button:disabled{opacity:.55;cursor:not-allowed}
   }
 }
 
+
+/* v19 tek yüzey premium mobil tasarım */
+html,
+body{
+  background:#070a10!important;
+  background-image:none!important;
+  min-height:100%;
+}
+body{
+  min-height:100dvh;
+  overflow-x:hidden;
+}
+.app{
+  background:#070a10!important;
+  background-image:none!important;
+  min-height:100dvh;
+}
+.screen,
+#homeScreen,
+.app-subscreen,
+.gameScreen,
+.result{
+  background:#070a10!important;
+  background-image:none!important;
+}
+.home-dashboard,
+.home-masthead,
+.subscreen-header,
+.subscreen-scroll{
+  background-color:#070a10!important;
+  background-image:none!important;
+}
+
+/* Native Android zaten status-bar inset uyguluyor; ikinci web boşluğunu kaldır. */
+.native-webview .app{
+  padding-top:0!important;
+}
+.native-webview .home-masthead{
+  margin-top:0!important;
+}
+.native-webview .subscreen-header{
+  margin-top:0!important;
+}
+
+/* Dış zeminde panel gölgesi/renk halesi oluşmasın. */
+.panel{
+  box-shadow:none!important;
+}
+#homeScreen .panel,
+#leaderboardScreen .panel,
+#profileScreen .panel,
+#settingsScreen .panel,
+#achievementsScreen .panel,
+#resultScreen .panel{
+  background:linear-gradient(180deg,#0f1722 0%,#0b1119 100%)!important;
+}
+
+/* Ekran gövdesi status bar'dan aşağıya tek renk devam etsin. */
+#homeScreen,
+#leaderboardScreen,
+#profileScreen,
+#settingsScreen,
+#achievementsScreen,
+#gameScreen,
+#resultScreen{
+  width:100%;
+}
+.result{
+  min-height:100dvh!important;
+}
+.gameScreen{
+  min-height:100dvh!important;
+}
+.app-subscreen{
+  height:100dvh!important;
+}
+
+/* Sabit header ile içerik arasında yalnızca ritmik boşluk, renk geçişi yok. */
+.subscreen-header{
+  border:0!important;
+  box-shadow:none!important;
+}
+.subscreen-scroll{
+  padding-top:10px;
+}
+.home-masthead{
+  border:0!important;
+  box-shadow:none!important;
+}
+
+/* Mobilde tam ekran yüzey: dıştaki mavi/siyah şeritleri kaldır. */
+@media(max-width:600px){
+  html,body,.app{
+    background:#070a10!important;
+  }
+  .app{
+    min-height:100dvh;
+  }
+  .native-webview .app{
+    padding:0 9px max(10px,env(safe-area-inset-bottom))!important;
+  }
+  .native-webview .home-masthead{
+    margin:0 -9px 11px!important;
+  }
+  .native-webview .subscreen-header{
+    margin:0 -9px!important;
+  }
+  .app-subscreen{
+    height:100dvh!important;
+    min-height:0!important;
+  }
+  .subscreen-scroll{
+    background:#070a10!important;
+    padding:9px 4px max(4px,env(safe-area-inset-bottom));
+  }
+  .result{
+    min-height:100dvh!important;
+  }
+  .gameScreen{
+    min-height:100dvh!important;
+  }
+}
+
+/* Mobil giriş ekranı da aynı yüzeyde olsun. */
+body:not(.mobile-entered) .mobile-gate{
+  background:#070a10!important;
+  background-image:none!important;
+}
+
 </style>
 </head>
 <body>
@@ -1059,6 +1188,7 @@ const $=s=>document.querySelector(s);
 const UA=navigator.userAgent||'';
 const IS_ANDROID_WEBVIEW=/\bwv\b/i.test(UA);
 const HAS_NATIVE_INSETS=/GuvenliBolgeApp\/2/i.test(UA);
+if(HAS_NATIVE_INSETS)document.body.classList.add('native-webview');
 if(IS_ANDROID_WEBVIEW&&!HAS_NATIVE_INSETS)document.body.classList.add('legacy-webview-insets');
 const screens=['authScreen','homeScreen','leaderboardScreen','profileScreen','achievementsScreen','settingsScreen','gameScreen','resultScreen'];
 let currentUser=null,currentProfile=null,myStats=null,trendRows=[],achievementMetrics={record_breaks:0,max_streak_15s:0},activeRunSession=null,startGamePending=false,achievementSnapshot=new Set(),guestMode=false,leaderboardOffset=0,leaderboardTotal=0,leaderboardLoading=false;
