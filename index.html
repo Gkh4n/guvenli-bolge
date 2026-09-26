@@ -526,9 +526,7 @@ button:disabled{opacity:.55;cursor:not-allowed}
   min-height:78px;
   margin:-8px -9px 12px;
   padding:13px 15px 14px;
-  background:
-    radial-gradient(circle at 14% 0%,rgba(41,215,238,.075),transparent 34%),
-    linear-gradient(180deg,#070a10 0%,#09111b 100%);
+  background:#070a10;
   border-bottom:1px solid rgba(112,145,178,.12);
 }
 .home-masthead:after{
@@ -648,6 +646,15 @@ button:disabled{opacity:.55;cursor:not-allowed}
   .home-brand-copy b{font-size:12px;letter-spacing:.08em}
   .home-profile-meta{display:none}
   .home-profile-btn{padding:4px}
+}
+
+
+/* v17 status bar + header renk birliği */
+#homeScreen{background:#070a10}
+#homeScreen .home-dashboard{background:transparent}
+@media(max-width:600px){
+  #homeScreen{background:#070a10}
+  .home-masthead{box-shadow:none}
 }
 
 </style>
