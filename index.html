@@ -907,6 +907,78 @@ body:not(.mobile-entered) .mobile-gate{
   background-image:none!important;
 }
 
+
+/* v20 kişisel rekor takibi + HUD dengesi */
+.gamebar{
+  display:grid!important;
+  grid-template-columns:auto minmax(0,1fr) auto;
+  align-items:center!important;
+  gap:10px;
+}
+.record-chase{
+  justify-self:center;
+  align-self:center;
+  min-width:92px;
+  height:28px;
+  padding:0 10px;
+  border-radius:999px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  white-space:nowrap;
+  pointer-events:none;
+  user-select:none;
+  font-size:9px;
+  line-height:1;
+  font-weight:950;
+  letter-spacing:.075em;
+  color:#a9b8c9;
+  border:1px solid rgba(112,145,178,.18);
+  background:rgba(11,17,25,.78);
+  transition:color .16s ease,border-color .16s ease,background .16s ease,box-shadow .16s ease;
+}
+.record-chase.approaching{
+  color:#c9faff;
+  border-color:rgba(41,215,238,.22);
+  background:rgba(41,215,238,.045);
+}
+.record-chase.record-hit,
+.record-chase.record-ahead{
+  color:#92f3ff;
+  border-color:rgba(41,215,238,.38);
+  background:rgba(41,215,238,.09);
+  box-shadow:0 0 18px rgba(41,215,238,.10);
+}
+.record-hit-pop{animation:recordHitPop .42s cubic-bezier(.18,1.45,.32,1)}
+@keyframes recordHitPop{
+  0%{transform:scale(.82);opacity:.45}
+  60%{transform:scale(1.08)}
+  100%{transform:scale(1);opacity:1}
+}
+@media(max-width:600px){
+  .gamebar{
+    grid-template-columns:auto minmax(80px,1fr) auto;
+    gap:7px;
+  }
+  .record-chase{
+    min-width:80px;
+    height:26px;
+    padding:0 7px;
+    font-size:8px;
+    letter-spacing:.055em;
+  }
+}
+@media(max-width:360px){
+  .record-chase{
+    min-width:72px;
+    padding:0 5px;
+    font-size:7.5px;
+  }
+}
+@media(prefers-reduced-motion:reduce){
+  .record-hit-pop{animation:none!important}
+}
+
 </style>
 </head>
 <body>
@@ -1138,6 +1210,7 @@ body:not(.mobile-entered) .mobile-gate{
         <span class="stat">SÜRE<b id="timeLabel">0.00s</b></span>
         <span class="stat">ÇÖKÜŞ<b id="waveLabel">0</b></span>
       </div>
+      <div id="recordChase" class="record-chase hidden" aria-live="polite"></div>
       <div class="gameactions"><button id="pauseBtn" class="pause-icon-btn" type="button" aria-label="Duraklat"><span class="pause-glyph" aria-hidden="true"></span></button></div>
     </div>
     <div class="gamewrap">
@@ -1192,7 +1265,7 @@ if(HAS_NATIVE_INSETS)document.body.classList.add('native-webview');
 if(IS_ANDROID_WEBVIEW&&!HAS_NATIVE_INSETS)document.body.classList.add('legacy-webview-insets');
 const screens=['authScreen','homeScreen','leaderboardScreen','profileScreen','achievementsScreen','settingsScreen','gameScreen','resultScreen'];
 let currentUser=null,currentProfile=null,myStats=null,trendRows=[],achievementMetrics={record_breaks:0,max_streak_15s:0},activeRunSession=null,startGamePending=false,achievementSnapshot=new Set(),guestMode=false,leaderboardOffset=0,leaderboardTotal=0,leaderboardLoading=false;
-let running=false,paused=false,dying=false,elapsed=0,wave=0,raf=0,last=0,cycle=0,collapseAt=3.2,revealAt=2.15,safeIndex=-1,decoyIndex=-1,flash=0,shake=0,zones=[],lastSafeZone=null,revealCuePlayed=false,dangerCuePlayed=false,revealPulse=0,successPulse=0,deathPulse=0,bgPhase=0,particles=[],fxRings=[],lastHudSecond=-1,lastHudWave=0,deathTimer=0;
+let running=false,paused=false,dying=false,elapsed=0,wave=0,raf=0,last=0,cycle=0,collapseAt=3.2,revealAt=2.15,safeIndex=-1,decoyIndex=-1,flash=0,shake=0,zones=[],lastSafeZone=null,revealCuePlayed=false,dangerCuePlayed=false,revealPulse=0,successPulse=0,deathPulse=0,bgPhase=0,particles=[],fxRings=[],lastHudSecond=-1,lastHudWave=0,deathTimer=0,recordCrossedAt=-1;
 const MOBILE_GAME=window.matchMedia('(max-width:600px)').matches;
 const REDUCED_MOTION=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 const MOBILE_STAGE_RATIO=MOBILE_GAME
@@ -1657,7 +1730,7 @@ $('#loginTab').onclick=()=>switchAuth('login');$('#registerTab').onclick=()=>swi
 
 function zoneCount(){if(MOBILE_GAME)return wave<5?5:wave<12?6:wave<22?7:8;return wave<5?4:wave<12?5:wave<24?6:7}
 function cycleDuration(){return Math.max(1.55,3.2-wave*.085)}
-function revealLead(){return Math.max(.48,1.08-wave*.033)}
+function revealLead(){return Math.max(.50,1.08-wave*.033)}
 function zoneSpeed(){return (MOBILE_GAME?40:34)+wave*3.5}
 function safeMultiplier(){return wave<13?1:wave<20?1.5:wave<30?1.9:2.15}
 function createZones(){
@@ -1709,7 +1782,8 @@ function prepareCycle(){
 }
 function pulseHud(el,className='hud-pop'){if(!el||REDUCED_MOTION)return;el.classList.remove(className);void el.offsetWidth;el.classList.add(className)}
 function resetGame(){
-  clearTimeout(deathTimer);dying=false;elapsed=0;wave=0;cycle=0;flash=0;shake=0;revealPulse=0;successPulse=0;deathPulse=0;particles=[];fxRings=[];lastHudSecond=-1;lastHudWave=0;
+  clearTimeout(deathTimer);dying=false;elapsed=0;wave=0;cycle=0;flash=0;shake=0;revealPulse=0;successPulse=0;deathPulse=0;particles=[];fxRings=[];lastHudSecond=-1;lastHudWave=0;recordCrossedAt=-1;
+  const chase=$('#recordChase');if(chase){chase.textContent='';chase.className='record-chase hidden'}
   player.moving=false;player.targetZone=null;player.attachedZone=null;createZones();prepareCycle();updateHud()
 }
 function updateHud(){
@@ -1718,9 +1792,47 @@ function updateHud(){
   $('#waveLabel').textContent=wave;
   if(second!==lastHudSecond){if(lastHudSecond>=0)pulseHud($('#timeLabel'),'hud-tick');lastHudSecond=second}
   if(wave!==lastHudWave){pulseHud($('#waveLabel'),'hud-pop');lastHudWave=wave}
-  const best=Number(myStats?.best_survival_ms||0)/1000;
+  const best=guestMode?0:Number(myStats?.best_survival_ms||0)/1000;
   const liveRecord=best>0&&elapsed>best;
   $('.gamebar')?.classList.toggle('record-live',liveRecord);
+
+  const chase=$('#recordChase');
+  if(!chase)return;
+  if(best<=0){
+    chase.className='record-chase hidden';
+    chase.textContent='';
+    return;
+  }
+
+  const remaining=best-elapsed;
+  if(remaining>5){
+    chase.className='record-chase hidden';
+    chase.textContent='';
+    return;
+  }
+
+  chase.classList.remove('hidden');
+  if(remaining>0){
+    chase.className='record-chase approaching';
+    chase.textContent='REKORA '+remaining.toFixed(2)+'s';
+    return;
+  }
+
+  if(recordCrossedAt<0){
+    recordCrossedAt=elapsed;
+    chase.className='record-chase record-hit';
+    chase.textContent='YENİ REKOR';
+    pulseHud(chase,'record-hit-pop');
+    return;
+  }
+
+  if(elapsed-recordCrossedAt<1.25){
+    chase.className='record-chase record-hit';
+    chase.textContent='YENİ REKOR';
+  }else{
+    chase.className='record-chase record-ahead';
+    chase.textContent='REKOR +'+(elapsed-best).toFixed(2)+'s';
+  }
 }
 async function callRunService(body){
   const {data:{session}}=await sb.auth.getSession();
