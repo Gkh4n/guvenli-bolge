@@ -666,6 +666,118 @@ button:disabled{opacity:.55;cursor:not-allowed}
 }
 .home-masthead:after{display:none!important}
 
+
+/* v18 sabit alt-ekran header + gizli içerik scroll */
+.app-subscreen{
+  height:calc(100dvh - 40px);
+  min-height:0!important;
+  overflow:hidden;
+  display:flex;
+  flex-direction:column;
+  background:#070a10;
+}
+.subscreen-header{
+  flex:0 0 auto;
+  position:relative;
+  z-index:8;
+  min-height:62px;
+  margin:-16px -14px 0;
+  padding:10px 14px 10px;
+  display:grid;
+  grid-template-columns:84px minmax(0,1fr) 84px;
+  align-items:center;
+  gap:8px;
+  background:#070a10;
+  border:0;
+  box-shadow:none;
+}
+.subscreen-title{
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  text-align:center;
+  color:#f5f7fb;
+  font-size:15px;
+  font-weight:900;
+  letter-spacing:.005em;
+}
+.subscreen-back,.subscreen-action{
+  height:40px;
+  border:1px solid rgba(112,145,178,.18);
+  border-radius:12px;
+  background:#0b1119;
+  color:var(--text);
+  font-weight:800;
+  font-size:11px;
+}
+.subscreen-back{justify-self:start;padding:0 12px}
+.subscreen-action{
+  justify-self:end;
+  padding:0 10px;
+  border-color:transparent;
+  background:transparent;
+  color:var(--muted);
+}
+.subscreen-spacer{display:block;width:84px;height:1px}
+.subscreen-scroll{
+  flex:1 1 auto;
+  min-height:0;
+  overflow-y:auto;
+  overflow-x:hidden;
+  overscroll-behavior:contain;
+  -webkit-overflow-scrolling:touch;
+  scrollbar-width:none;
+  padding:10px 0 max(4px,env(safe-area-inset-bottom));
+}
+.subscreen-scroll::-webkit-scrollbar{display:none;width:0;height:0}
+.app-subscreen .panel{width:100%}
+.leaderboard-context{margin-bottom:12px}
+.leaderboard-scroll{
+  max-height:none!important;
+  overflow:visible!important;
+  padding-right:0!important;
+  scrollbar-width:none!important;
+}
+.leaderboard-scroll::-webkit-scrollbar{display:none!important}
+.leaderboard-page-head{display:none!important}
+.leaderboard-page-title{display:none!important}
+
+/* bu ekranlarda web sayfası değil native panel hissi */
+#leaderboardScreen .leaderboard-page,
+#profileScreen .profile-page,
+#settingsScreen .settings-panel,
+#achievementsScreen .achievements-page{
+  margin:0;
+  box-shadow:none;
+}
+
+@media(max-width:820px){
+  .app-subscreen{height:calc(100dvh - 28px)}
+}
+@media(max-width:600px){
+  .app-subscreen{
+    height:calc(100dvh - 18px);
+    background:#070a10;
+  }
+  .subscreen-header{
+    min-height:60px;
+    margin:-8px -9px 0;
+    padding:9px 12px;
+    grid-template-columns:76px minmax(0,1fr) 76px;
+  }
+  .subscreen-title{font-size:14px}
+  .subscreen-back{height:40px;padding:0 10px}
+  .subscreen-action{height:40px;padding:0 4px}
+  .subscreen-spacer{width:76px}
+  .subscreen-scroll{padding:9px 4px max(4px,env(safe-area-inset-bottom))}
+  #leaderboardScreen .leaderboard-page,
+  #profileScreen .profile-page,
+  #settingsScreen .settings-panel,
+  #achievementsScreen .achievements-page{
+    border-radius:18px;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -758,25 +870,32 @@ button:disabled{opacity:.55;cursor:not-allowed}
     </div>
   </section>
 
-  <section id="leaderboardScreen" class="screen hidden">
-    <div class="top"><button id="leaderboardBack" class="iconbtn" type="button">← Geri</button><div class="tiny">GLOBAL SIRALAMA</div></div>
-    <div class="panel leaderboard-page">
-      <div class="leaderboard-page-head">
-        <div>
+  <section id="leaderboardScreen" class="screen app-subscreen hidden">
+    <header class="subscreen-header">
+      <button id="leaderboardBack" class="subscreen-back" type="button">← Geri</button>
+      <div class="subscreen-title">Global Sıralama</div>
+      <button id="leaderboardRefresh" class="subscreen-action" type="button">Yenile</button>
+    </header>
+    <div class="subscreen-scroll">
+      <div class="panel leaderboard-page">
+        <div class="leaderboard-context">
           <div class="leaderboard-kicker">EN İYİ SKORLAR</div>
-          <div class="leaderboard-page-title">Global Sıralama</div>
           <div id="leaderboardSummary" class="leaderboard-summary">Sıralama yükleniyor…</div>
         </div>
-        <button id="leaderboardRefresh" class="refresh leaderboard-refresh" type="button">Yenile</button>
+        <div id="leaderboardBoard" class="board leaderboard-scroll"><div class="tiny">Skorlar yükleniyor…</div></div>
+        <button id="leaderboardLoadMore" class="secondary leaderboard-load-more hidden" type="button">DAHA FAZLA GÖSTER</button>
       </div>
-      <div id="leaderboardBoard" class="board leaderboard-scroll"><div class="tiny">Skorlar yükleniyor…</div></div>
-      <button id="leaderboardLoadMore" class="secondary leaderboard-load-more hidden" type="button">DAHA FAZLA GÖSTER</button>
     </div>
   </section>
 
-  <section id="profileScreen" class="screen hidden">
-    <div class="top"><button id="profileBack" class="iconbtn" type="button">← Geri</button><div class="tiny">PROFİL</div></div>
-    <div class="panel profile-page">
+  <section id="profileScreen" class="screen app-subscreen hidden">
+    <header class="subscreen-header">
+      <button id="profileBack" class="subscreen-back" type="button">← Geri</button>
+      <div class="subscreen-title">Profil</div>
+      <span class="subscreen-spacer" aria-hidden="true"></span>
+    </header>
+    <div class="subscreen-scroll">
+      <div class="panel profile-page">
       <div class="profile-page-head">
         <div id="profileAvatar" class="avatar profile-avatar">G</div>
         <div><div id="profileUsernameDisplay" class="profile-name">-</div></div>
@@ -798,12 +917,18 @@ button:disabled{opacity:.55;cursor:not-allowed}
         <div id="trendEmpty" class="trend-empty hidden">Grafik için en az 2 oyun gerekiyor.</div>
         <canvas id="scoreTrendCanvas" width="680" height="280" aria-label="Son 10 oyun skor grafiği"></canvas>
       </div>
+      </div>
     </div>
   </section>
 
-  <section id="achievementsScreen" class="screen hidden">
-    <div class="top"><button id="achievementsBack" class="iconbtn" type="button">← Geri</button><div class="tiny">BAŞARIMLAR</div></div>
-    <div class="panel achievements-page">
+  <section id="achievementsScreen" class="screen app-subscreen hidden">
+    <header class="subscreen-header">
+      <button id="achievementsBack" class="subscreen-back" type="button">← Geri</button>
+      <div class="subscreen-title">Başarımlar</div>
+      <span class="subscreen-spacer" aria-hidden="true"></span>
+    </header>
+    <div class="subscreen-scroll">
+      <div class="panel achievements-page">
       <div class="achievements-page-head">
         <div>
           <div class="achievement-page-kicker">İLERLEME</div>
@@ -813,12 +938,18 @@ button:disabled{opacity:.55;cursor:not-allowed}
       </div>
       <div class="achievement-page-progress"><div id="achievementPageProgressBar" class="achievement-page-progress-bar"></div></div>
       <div id="achievementGrid" class="achievement-grid"></div>
+      </div>
     </div>
   </section>
 
-  <section id="settingsScreen" class="screen hidden">
-    <div class="top"><button id="settingsBack" class="iconbtn" type="button">← Geri</button><div class="tiny">AYARLAR</div></div>
-    <div class="panel accountpanel settings-panel">
+  <section id="settingsScreen" class="screen app-subscreen hidden">
+    <header class="subscreen-header">
+      <button id="settingsBack" class="subscreen-back" type="button">← Geri</button>
+      <div class="subscreen-title">Ayarlar</div>
+      <span class="subscreen-spacer" aria-hidden="true"></span>
+    </header>
+    <div class="subscreen-scroll">
+      <div class="panel accountpanel settings-panel">
       <div class="settings-static-block">
         <div class="settings-block-head"><div><h2 class="sectiontitle">Hesap</h2><p>Kullanıcı adını görüntüle veya güncelle.</p></div></div>
         <form id="usernameForm" class="form"><div class="field"><label class="label">Kullanıcı adı</label><input id="accountUsername" class="input" maxlength="16" autocomplete="username" /></div><button class="secondary" type="submit">KULLANICI ADINI GÜNCELLE</button><div id="usernameMsg" class="msg"></div></form>
@@ -867,6 +998,7 @@ button:disabled{opacity:.55;cursor:not-allowed}
           <div class="danger-inline-note">Bu işlem geri alınamaz. Tüm skorların ve hesap bilgilerin kalıcı olarak silinir.</div>
           <button id="openDeleteBtn" class="danger full-btn" type="button">HESABI SİL</button>
         </div>
+      </div>
       </div>
     </div>
   </section>
@@ -946,6 +1078,10 @@ function show(id){
   document.body.classList.toggle('game-active',id==='gameScreen');
   const el=$('#'+id);
   if(el&&!REDUCED_MOTION){el.classList.remove('screen-enter');void el.offsetWidth;el.classList.add('screen-enter')}
+}
+function resetSubscreenScroll(id){
+  const sc=$('#'+id+' .subscreen-scroll');
+  if(sc)sc.scrollTop=0
 }
 let toastTimer=0;
 function showToast(text,type=''){
@@ -1387,7 +1523,7 @@ $('#recoveryCodeForm').addEventListener('submit',async e=>{e.preventDefault();co
 $('#deleteForm').addEventListener('submit',async e=>{e.preventDefault();if($('#deleteConfirm').value.trim().toUpperCase()!=='SIL'){setMsg($('#deleteMsg'),'Onay alanına SIL yazmalısın.','error');return}const password=$('#deletePassword').value;setMsg($('#deleteMsg'),'Hesap siliniyor…');try{const {data,error}=await sb.functions.invoke('safe-zone-delete-account',{body:{password}});if(error)throw error;if(!data?.ok)throw new Error(data?.message||'Hesap silinemedi.');currentUser=null;currentProfile=null;$('#deleteModal').classList.add('hidden');await sb.auth.signOut({scope:'local'}).catch(()=>{});switchAuth('login');show('authScreen');setMsg($('#loginMsg'),'Hesabın ve skorların kalıcı olarak silindi.','ok')}catch(err){setMsg($('#deleteMsg'),err.message||'Hesap silinemedi.','error')}});
 
 function resetForgotModal(){$('#forgotUsername').value='';$('#forgotRecoveryCode').value='';$('#forgotNewPassword').value='';$('#forgotNewPassword2').value='';setMsg($('#forgotMsg'),'')}
-$('#loginTab').onclick=()=>switchAuth('login');$('#registerTab').onclick=()=>switchAuth('register');$('#forgotBtn').onclick=()=>{resetForgotModal();$('#forgotModal').classList.remove('hidden')};$('#closeForgot').onclick=()=>{resetForgotModal();$('#forgotModal').classList.add('hidden')};$('#copyRecoveryCode').onclick=async()=>{const code=$('#recoveryCodeValue').textContent;try{await navigator.clipboard.writeText(code);showToast('Kurtarma kodu kopyalandı.','ok')}catch{showToast('Kodu seçip kopyalayabilirsin.','error')}};$('#closeRecoveryCode').onclick=()=>$('#recoveryCodeModal').classList.add('hidden');$('#openDeleteBtn').onclick=()=>{setMsg($('#deleteMsg'),'');$('#deletePassword').value='';$('#deleteConfirm').value='';$('#deleteModal').classList.remove('hidden')};$('#closeDelete').onclick=()=>$('#deleteModal').classList.add('hidden');$('#profileBtn').onclick=()=>{show('profileScreen');Promise.all([loadMyStats(),loadScoreTrend()]).catch(()=>{})};$('#profileBack').onclick=()=>show('homeScreen');$('#achievementsBtn').onclick=()=>{show('achievementsScreen');renderAchievements()};$('#achievementsBack').onclick=()=>show('homeScreen');$('#settingsBtn').onclick=()=>{closeAllSettingsAccordions();show('settingsScreen')};$('#settingsBack').onclick=()=>{closeAllSettingsAccordions();show('homeScreen')};$('#logoutBtn').onclick=async()=>{await sb.auth.signOut();currentUser=null;currentProfile=null;myStats=null;switchAuth('login');show('authScreen')};$('#homeRefreshBoard').onclick=loadLeaderboard;$('#leaderboardBtn').onclick=()=>{show('leaderboardScreen');loadFullLeaderboard(true)};$('#leaderboardBack').onclick=()=>show('homeScreen');$('#leaderboardRefresh').onclick=()=>loadFullLeaderboard(true);$('#leaderboardLoadMore').onclick=()=>loadFullLeaderboard(false);
+$('#loginTab').onclick=()=>switchAuth('login');$('#registerTab').onclick=()=>switchAuth('register');$('#forgotBtn').onclick=()=>{resetForgotModal();$('#forgotModal').classList.remove('hidden')};$('#closeForgot').onclick=()=>{resetForgotModal();$('#forgotModal').classList.add('hidden')};$('#copyRecoveryCode').onclick=async()=>{const code=$('#recoveryCodeValue').textContent;try{await navigator.clipboard.writeText(code);showToast('Kurtarma kodu kopyalandı.','ok')}catch{showToast('Kodu seçip kopyalayabilirsin.','error')}};$('#closeRecoveryCode').onclick=()=>$('#recoveryCodeModal').classList.add('hidden');$('#openDeleteBtn').onclick=()=>{setMsg($('#deleteMsg'),'');$('#deletePassword').value='';$('#deleteConfirm').value='';$('#deleteModal').classList.remove('hidden')};$('#closeDelete').onclick=()=>$('#deleteModal').classList.add('hidden');$('#profileBtn').onclick=()=>{show('profileScreen');resetSubscreenScroll('profileScreen');Promise.all([loadMyStats(),loadScoreTrend()]).catch(()=>{})};$('#profileBack').onclick=()=>show('homeScreen');$('#achievementsBtn').onclick=()=>{show('achievementsScreen');resetSubscreenScroll('achievementsScreen');renderAchievements()};$('#achievementsBack').onclick=()=>show('homeScreen');$('#settingsBtn').onclick=()=>{closeAllSettingsAccordions();show('settingsScreen');resetSubscreenScroll('settingsScreen')};$('#settingsBack').onclick=()=>{closeAllSettingsAccordions();show('homeScreen')};$('#logoutBtn').onclick=async()=>{await sb.auth.signOut();currentUser=null;currentProfile=null;myStats=null;switchAuth('login');show('authScreen')};$('#homeRefreshBoard').onclick=loadLeaderboard;$('#leaderboardBtn').onclick=()=>{show('leaderboardScreen');resetSubscreenScroll('leaderboardScreen');loadFullLeaderboard(true)};$('#leaderboardBack').onclick=()=>show('homeScreen');$('#leaderboardRefresh').onclick=()=>loadFullLeaderboard(true);$('#leaderboardLoadMore').onclick=()=>loadFullLeaderboard(false);
 
 function zoneCount(){if(MOBILE_GAME)return wave<5?5:wave<12?6:wave<22?7:8;return wave<5?4:wave<12?5:wave<24?6:7}
 function cycleDuration(){return Math.max(1.55,3.2-wave*.085)}
