@@ -271,6 +271,64 @@ button,input{font:inherit}button{cursor:pointer}.hidden{display:none!important}
   .recent-empty{height:105px}
 }
 
+
+/* v8 kompakt başarımlar */
+.home-insights{align-items:stretch}
+.achievements-side{min-width:0;display:flex;flex-direction:column;justify-content:space-between}
+.achievements-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px}
+.achievements-head b{display:block;font-size:12px;letter-spacing:.08em}
+.achievements-head span{display:block;font-size:9px;color:var(--muted);margin-top:3px}
+.achievements-count{display:flex;align-items:center;gap:6px;height:34px;padding:0 10px;border:1px solid var(--line);border-radius:999px;background:#0d141e;color:var(--accent2);font-weight:900;font-size:11px}
+.achievement-mini-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px}
+.achievement-mini{display:flex;align-items:center;gap:7px;min-width:0;padding:8px;border:1px solid var(--line);border-radius:12px;background:#0b1119}
+.achievement-mini.locked{opacity:.5}
+.achievement-mini.unlocked{border-color:rgba(41,215,238,.27);background:rgba(41,215,238,.045)}
+.achievement-mini-icon{width:31px;height:31px;flex:0 0 31px;border-radius:10px;display:grid;place-items:center;border:1px solid rgba(146,243,255,.18);background:#101923;color:var(--accent2);font-size:10px;font-weight:950}
+.achievement-mini-text{min-width:0}
+.achievement-mini-text b{display:block;font-size:9px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.achievement-mini-text span{display:block;font-size:8px;color:var(--muted);margin-top:2px}
+.achievement-progress{height:5px;margin-top:9px;border-radius:999px;background:#111925;overflow:hidden}
+.achievement-progress-bar{height:100%;width:0;border-radius:inherit;background:linear-gradient(90deg,#29d7ee,#92f3ff);transition:width .3s ease}
+.achievements-page{padding:20px}
+.achievements-page-head{display:flex;align-items:end;justify-content:space-between;gap:16px}
+.achievement-page-kicker{font-size:10px;color:var(--muted);font-weight:900;letter-spacing:.12em}
+.achievement-page-title{font-size:22px;font-weight:950;margin-top:5px}
+.achievement-page-percent{font-size:28px;font-weight:950;color:var(--accent2)}
+.achievement-page-progress{height:7px;margin:14px 0 18px;background:#111925;border-radius:999px;overflow:hidden}
+.achievement-page-progress-bar{height:100%;width:0;background:linear-gradient(90deg,#29d7ee,#92f3ff);border-radius:inherit}
+.achievement-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.achievement-card{padding:14px;border:1px solid var(--line);border-radius:15px;background:#0a1018;min-width:0}
+.achievement-card.locked{opacity:.58}
+.achievement-card.unlocked{border-color:rgba(41,215,238,.28);background:linear-gradient(180deg,rgba(41,215,238,.055),#0a1018)}
+.achievement-card-top{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.achievement-icon{width:40px;height:40px;border-radius:13px;display:grid;place-items:center;border:1px solid rgba(146,243,255,.18);background:#101923;color:var(--accent2);font-size:12px;font-weight:950}
+.achievement-state{font-size:8px;letter-spacing:.09em;font-weight:900;color:var(--muted)}
+.achievement-card.unlocked .achievement-state{color:#86efac}
+.achievement-title{display:block;font-size:13px;margin-top:11px}
+.achievement-desc{display:block;font-size:10px;color:var(--muted);margin-top:4px;line-height:1.4}
+.achievement-card-progress{height:5px;margin-top:11px;background:#111925;border-radius:999px;overflow:hidden}
+.achievement-card-progress-fill{height:100%;background:#29d7ee;border-radius:inherit}
+.achievement-meta{font-size:9px;color:var(--muted);margin-top:6px;text-align:right}
+@media(max-width:820px){
+  .achievement-mini-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:600px){
+  .home-insights{gap:12px}
+  .achievements-side{padding-top:1px}
+  .achievements-head{margin-bottom:8px}
+  .achievement-mini-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:5px}
+  .achievement-mini{display:grid;place-items:center;text-align:center;padding:7px 4px;gap:4px}
+  .achievement-mini-icon{width:30px;height:30px;flex-basis:30px}
+  .achievement-mini-text b{font-size:8px}
+  .achievement-mini-text span{font-size:7px}
+  .achievements-page{padding:15px}
+  .achievement-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+  .achievement-card{padding:11px}
+  .achievement-icon{width:36px;height:36px;border-radius:11px}
+  .achievement-page-title{font-size:19px}
+  .achievement-page-percent{font-size:24px}
+}
+
 </style>
 </head>
 <body>
@@ -340,10 +398,13 @@ button,input{font:inherit}button{cursor:pointer}.hidden{display:none!important}
           <div class="goal-progress"><div id="goalProgressBar" class="goal-progress-bar"></div></div>
           <div class="goal-foot"><span id="goalBestLabel">Rekorun: 0.00s</span><span id="goalPercent">0%</span></div>
         </div>
-        <div class="recent-side">
-          <div class="recent-head"><div><b>SON 5 OYUN</b><span>Yakın performansın</span></div><div id="recentDelta" class="recent-delta">-</div></div>
-          <div id="recentEmpty" class="recent-empty hidden">İlk oyunundan sonra burada gelişimini göreceksin.</div>
-          <canvas id="homeTrendCanvas" width="520" height="150" aria-label="Son 5 oyun skor grafiği"></canvas>
+        <div class="achievements-side">
+          <div class="achievements-head">
+            <div><b>BAŞARIMLAR</b><span>Oyuncu ilerlemen</span></div>
+            <button id="achievementsBtn" class="achievements-count" type="button"><span id="achievementCount">0/10</span><span aria-hidden="true">→</span></button>
+          </div>
+          <div id="homeAchievements" class="achievement-mini-grid"></div>
+          <div class="achievement-progress"><div id="achievementProgressBar" class="achievement-progress-bar"></div></div>
         </div>
       </div>
     </div>
@@ -373,6 +434,21 @@ button,input{font:inherit}button{cursor:pointer}.hidden{display:none!important}
         <div id="trendEmpty" class="trend-empty hidden">Grafik için en az 2 oyun gerekiyor.</div>
         <canvas id="scoreTrendCanvas" width="680" height="280" aria-label="Son 10 oyun skor grafiği"></canvas>
       </div>
+    </div>
+  </section>
+
+  <section id="achievementsScreen" class="screen hidden">
+    <div class="top"><button id="achievementsBack" class="iconbtn" type="button">← Geri</button><div class="tiny">BAŞARIMLAR</div></div>
+    <div class="panel achievements-page">
+      <div class="achievements-page-head">
+        <div>
+          <div class="achievement-page-kicker">İLERLEME</div>
+          <div class="achievement-page-title"><span id="achievementPageCount">0</span> / 10 tamamlandı</div>
+        </div>
+        <div id="achievementPagePercent" class="achievement-page-percent">0%</div>
+      </div>
+      <div class="achievement-page-progress"><div id="achievementPageProgressBar" class="achievement-page-progress-bar"></div></div>
+      <div id="achievementGrid" class="achievement-grid"></div>
     </div>
   </section>
 
@@ -447,8 +523,8 @@ const UA=navigator.userAgent||'';
 const IS_ANDROID_WEBVIEW=/\bwv\b/i.test(UA);
 const HAS_NATIVE_INSETS=/GuvenliBolgeApp\/2/i.test(UA);
 if(IS_ANDROID_WEBVIEW&&!HAS_NATIVE_INSETS)document.body.classList.add('legacy-webview-insets');
-const screens=['authScreen','homeScreen','profileScreen','settingsScreen','gameScreen','resultScreen'];
-let currentUser=null,currentProfile=null,currentBoard=[],allBoardRows=[],myStats=null,recoveryUsername='',trendRows=[],homeInsightRows=[];
+const screens=['authScreen','homeScreen','profileScreen','achievementsScreen','settingsScreen','gameScreen','resultScreen'];
+let currentUser=null,currentProfile=null,currentBoard=[],allBoardRows=[],myStats=null,recoveryUsername='',trendRows=[],achievementMetrics={record_breaks:0,max_streak_15s:0};
 let running=false,paused=false,elapsed=0,wave=0,raf=0,last=0,cycle=0,collapseAt=3.2,revealAt=2.15,safeIndex=-1,decoyIndex=-1,flash=0,shake=0,zones=[],lastSafeZone=null;
 const MOBILE_GAME=window.matchMedia('(max-width:600px)').matches;
 const W=MOBILE_GAME?620:760,H=MOBILE_GAME?1000:620,PLAYER_R=10,canvas=$('#gameCanvas'),ctx=canvas.getContext('2d');
@@ -640,6 +716,87 @@ function nextScoreTarget(bestSeconds){
   return next<=bestSeconds+0.001?next+step:next;
 }
 
+function getAchievements(){
+  const games=Number(myStats?.games_played||0);
+  const bestMs=Number(myStats?.best_survival_ms||0);
+  const maxWaves=Number(myStats?.max_waves||0);
+  const totalMs=Number(myStats?.total_survival_ms||0);
+  const streak=Number(achievementMetrics?.max_streak_15s||0);
+  const breaks=Number(achievementMetrics?.record_breaks||0);
+
+  return [
+    {id:'first',icon:'1',title:'İlk Adım',desc:'İlk oyununu tamamla',current:games,target:1,unit:' oyun'},
+    {id:'tensec',icon:'10s',title:'Isındım',desc:'10 saniye hayatta kal',current:bestMs/1000,target:10,unit:'s'},
+    {id:'tenwaves',icon:'10×',title:'Güvenli Eller',desc:'10 çöküşten sağ çık',current:maxWaves,target:10,unit:' çöküş'},
+    {id:'thirty',icon:'30s',title:'30 Saniye Kulübü',desc:'30 saniyeyi geç',current:bestMs/1000,target:30,unit:'s'},
+    {id:'fifty',icon:'50s',title:'Usta Kaçışçı',desc:'50 saniyeyi geç',current:bestMs/1000,target:50,unit:'s'},
+    {id:'games25',icon:'25×',title:'Dayanıklı',desc:'25 oyun tamamla',current:games,target:25,unit:' oyun'},
+    {id:'games100',icon:'100',title:'Bağımlılık Başlıyor',desc:'100 oyun tamamla',current:games,target:100,unit:' oyun'},
+    {id:'streak',icon:'5×',title:'İstikrarlı',desc:'5 oyunda üst üste 15s+',current:streak,target:5,unit:' seri'},
+    {id:'records',icon:'★',title:'Rekor Avcısı',desc:'Kendi rekorunu 10 kez kır',current:breaks,target:10,unit:' rekor'},
+    {id:'hour',icon:'1h',title:'Veteran',desc:'Toplam 1 saat oyunda kal',current:totalMs,target:3600000,unit:'ms'}
+  ].map(a=>({...a,unlocked:a.current>=a.target,progress:Math.min(1,a.current/a.target)}));
+}
+
+function achievementProgressText(a){
+  if(a.unlocked)return'Tamamlandı';
+  if(a.id==='hour'){
+    const mins=Math.floor(a.current/60000);
+    return mins+' / 60 dk';
+  }
+  if(['tensec','thirty','fifty'].includes(a.id)){
+    return Math.min(a.current,a.target).toFixed(1)+' / '+a.target+'s';
+  }
+  return Math.floor(Math.min(a.current,a.target))+' / '+a.target;
+}
+
+function renderAchievements(){
+  const achievements=getAchievements();
+  const unlocked=achievements.filter(a=>a.unlocked).length;
+  const percent=Math.round((unlocked/achievements.length)*100);
+
+  $('#achievementCount').textContent=unlocked+'/'+achievements.length;
+  $('#achievementProgressBar').style.width=percent+'%';
+  $('#achievementPageCount').textContent=unlocked;
+  $('#achievementPagePercent').textContent=percent+'%';
+  $('#achievementPageProgressBar').style.width=percent+'%';
+
+  const mini=$('#homeAchievements');
+  mini.innerHTML='';
+  const showcase=[
+    ...achievements.filter(a=>a.unlocked).slice(-2),
+    ...achievements.filter(a=>!a.unlocked).sort((a,b)=>b.progress-a.progress)
+  ].slice(0,4);
+
+  showcase.forEach(a=>{
+    const el=document.createElement('div');
+    el.className='achievement-mini'+(a.unlocked?' unlocked':' locked');
+    const icon=document.createElement('div');icon.className='achievement-mini-icon';icon.textContent=a.icon;
+    const txt=document.createElement('div');txt.className='achievement-mini-text';
+    const title=document.createElement('b');title.textContent=a.title;
+    const status=document.createElement('span');status.textContent=a.unlocked?'Açıldı':Math.round(a.progress*100)+'%';
+    txt.append(title,status);el.append(icon,txt);mini.appendChild(el);
+  });
+
+  const grid=$('#achievementGrid');
+  grid.innerHTML='';
+  achievements.forEach(a=>{
+    const el=document.createElement('div');
+    el.className='achievement-card'+(a.unlocked?' unlocked':' locked');
+    const top=document.createElement('div');top.className='achievement-card-top';
+    const icon=document.createElement('div');icon.className='achievement-icon';icon.textContent=a.icon;
+    const state=document.createElement('div');state.className='achievement-state';state.textContent=a.unlocked?'AÇILDI':'KİLİTLİ';
+    top.append(icon,state);
+    const title=document.createElement('b');title.className='achievement-title';title.textContent=a.title;
+    const desc=document.createElement('span');desc.className='achievement-desc';desc.textContent=a.desc;
+    const prog=document.createElement('div');prog.className='achievement-card-progress';
+    const fill=document.createElement('div');fill.className='achievement-card-progress-fill';fill.style.width=Math.round(a.progress*100)+'%';
+    prog.appendChild(fill);
+    const meta=document.createElement('div');meta.className='achievement-meta';meta.textContent=achievementProgressText(a);
+    el.append(top,title,desc,prog,meta);grid.appendChild(el);
+  });
+}
+
 function renderHomeInsights(){
   const bestMs=Number(myStats?.best_survival_ms||0);
   const best=bestMs/1000;
@@ -651,96 +808,20 @@ function renderHomeInsights(){
   $('#goalPercent').textContent=Math.round(progress)+'%';
   $('#goalProgressBar').style.width=progress+'%';
   $('#goalRemaining').textContent=best<=0?'İlk hedefin':remaining.toFixed(2)+' saniye kaldı';
-
-  const canvas=$('#homeTrendCanvas'),empty=$('#recentEmpty'),deltaEl=$('#recentDelta');
-  if(!canvas||!empty||!deltaEl)return;
-  if(!homeInsightRows.length){
-    canvas.classList.add('hidden');
-    empty.classList.remove('hidden');
-    deltaEl.textContent='-';
-    deltaEl.className='recent-delta';
-    return;
-  }
-
-  empty.classList.add('hidden');
-  canvas.classList.remove('hidden');
-  const scores=homeInsightRows.map(r=>(Number(r.survival_ms)||0)/1000);
-  if(scores.length>=2){
-    const delta=scores.at(-1)-scores.at(-2);
-    deltaEl.textContent=(delta>=0?'+':'')+delta.toFixed(2)+'s';
-    deltaEl.className='recent-delta '+(delta>0?'up':delta<0?'down':'');
-  }else{
-    deltaEl.textContent=scores[0].toFixed(2)+'s';
-    deltaEl.className='recent-delta';
-  }
-
-  const rect=canvas.getBoundingClientRect(),dpr=Math.min(window.devicePixelRatio||1,2);
-  const cssW=Math.max(240,Math.round(rect.width||520));
-  const mobile=cssW<440;
-  const cssH=mobile?118:132;
-  canvas.style.height=cssH+'px';
-  canvas.width=Math.round(cssW*dpr);
-  canvas.height=Math.round(cssH*dpr);
-
-  const c=canvas.getContext('2d');
-  c.setTransform(dpr,0,0,dpr,0,0);
-  c.clearRect(0,0,cssW,cssH);
-
-  const pad={l:8,r:8,t:12,b:20},w=cssW-16,h=cssH-32;
-  const min=Math.min(...scores),max=Math.max(...scores),spread=Math.max(1,max-min);
-  const low=Math.max(0,min-spread*.18),high=max+spread*.18,range=Math.max(1,high-low);
-  const x=i=>scores.length===1?cssW/2:pad.l+(i/(scores.length-1))*w;
-  const y=v=>pad.t+h-((v-low)/range)*h;
-
-  c.strokeStyle='rgba(255,255,255,.06)';
-  c.lineWidth=1;
-  for(let g=0;g<3;g++){
-    const yy=pad.t+(h/2)*g;
-    c.beginPath();c.moveTo(pad.l,yy);c.lineTo(cssW-pad.r,yy);c.stroke();
-  }
-
-  if(scores.length>1){
-    const grad=c.createLinearGradient(0,pad.t,0,pad.t+h);
-    grad.addColorStop(0,'rgba(41,215,238,.16)');
-    grad.addColorStop(1,'rgba(41,215,238,0)');
-    c.beginPath();c.moveTo(x(0),y(scores[0]));
-    for(let i=1;i<scores.length;i++)c.lineTo(x(i),y(scores[i]));
-    c.lineTo(x(scores.length-1),pad.t+h);c.lineTo(x(0),pad.t+h);c.closePath();
-    c.fillStyle=grad;c.fill();
-
-    c.beginPath();
-    scores.forEach((v,i)=>{if(i===0)c.moveTo(x(i),y(v));else c.lineTo(x(i),y(v))});
-    c.strokeStyle='#29d7ee';c.lineWidth=2.5;c.lineCap='round';c.lineJoin='round';c.stroke();
-  }
-
-  scores.forEach((v,i)=>{
-    c.beginPath();c.arc(x(i),y(v),i===scores.length-1?4.5:3.2,0,Math.PI*2);
-    c.fillStyle=i===scores.length-1?'#ffffff':'#92f3ff';c.fill();
-    c.strokeStyle='#0a1018';c.lineWidth=2;c.stroke();
-    c.fillStyle='#69778a';c.textAlign='center';c.textBaseline='alphabetic';c.font='9px system-ui';
-    c.fillText(String(i+1),x(i),cssH-5);
-  });
+  renderAchievements();
 }
 
 async function loadHomeInsights(){
   if(!currentUser)return;
-  const {data,error}=await sb.from('safe_zone_runs')
-    .select('survival_ms,waves,created_at')
-    .eq('user_id',currentUser.id)
-    .order('created_at',{ascending:false})
-    .limit(5);
+  const {data,error}=await sb.rpc('safe_zone_my_achievement_metrics');
   if(error)throw error;
-  homeInsightRows=(data||[]).slice().reverse();
+  const row=Array.isArray(data)?(data[0]||{}):(data||{});
+  achievementMetrics={
+    record_breaks:Number(row.record_breaks||0),
+    max_streak_15s:Number(row.max_streak_15s||0)
+  };
   renderHomeInsights();
 }
-
-let homeTrendResizeTimer=0;
-window.addEventListener('resize',()=>{
-  clearTimeout(homeTrendResizeTimer);
-  homeTrendResizeTimer=setTimeout(()=>{
-    if(!$('#homeScreen').classList.contains('hidden'))renderHomeInsights();
-  },120);
-});
 
 async function loadLeaderboard(){
   const target=$('#homeBoard');
@@ -800,7 +881,7 @@ $('#securityForm').addEventListener('submit',async e=>{e.preventDefault();const 
 $('#deleteForm').addEventListener('submit',async e=>{e.preventDefault();if($('#deleteConfirm').value.trim().toUpperCase()!=='SIL'){setMsg($('#deleteMsg'),'Onay alanına SIL yazmalısın.','error');return}const password=$('#deletePassword').value;setMsg($('#deleteMsg'),'Hesap siliniyor…');try{const {data,error}=await sb.functions.invoke('safe-zone-delete-account',{body:{password}});if(error)throw error;if(!data?.ok)throw new Error(data?.message||'Hesap silinemedi.');currentUser=null;currentProfile=null;$('#deleteModal').classList.add('hidden');await sb.auth.signOut({scope:'local'}).catch(()=>{});switchAuth('login');show('authScreen');setMsg($('#loginMsg'),'Hesabın ve skorların kalıcı olarak silindi.','ok')}catch(err){setMsg($('#deleteMsg'),err.message||'Hesap silinemedi.','error')}});
 
 function resetForgotModal(){recoveryUsername='';$('#forgotLookupForm').classList.remove('hidden');$('#forgotResetForm').classList.add('hidden');$('#forgotUsername').value='';$('#forgotAnswer').value='';$('#forgotNewPassword').value='';$('#forgotNewPassword2').value='';$('#forgotQuestionText').textContent='';$('#forgotHelp').textContent='Önce kullanıcı adını yaz. Kayıt sırasında seçtiğin güvenlik sorusunu göstereceğiz.';setMsg($('#forgotLookupMsg'),'');setMsg($('#forgotMsg'),'')}
-$('#loginTab').onclick=()=>switchAuth('login');$('#registerTab').onclick=()=>switchAuth('register');$('#forgotBtn').onclick=()=>{resetForgotModal();$('#forgotModal').classList.remove('hidden')};$('#closeForgot').onclick=()=>{resetForgotModal();$('#forgotModal').classList.add('hidden')};$('#openDeleteBtn').onclick=()=>{setMsg($('#deleteMsg'),'');$('#deletePassword').value='';$('#deleteConfirm').value='';$('#deleteModal').classList.remove('hidden')};$('#closeDelete').onclick=()=>$('#deleteModal').classList.add('hidden');$('#profileBtn').onclick=()=>{show('profileScreen');Promise.all([loadMyStats(),loadScoreTrend()]).catch(()=>{})};$('#profileBack').onclick=()=>show('homeScreen');$('#settingsBtn').onclick=()=>show('settingsScreen');$('#settingsBack').onclick=()=>show('homeScreen');$('#logoutBtn').onclick=async()=>{await sb.auth.signOut();currentUser=null;currentProfile=null;myStats=null;switchAuth('login');show('authScreen')};$('#homeRefreshBoard').onclick=loadLeaderboard;
+$('#loginTab').onclick=()=>switchAuth('login');$('#registerTab').onclick=()=>switchAuth('register');$('#forgotBtn').onclick=()=>{resetForgotModal();$('#forgotModal').classList.remove('hidden')};$('#closeForgot').onclick=()=>{resetForgotModal();$('#forgotModal').classList.add('hidden')};$('#openDeleteBtn').onclick=()=>{setMsg($('#deleteMsg'),'');$('#deletePassword').value='';$('#deleteConfirm').value='';$('#deleteModal').classList.remove('hidden')};$('#closeDelete').onclick=()=>$('#deleteModal').classList.add('hidden');$('#profileBtn').onclick=()=>{show('profileScreen');Promise.all([loadMyStats(),loadScoreTrend()]).catch(()=>{})};$('#profileBack').onclick=()=>show('homeScreen');$('#achievementsBtn').onclick=()=>{show('achievementsScreen');renderAchievements()};$('#achievementsBack').onclick=()=>show('homeScreen');$('#settingsBtn').onclick=()=>show('settingsScreen');$('#settingsBack').onclick=()=>show('homeScreen');$('#logoutBtn').onclick=async()=>{await sb.auth.signOut();currentUser=null;currentProfile=null;myStats=null;switchAuth('login');show('authScreen')};$('#homeRefreshBoard').onclick=loadLeaderboard;
 
 function zoneCount(){if(MOBILE_GAME)return wave<5?5:wave<12?6:wave<22?7:8;return wave<5?4:wave<12?5:wave<24?6:7}
 function cycleDuration(){return Math.max(1.55,3.2-wave*.085)}
@@ -877,7 +958,7 @@ window.safeZoneHandleBack=()=>{
   if(!$('#deleteModal').classList.contains('hidden')){$('#deleteModal').classList.add('hidden');return true}
   if(!$('#forgotModal').classList.contains('hidden')){$('#forgotModal').classList.add('hidden');return true}
   if(!$('#tutorialModal').classList.contains('hidden')){$('#tutorialModal').classList.add('hidden');return true}
-  if(visible==='profileScreen'||visible==='settingsScreen'||visible==='resultScreen'){show('homeScreen');return true}
+  if(visible==='profileScreen'||visible==='achievementsScreen'||visible==='settingsScreen'||visible==='resultScreen'){show('homeScreen');return true}
   if(visible==='gameScreen'){
     if(paused){togglePause();return true}
     togglePause();return true
