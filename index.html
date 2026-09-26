@@ -1338,6 +1338,35 @@ body::-webkit-scrollbar,
   overflow:visible!important;
 }
 
+
+/* v23 Türkçe marka ve görünmez ana scrollbar */
+.home-brand-copy b{
+  font-family:"Roboto","Noto Sans","Segoe UI",Arial,sans-serif!important;
+  font-weight:800!important;
+  font-style:normal!important;
+  font-variant-ligatures:none!important;
+  text-transform:none!important;
+  letter-spacing:.105em!important;
+  color:#f5f7fb!important;
+  -webkit-text-fill-color:#f5f7fb!important;
+  background:none!important;
+  filter:none!important;
+}
+
+/* Kaydırma devam eder, scrollbar görünmez. */
+html,body,.app,#homeScreen{
+  scrollbar-width:none!important;
+  -ms-overflow-style:none!important;
+}
+html::-webkit-scrollbar,
+body::-webkit-scrollbar,
+.app::-webkit-scrollbar,
+#homeScreen::-webkit-scrollbar{
+  display:none!important;
+  width:0!important;
+  height:0!important;
+}
+
 </style>
 </head>
 <body>
@@ -1383,7 +1412,7 @@ body::-webkit-scrollbar,
       <div class="home-brand-lockup">
         <div class="home-brand-mark" aria-hidden="true"><span>G</span><i></i></div>
         <div class="home-brand-copy">
-          <b>GÜVENLİ BÖLGE</b>
+          <b>G&#220;VENL&#304; B&#214;LGE</b>
         </div>
       </div>
       <div class="home-mast-actions">
