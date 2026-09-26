@@ -1168,23 +1168,21 @@ function createZones(){
 }
 function addChallengeZone(){
   const r=rand(MOBILE_GAME?34:40,MOBILE_GAME?48:55);
-  let x=W/2,y=H/2,placed=false;
-  for(let a=0;a<90;a++){
+  let best=null,bestClearance=-Infinity;
+  for(let a=0;a<140;a++){
     const tx=rand(r+18,W-r-18),ty=rand(r+18,H-r-18);
-    const awayFromPlayer=Math.hypot(player.x-tx,player.y-ty)>r+70;
-    if(awayFromPlayer&&zones.every(z=>Math.hypot(z.x-tx,z.y-ty)>z.r+r+18)){x=tx;y=ty;placed=true;break}
+    const playerClearance=Math.hypot(player.x-tx,player.y-ty)-(r+65);
+    const zoneClearance=Math.min(...zones.map(z=>Math.hypot(z.x-tx,z.y-ty)-(z.r+r+16)));
+    const clearance=Math.min(playerClearance,zoneClearance);
+    if(clearance>bestClearance){bestClearance=clearance;best={x:tx,y:ty}}
+    if(clearance>=0)break
   }
-  if(!placed){
-    for(let a=0;a<50;a++){
-      const tx=rand(r+18,W-r-18),ty=rand(r+18,H-r-18);
-      if(Math.hypot(player.x-tx,player.y-ty)>r+55){x=tx;y=ty;placed=true;break}
-    }
-  }
+  if(!best)return;
   const angle=rand(0,Math.PI*2),speed=zoneSpeed();
-  const z={x,y,r,vx:Math.cos(angle)*speed,vy:Math.sin(angle)*speed,pulse:rand(0,Math.PI*2),fakePulse:0};
+  const z={x:best.x,y:best.y,r,vx:Math.cos(angle)*speed,vy:Math.sin(angle)*speed,pulse:rand(0,Math.PI*2),fakePulse:0};
   zones.push(z);
   addRing(z.x,z.y,z.r+4,'255,255,255',105,.55,3);
-  spawnParticles(z.x,z.y,6,'success');
+  spawnParticles(z.x,z.y,6,'spawn');
   showToast('Zorluk arttı · +1 daire');
 }
 function prepareCycle(){
@@ -1234,7 +1232,8 @@ async function startGame(){
   if((!guestMode&&(!currentUser||!currentProfile))||startGamePending)return;
   if(soundEnabled)getAudioCtx();
   startGamePending=true;
-  setBusy($('#playBtn'),true,'OYUNA BAŞLA','HAZIR OL…');setBusy($('#retryBtn'),true,'TEKRAR OYNA','HAZIR OL…');setBusy($('#guestPlayBtn'),true,'MİSAFİR OLARAK OYNA','HAZIR OL…');
+  setBusy($('#playBtn'),true,'OYUNA BAŞLA','HAZIR OL…');setBusy($('#retryBtn'),true,'TEKRAR OYNA','HAZIR OL…');
+  const guestBtn=$('#guestPlayBtn');if(guestBtn){guestBtn.disabled=true;const gb=guestBtn.querySelector('b');if(gb)gb.textContent='HAZIR OL…'}
   try{
     if(guestMode){
       activeRunSession=null;
@@ -1256,7 +1255,8 @@ async function startGame(){
     showToast(e?.message||'Oyun başlatılamadı.','error');
   }finally{
     startGamePending=false;
-    setBusy($('#playBtn'),false,'OYUNA BAŞLA');setBusy($('#retryBtn'),false,'TEKRAR OYNA');setBusy($('#guestPlayBtn'),false,'MİSAFİR OLARAK OYNA');
+    setBusy($('#playBtn'),false,'OYUNA BAŞLA');setBusy($('#retryBtn'),false,'TEKRAR OYNA');
+    const guestBtn=$('#guestPlayBtn');if(guestBtn){guestBtn.disabled=false;const gb=guestBtn.querySelector('b');if(gb)gb.textContent='MİSAFİR OLARAK OYNA'}
   }
 }
 function stopGameToHome(){running=false;paused=false;dying=false;activeRunSession=null;clearTimeout(deathTimer);stopAmbientSound();cancelAnimationFrame(raf);$('#pauseOverlay').classList.add('hidden');if(guestMode){show('authScreen')}else{show('homeScreen');loadLeaderboard()}}
@@ -1492,7 +1492,7 @@ function drawFx(){
   for(const p of particles){
     const a=Math.max(0,p.life/p.maxLife);
     ctx.beginPath();ctx.arc(p.x,p.y,p.size*(.55+a*.45),0,Math.PI*2);
-    ctx.fillStyle=p.kind==='death'?('rgba(251,113,133,'+a+')'):('rgba(146,243,255,'+a+')');ctx.fill()
+    ctx.fillStyle=p.kind==='death'?('rgba(251,113,133,'+a+')'):p.kind==='spawn'?('rgba(255,255,255,'+(a*.8)+')'):('rgba(146,243,255,'+a+')');ctx.fill()
   }
 }
 function draw(){
