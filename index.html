@@ -169,6 +169,31 @@ button,input{font:inherit}button{cursor:pointer}.hidden{display:none!important}
   .gamestatus{height:19px;min-height:19px;padding:3px 2px 0;font-size:10px}
 }
 
+
+/* v4 Android safe-area + oyun HUD */
+.gamewrap{position:relative}
+.pause-icon-btn{width:48px;height:48px;display:grid;place-items:center;border:1px solid var(--line);border-radius:14px;background:var(--panel2);color:var(--text);padding:0}
+.pause-glyph{width:17px;height:21px;position:relative;display:block}
+.pause-glyph:before,.pause-glyph:after{content:"";position:absolute;top:0;bottom:0;width:5px;border-radius:3px;background:currentColor}
+.pause-glyph:before{left:1px}.pause-glyph:after{right:1px}
+.game-overlay{position:absolute;inset:0;z-index:8;display:grid;place-items:center;background:rgba(2,6,12,.68);backdrop-filter:blur(7px);padding:20px}
+.game-overlay-card{width:min(82%,330px);display:grid;gap:10px;text-align:center;padding:20px;border:1px solid rgba(255,255,255,.12);border-radius:20px;background:rgba(11,17,25,.92);box-shadow:0 24px 70px rgba(0,0,0,.45)}
+.game-overlay-kicker{font-size:12px;letter-spacing:.14em;font-weight:900;color:var(--muted);margin-bottom:3px}
+.overlay-action{width:100%;height:52px}
+.legacy-webview-insets .app{padding-top:52px!important}
+.legacy-webview-insets .mobile-gate{padding-top:52px!important}
+@media(max-width:600px){
+  .gamebar{min-height:62px;padding:5px 3px 7px;margin-bottom:5px}
+  .gamestats{gap:24px;align-items:center}
+  .gamebar .stat{font-size:13px!important;letter-spacing:.08em;font-weight:850}
+  .gamebar .stat b{font-size:28px!important;line-height:1.02;margin-top:4px;font-weight:950}
+  .pause-icon-btn{width:46px;height:46px;border-radius:13px}
+  .pause-glyph{width:16px;height:20px}
+  .gamewrap canvas{max-height:calc(100dvh - 105px)}
+  .gamestatus{font-size:11px}
+  .profile-page,.accountpanel{margin-top:2px}
+}
+
 </style>
 </head>
 <body>
@@ -278,9 +303,18 @@ button,input{font:inherit}button{cursor:pointer}.hidden{display:none!important}
         <span class="stat">SÜRE<b id="timeLabel">0.00s</b></span>
         <span class="stat">ÇÖKÜŞ<b id="waveLabel">0</b></span>
       </div>
-      <div class="gameactions"><button id="pauseBtn" class="iconbtn" type="button">Duraklat</button><button id="quitBtn" class="iconbtn" type="button">Çık</button></div>
+      <div class="gameactions"><button id="pauseBtn" class="pause-icon-btn" type="button" aria-label="Duraklat"><span class="pause-glyph" aria-hidden="true"></span></button></div>
     </div>
-    <div class="gamewrap"><canvas id="gameCanvas" width="760" height="620"></canvas></div>
+    <div class="gamewrap">
+      <canvas id="gameCanvas" width="760" height="620"></canvas>
+      <div id="pauseOverlay" class="game-overlay hidden">
+        <div class="game-overlay-card">
+          <div class="game-overlay-kicker">OYUN DURAKLATILDI</div>
+          <button id="pauseContinueBtn" class="primary overlay-action" type="button">DEVAM ET</button>
+          <button id="pauseExitBtn" class="secondary overlay-action" type="button">ÇIKIŞ</button>
+        </div>
+      </div>
+    </div>
     <div id="gameStatus" class="gamestatus">Hazır ol…</div>
   </section>
 
@@ -309,6 +343,10 @@ const SUPABASE_URL='https://vysddydaqjxdfoaziyrv.supabase.co';
 const SUPABASE_KEY='sb_publishable_3QXB59ogdtiPnVHEMpvKIw_4dFLra_e';
 const sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
 const $=s=>document.querySelector(s);
+const UA=navigator.userAgent||'';
+const IS_ANDROID_WEBVIEW=/\bwv\b/i.test(UA);
+const HAS_NATIVE_INSETS=/GuvenliBolgeApp\/2/i.test(UA);
+if(IS_ANDROID_WEBVIEW&&!HAS_NATIVE_INSETS)document.body.classList.add('legacy-webview-insets');
 const screens=['authScreen','homeScreen','profileScreen','settingsScreen','gameScreen','resultScreen'];
 let currentUser=null,currentProfile=null,currentBoard=[],allBoardRows=[],myStats=null,recoveryUsername='';
 let running=false,paused=false,elapsed=0,wave=0,raf=0,last=0,cycle=0,collapseAt=3.2,revealAt=2.15,safeIndex=-1,decoyIndex=-1,flash=0,shake=0,zones=[],lastSafeZone=null;
@@ -461,9 +499,15 @@ function prepareCycle(){
 }
 function resetGame(){elapsed=0;wave=0;cycle=0;flash=0;shake=0;player.moving=false;player.targetZone=null;player.attachedZone=null;createZones();prepareCycle();updateHud()}
 function updateHud(){$('#timeLabel').textContent=elapsed.toFixed(2)+'s';$('#waveLabel').textContent=wave}
-function startGame(){if(!currentUser||!currentProfile)return;cancelAnimationFrame(raf);resetGame();running=true;paused=false;$('#pauseBtn').textContent='Duraklat';show('gameScreen');draw();last=performance.now();raf=requestAnimationFrame(loop)}
-function stopGameToHome(){running=false;paused=false;cancelAnimationFrame(raf);show('homeScreen');loadLeaderboard()}
-function togglePause(){if(!running)return;paused=!paused;$('#pauseBtn').textContent=paused?'Devam Et':'Duraklat';if(!paused){last=performance.now();raf=requestAnimationFrame(loop)}else draw()}
+function startGame(){if(!currentUser||!currentProfile)return;cancelAnimationFrame(raf);resetGame();running=true;paused=false;$('#pauseOverlay').classList.add('hidden');show('gameScreen');draw();last=performance.now();raf=requestAnimationFrame(loop)}
+function stopGameToHome(){running=false;paused=false;cancelAnimationFrame(raf);$('#pauseOverlay').classList.add('hidden');show('homeScreen');loadLeaderboard()}
+function togglePause(){
+  if(!running)return;
+  paused=!paused;
+  $('#pauseOverlay').classList.toggle('hidden',!paused);
+  if(paused){cancelAnimationFrame(raf);draw()}
+  else{last=performance.now();raf=requestAnimationFrame(loop)}
+}
 function pointInZone(x,y,z,m=0){const dx=x-z.x,dy=y-z.y;return dx*dx+dy*dy<=Math.pow(z.r-m,2)}
 function dashTo(z){if(!running||paused)return;player.sx=player.x;player.sy=player.y;player.tx=z.x;player.ty=z.y;player.targetZone=z;player.attachedZone=null;player.progress=0;player.moving=true}
 canvas.addEventListener('pointerdown',e=>{if(!running||paused||cycle<revealAt)return;const r=canvas.getBoundingClientRect(),x=(e.clientX-r.left)*W/r.width,y=(e.clientY-r.top)*H/r.height;let picked=null,d0=Infinity;for(const z of zones){const d=(x-z.x)**2+(y-z.y)**2;if(d<=Math.pow(z.r+16,2)&&d<d0){picked=z;d0=d}}if(picked)dashTo(picked)});
@@ -478,7 +522,7 @@ async function endGame(){if(!running)return;running=false;paused=false;cancelAni
 function collapse(){const safe=zones[safeIndex],survived=pointInZone(player.x,player.y,safe,4);flash=1;shake=survived?5:15;if(navigator.vibrate)navigator.vibrate(survived?15:[35,25,35]);if(!survived){endGame();return}playPassSound();wave++;player.x=safe.x;player.y=safe.y;player.tx=safe.x;player.ty=safe.y;player.moving=false;player.targetZone=null;player.attachedZone=safe;$('#gameStatus').textContent='GÜVENDESİN';prepareCycle()}
 function update(dt){elapsed+=dt;cycle+=dt;if(flash>0)flash=Math.max(0,flash-dt*3.8);if(shake>0)shake=Math.max(0,shake-dt*32);const base=zoneSpeed(),revealed=cycle>=revealAt;zones.forEach((z,i)=>{z.pulse+=dt*3;if(z.fakePulse>0)z.fakePulse=Math.max(0,z.fakePulse-dt);const target=base*((revealed&&i===safeIndex&&wave>=10)?safeMultiplier():1),cur=Math.hypot(z.vx,z.vy)||1;z.vx=z.vx/cur*target;z.vy=z.vy/cur*target;z.x+=z.vx*dt;z.y+=z.vy*dt;if(z.x<z.r+12){z.x=z.r+12;z.vx=Math.abs(z.vx)}if(z.x>W-z.r-12){z.x=W-z.r-12;z.vx=-Math.abs(z.vx)}if(z.y<z.r+12){z.y=z.r+12;z.vy=Math.abs(z.vy)}if(z.y>H-z.r-12){z.y=H-z.r-12;z.vy=-Math.abs(z.vy)}});if(player.moving){if(player.targetZone){player.tx=player.targetZone.x;player.ty=player.targetZone.y}player.progress+=dt/Math.max(.095,.19-wave*.0025);const t=clamp(player.progress,0,1),ease=1-Math.pow(1-t,3);player.x=player.sx+(player.tx-player.sx)*ease;player.y=player.sy+(player.ty-player.sy)*ease;if(t>=1){player.moving=false;player.attachedZone=player.targetZone;player.targetZone=null}}else if(player.attachedZone&&zones.includes(player.attachedZone)){player.x=player.attachedZone.x;player.y=player.attachedZone.y;player.tx=player.x;player.ty=player.y}if(cycle>=revealAt&&cycle<collapseAt){const left=collapseAt-cycle;$('#gameStatus').textContent='GÜVENLİ BÖLGE AÇIK — '+left.toFixed(2)+'s'}if(cycle>=collapseAt)collapse();updateHud()}
 function drawZone(z,i){const revealed=cycle>=revealAt,isSafe=revealed&&i===safeIndex,isDecoy=z.fakePulse>0&&i===decoyIndex&&!isSafe,r=z.r*(1+Math.sin(z.pulse)*.05);ctx.beginPath();ctx.arc(z.x,z.y,r,0,Math.PI*2);ctx.fillStyle=isSafe?'rgba(34,211,238,.16)':'rgba(255,255,255,.055)';ctx.fill();ctx.lineWidth=isSafe?7:2;ctx.strokeStyle=isSafe?'rgba(34,211,238,.98)':isDecoy?'rgba(250,204,21,.9)':'rgba(255,255,255,.22)';ctx.stroke();if(isSafe){ctx.beginPath();ctx.arc(z.x,z.y,r+13+Math.sin(z.pulse*1.7)*4,0,Math.PI*2);ctx.strokeStyle='rgba(34,211,238,.28)';ctx.lineWidth=4;ctx.stroke();if(wave>=10){ctx.beginPath();ctx.moveTo(z.x,z.y);ctx.lineTo(z.x-z.vx*.11,z.y-z.vy*.11);ctx.strokeStyle='rgba(34,211,238,.32)';ctx.lineWidth=8;ctx.stroke()}}if(isDecoy){ctx.beginPath();ctx.arc(z.x,z.y,r+10,0,Math.PI*2);ctx.strokeStyle='rgba(250,204,21,.35)';ctx.lineWidth=4;ctx.stroke()}}
-function draw(){ctx.clearRect(0,0,W,H);const ox=shake?(Math.random()-.5)*shake:0,oy=shake?(Math.random()-.5)*shake:0;ctx.save();ctx.translate(ox,oy);ctx.fillStyle='#05070b';ctx.fillRect(-30,-30,W+60,H+60);const g=ctx.createRadialGradient(W/2,H/2,40,W/2,H/2,520);g.addColorStop(0,'rgba(25,38,55,.36)');g.addColorStop(1,'rgba(2,6,23,0)');ctx.fillStyle=g;ctx.fillRect(0,0,W,H);for(let x=0;x<W;x+=38){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.strokeStyle='rgba(255,255,255,.025)';ctx.stroke()}for(let y=0;y<H;y+=38){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.strokeStyle='rgba(255,255,255,.025)';ctx.stroke()}zones.forEach(drawZone);if(player.moving){ctx.beginPath();ctx.moveTo(player.sx,player.sy);ctx.lineTo(player.x,player.y);ctx.strokeStyle='rgba(255,255,255,.18)';ctx.lineWidth=4;ctx.stroke()}ctx.beginPath();ctx.arc(player.x,player.y,PLAYER_R+6,0,Math.PI*2);ctx.fillStyle='rgba(255,255,255,.08)';ctx.fill();ctx.beginPath();ctx.arc(player.x,player.y,PLAYER_R,0,Math.PI*2);ctx.fillStyle='#fff';ctx.fill();if(running&&cycle>=revealAt){const remaining=Math.max(0,collapseAt-cycle),progress=remaining/revealLead();ctx.beginPath();ctx.arc(W/2,H/2,31,-Math.PI/2,-Math.PI/2+Math.PI*2*progress);ctx.strokeStyle=remaining<.35?'#fb7185':'rgba(255,255,255,.9)';ctx.lineWidth=6;ctx.stroke();ctx.textAlign='center';ctx.fillStyle='#fff';ctx.font='700 18px system-ui';ctx.fillText(remaining.toFixed(1),W/2,H/2+6)}if(paused){ctx.fillStyle='rgba(0,0,0,.56)';ctx.fillRect(0,0,W,H);ctx.textAlign='center';ctx.fillStyle='#fff';ctx.font='700 30px system-ui';ctx.fillText('DURAKLATILDI',W/2,H/2)}if(flash>0){ctx.fillStyle=`rgba(255,255,255,${flash*.28})`;ctx.fillRect(0,0,W,H)}ctx.restore()}
+function draw(){ctx.clearRect(0,0,W,H);const ox=shake?(Math.random()-.5)*shake:0,oy=shake?(Math.random()-.5)*shake:0;ctx.save();ctx.translate(ox,oy);ctx.fillStyle='#05070b';ctx.fillRect(-30,-30,W+60,H+60);const g=ctx.createRadialGradient(W/2,H/2,40,W/2,H/2,520);g.addColorStop(0,'rgba(25,38,55,.36)');g.addColorStop(1,'rgba(2,6,23,0)');ctx.fillStyle=g;ctx.fillRect(0,0,W,H);for(let x=0;x<W;x+=38){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.strokeStyle='rgba(255,255,255,.025)';ctx.stroke()}for(let y=0;y<H;y+=38){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.strokeStyle='rgba(255,255,255,.025)';ctx.stroke()}zones.forEach(drawZone);if(player.moving){ctx.beginPath();ctx.moveTo(player.sx,player.sy);ctx.lineTo(player.x,player.y);ctx.strokeStyle='rgba(255,255,255,.18)';ctx.lineWidth=4;ctx.stroke()}ctx.beginPath();ctx.arc(player.x,player.y,PLAYER_R+6,0,Math.PI*2);ctx.fillStyle='rgba(255,255,255,.08)';ctx.fill();ctx.beginPath();ctx.arc(player.x,player.y,PLAYER_R,0,Math.PI*2);ctx.fillStyle='#fff';ctx.fill();if(running&&cycle>=revealAt){const remaining=Math.max(0,collapseAt-cycle),progress=remaining/revealLead();ctx.beginPath();ctx.arc(W/2,H/2,31,-Math.PI/2,-Math.PI/2+Math.PI*2*progress);ctx.strokeStyle=remaining<.35?'#fb7185':'rgba(255,255,255,.9)';ctx.lineWidth=6;ctx.stroke();ctx.textAlign='center';ctx.fillStyle='#fff';ctx.font='700 18px system-ui';ctx.fillText(remaining.toFixed(1),W/2,H/2+6)}if(paused){ctx.fillStyle='rgba(0,0,0,.18)';ctx.fillRect(0,0,W,H)}if(flash>0){ctx.fillStyle=`rgba(255,255,255,${flash*.28})`;ctx.fillRect(0,0,W,H)}ctx.restore()}
 function loop(now){if(!running||paused)return;const dt=Math.min(.033,Math.max(0,(now-last)/1000));last=now;update(dt);draw();if(running)raf=requestAnimationFrame(loop)}
 
 function tutorialStorageKey(){return currentUser?'safe_zone_tutorial_seen_'+currentUser.id:'safe_zone_tutorial_seen'}
@@ -487,7 +531,7 @@ function requestStartGame(){if(!currentUser||!currentProfile)return;if(hasSeenTu
 $('#playBtn').onclick=requestStartGame;
 $('#tutorialLaterBtn').onclick=()=>$('#tutorialModal').classList.add('hidden');
 $('#tutorialStartBtn').onclick=async()=>{if(!currentUser||!currentProfile)return;$('#tutorialModal').classList.add('hidden');currentProfile.tutorial_seen=true;localStorage.setItem(tutorialStorageKey(),'1');try{await sb.from('safe_zone_profiles').update({tutorial_seen:true,updated_at:new Date().toISOString()}).eq('user_id',currentUser.id)}catch{}startGame()};
-$('#pauseBtn').onclick=togglePause;$('#quitBtn').onclick=stopGameToHome;$('#retryBtn').onclick=startGame;$('#resultHomeBtn').onclick=()=>{show('homeScreen');loadLeaderboard()};
+$('#pauseBtn').onclick=togglePause;$('#pauseContinueBtn').onclick=togglePause;$('#pauseExitBtn').onclick=stopGameToHome;$('#retryBtn').onclick=startGame;$('#resultHomeBtn').onclick=()=>{show('homeScreen');loadLeaderboard()};
 const mobileGate=$('#mobileGate');if(window.matchMedia('(max-width:820px)').matches){setTimeout(()=>document.body.classList.add('mobile-entered'),1050)}else{document.body.classList.add('mobile-entered')}
 
 sb.auth.onAuthStateChange((event,session)=>{if(event==='SIGNED_OUT'){currentUser=null;currentProfile=null}else if(session?.user){currentUser=session.user}});
