@@ -2140,11 +2140,15 @@ function setMsg(el,text,type=''){el.textContent=text;el.className='msg'+(type?' 
 function setBusy(btn,busy,label,busyLabel=null){if(!btn)return;btn.disabled=busy;if(label)btn.textContent=busy?(busyLabel||t('processing')):label}
 function validUsername(v){return /^[A-Za-z0-9_]{3,16}$/.test(v)}
 function usernameModerationKey(v){
-  const map={0:'o',1:'i',3:'e',4:'a',5:'s',7:'t'};
-  return String(v||'').toLowerCase().replace(/[013457]/g,c=>map[c]||c).replace(/[^a-z]/g,'');
+  const map={0:'o',1:'i',3:'e',4:'a',5:'s',6:'g',7:'t',8:'b',9:'g'};
+  return String(v||'')
+    .toLowerCase()
+    .replace(/[013456789]/g,c=>map[c]||c)
+    .replace(/[^a-z]/g,'')
+    .replace(/(.)\1+/g,'$1');
 }
 function usernameAllowed(v){
-  return !/(sikici|siken|siker|sikey|sikim|siktir|sikis|sikmek|amcik|aminakoy|orospu|kahpe|kaltak|pezevenk|gavat|ibne|yarrak|yarak|gotveren|fuck|bitch|cunt|motherfucker|fucker)/.test(usernameModerationKey(v));
+  return !/(sikici|siken|siker|sikey|sikim|sikin|siktir|sikis|sikmek|amcik|aminakoy|amk|orospu|kahpe|kaltak|pezevenk|gavat|ibne|yarrak|yarak|gotveren|gotunu|fuck|fucker|fucking|motherfucker|bitch|cunt|pussy|dickhead|asshole)/.test(usernameModerationKey(v));
 }
 function normalized(v){return String(v||'').trim().toLowerCase()}
 function friendlyAuthError(err){const c=err?.code||'';if(c==='weak_password')return t('weakPassword');if(currentLang==='tr'&&err?.message)return err.message;return t('genericError')}
