@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.os.Build;
 import android.view.Window;
 import android.view.WindowInsets;
-import android.webkit.JavascriptInterface;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
@@ -19,22 +18,17 @@ import android.widget.FrameLayout;
 
 public class MainActivity extends Activity {
     private static final String GAME_URL = "https://gkh4n.github.io/guvenli-bolge/";
-    private static final int DARK_BG = Color.rgb(7, 10, 16);
-    private static final int LIGHT_BG = Color.rgb(238, 243, 247);
     private WebView webView;
-    private FrameLayout root;
-    private boolean lightTheme;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-        lightTheme = getSharedPreferences("safe_zone_prefs", MODE_PRIVATE)
-                .getBoolean("light_theme", false);
-        applySystemBars(lightTheme);
+        getWindow().setStatusBarColor(Color.rgb(7, 10, 16));
+        getWindow().setNavigationBarColor(Color.rgb(7, 10, 16));
 
-        root = new FrameLayout(this);
-        root.setBackgroundColor(lightTheme ? LIGHT_BG : DARK_BG);
+        FrameLayout root = new FrameLayout(this);
+        root.setBackgroundColor(Color.rgb(7, 10, 16));
 
         root.setOnApplyWindowInsetsListener((v, insets) -> {
             int left, top, right, bottom;
@@ -56,7 +50,7 @@ public class MainActivity extends Activity {
         });
 
         webView = new WebView(this);
-        webView.setBackgroundColor(lightTheme ? LIGHT_BG : DARK_BG);
+        webView.setBackgroundColor(Color.rgb(7, 10, 16));
         webView.setVerticalScrollBarEnabled(false);
         webView.setHorizontalScrollBarEnabled(false);
         webView.setVerticalFadingEdgeEnabled(false);
@@ -80,7 +74,6 @@ public class MainActivity extends Activity {
         settings.setLoadWithOverviewMode(true);
         settings.setUseWideViewPort(true);
         settings.setUserAgentString(settings.getUserAgentString() + " GuvenliBolgeApp/2");
-        webView.addJavascriptInterface(new ThemeBridge(), "SafeZoneNative");
 
         webView.setWebChromeClient(new WebChromeClient());
         webView.setWebViewClient(new WebViewClient() {
@@ -104,40 +97,6 @@ public class MainActivity extends Activity {
         loadGame();
     }
 
-    private void applySystemBars(boolean light) {
-        int bg = light ? LIGHT_BG : DARK_BG;
-        Window window = getWindow();
-        window.setStatusBarColor(bg);
-        window.setNavigationBarColor(bg);
-
-        int flags = window.getDecorView().getSystemUiVisibility();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (light) flags |= android.view.View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
-            else flags &= ~android.view.View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
-        }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            if (light) flags |= android.view.View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR;
-            else flags &= ~android.view.View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR;
-        }
-        window.getDecorView().setSystemUiVisibility(flags);
-
-        if (root != null) root.setBackgroundColor(bg);
-        if (webView != null) webView.setBackgroundColor(bg);
-    }
-
-    private class ThemeBridge {
-        @JavascriptInterface
-        public void setTheme(String theme) {
-            final boolean useLight = "light".equals(theme);
-            runOnUiThread(() -> {
-                lightTheme = useLight;
-                getSharedPreferences("safe_zone_prefs", MODE_PRIVATE)
-                        .edit().putBoolean("light_theme", useLight).apply();
-                applySystemBars(useLight);
-            });
-        }
-    }
-
     private boolean hasNetwork() {
         ConnectivityManager cm = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
         if (cm == null) return false;
@@ -155,14 +114,9 @@ public class MainActivity extends Activity {
     }
 
     private void showOfflinePage() {
-        String bg = lightTheme ? "#eef3f7" : "#070a10";
-        String text = lightTheme ? "#0d1823" : "#f5f7fb";
-        String muted = lightTheme ? "#667789" : "#8c99ab";
-        String button = lightTheme ? "#0aa9c4" : "#92f3ff";
-        String buttonText = lightTheme ? "#ffffff" : "#081017";
         String html = "<!doctype html><html><head><meta name='viewport' content='width=device-width,initial-scale=1'>"
-                + "<style>body{margin:0;background:" + bg + ";color:" + text + ";font-family:sans-serif;display:grid;place-items:center;min-height:100vh;text-align:center;padding:28px;box-sizing:border-box}"
-                + "h1{font-size:28px;margin:0 0 10px}p{color:" + muted + ";line-height:1.6}button{margin-top:16px;border:0;border-radius:14px;padding:14px 22px;font-weight:800;background:" + button + ";color:" + buttonText + "}</style></head>"
+                + "<style>body{margin:0;background:#070a10;color:#f5f7fb;font-family:sans-serif;display:grid;place-items:center;min-height:100vh;text-align:center;padding:28px;box-sizing:border-box}"
+                + "h1{font-size:28px;margin:0 0 10px}p{color:#8c99ab;line-height:1.6}button{margin-top:16px;border:0;border-radius:14px;padding:14px 22px;font-weight:800;background:#92f3ff;color:#081017}</style></head>"
                 + "<body><main><h1>Güvenli Bölge</h1><p>Oyuna bağlanmak için internet bağlantısı gerekiyor.</p>"
                 + "<button onclick=\"location.href='" + GAME_URL + "'\">Tekrar Dene</button></main></body></html>";
         webView.loadDataWithBaseURL(GAME_URL, html, "text/html", "UTF-8", null);
