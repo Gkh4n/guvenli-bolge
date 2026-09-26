@@ -1929,7 +1929,7 @@ function collapse(){
   playPassSound();spawnSuccessFx(safe);
   wave++;
   player.x=safe.x;player.y=safe.y;player.tx=safe.x;player.ty=safe.y;player.moving=false;player.targetZone=null;player.attachedZone=safe;
-  if(wave===10)addChallengeZone();
+  if(wave%10===0&&wave<=30)addChallengeZone();
   $('#gameStatus').textContent='GÜVENDESİN';
   prepareCycle()
 }
