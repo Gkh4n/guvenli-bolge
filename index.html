@@ -979,6 +979,26 @@ body:not(.mobile-entered) .mobile-gate{
   .record-hit-pop{animation:none!important}
 }
 
+
+/* v21 çoklu dil */
+.auth-language-row{
+  display:flex;align-items:center;justify-content:flex-end;gap:8px;
+  margin-top:10px;color:var(--muted);font-size:9px;font-weight:800;
+}
+.language-select{
+  height:36px;min-width:118px;padding:0 30px 0 10px;
+  border:1px solid var(--line);border-radius:11px;
+  background:#0a1018;color:var(--text);outline:none;
+  font:750 10px/1 system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+.language-select:focus{border-color:rgba(41,215,238,.45);box-shadow:0 0 0 3px rgba(41,215,238,.08)}
+.language-setting-row .language-select{flex:0 0 auto}
+@media(max-width:600px){
+  .auth-language-row{margin-top:8px}
+  .language-select{min-width:108px;height:34px}
+  .language-setting-row{gap:10px}
+}
+
 </style>
 </head>
 <body>
@@ -997,6 +1017,7 @@ body:not(.mobile-entered) .mobile-gate{
       </div>
       <div class="panel authpanel">
         <div class="tabs"><button id="loginTab" class="tab active" type="button">Giriş Yap</button><button id="registerTab" class="tab" type="button">Kayıt Ol</button></div>
+        <div class="auth-language-row"><span>Dil</span><select id="authLanguageSelect" class="language-select" aria-label="Dil"><option value="tr">Türkçe</option><option value="en">English</option><option value="de">Deutsch</option><option value="fr">Français</option><option value="es">Español</option></select></div>
         <form id="loginForm" class="form">
           <div class="field"><label class="label" for="loginUsername">Kullanıcı adı</label><input id="loginUsername" class="input" maxlength="16" autocomplete="username" placeholder="kullaniciadi" required /></div>
           <div class="field"><label class="label" for="loginPassword">Şifre</label><input id="loginPassword" class="input" type="password" minlength="6" autocomplete="current-password" placeholder="••••••••" required /></div>
@@ -1165,6 +1186,13 @@ body:not(.mobile-entered) .mobile-gate{
 
       <div class="settings-separator"></div>
 
+      <div class="settings-static-block">
+        <div class="settings-block-head"><div><h2 class="sectiontitle">Dil</h2><p>Arayüz dilini seç.</p></div></div>
+        <div class="setting-row compact-setting-row language-setting-row"><div><b>Uygulama dili</b><span>Seçimin bu cihazda hatırlanır.</span></div><select id="settingsLanguageSelect" class="language-select" aria-label="Dil"><option value="tr">Türkçe</option><option value="en">English</option><option value="de">Deutsch</option><option value="fr">Français</option><option value="es">Español</option></select></div>
+      </div>
+
+      <div class="settings-separator"></div>
+
       <div class="settings-accordion" id="passwordAccordion">
         <button id="passwordAccordionBtn" class="settings-accordion-trigger" type="button" aria-expanded="false" aria-controls="passwordAccordionBody">
           <span class="settings-accordion-copy"><b>Şifre değiştir</b><small>Hesap şifreni güvenli şekilde güncelle.</small></span>
@@ -1258,6 +1286,68 @@ const SUPABASE_URL='https://vysddydaqjxdfoaziyrv.supabase.co';
 const SUPABASE_KEY='sb_publishable_3QXB59ogdtiPnVHEMpvKIw_4dFLra_e';
 const sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
 const $=s=>document.querySelector(s);
+
+const I18N={"tr":{"offline":"Bağlantı yok · skor kaydedilemeyebilir","heroEyebrow":"Hızlı düşün. Doğru bölgeyi seç.","heroSub":"Parlayan güvenli bölgeyi yakala, çöküşten sağ çık ve rekorunu geliştir.","pillAccount":"Kalıcı hesap","pillStats":"Kişisel istatistikler","pillMobile":"Mobil uyumlu","loginTab":"Giriş Yap","registerTab":"Kayıt Ol","username":"Kullanıcı adı","password":"Şifre","loginBtn":"GİRİŞ YAP","noAccount":"Hesabın yoksa Kayıt Ol sekmesini kullan.","forgot":"Şifremi unuttum","passwordRepeat":"Şifre tekrar","createAccount":"HESAP OLUŞTUR","registerFine":"E-posta gerekmez. Hesap oluşturulduğunda sana tek kullanımlık bir kurtarma kodu verilir; bu kodu güvenli bir yerde sakla.","or":"veya","guestPlay":"MİSAFİR OLARAK OYNA","guestPlayDesc":"Hesap açmadan hemen başla · skor sıralamaya kaydedilmez","profileUpper":"PROFİL","bestUpper":"EN İYİ","globalUpper":"GLOBAL","gameUpper":"OYUN","startGame":"OYUNA BAŞLA","globalLeaderboardUpper":"GLOBAL SIRALAMA","top5":"En iyi 5 oyuncu","refresh":"Yenile","scoresLoading":"Skorlar yükleniyor…","viewAll":"TÜM SIRALAMAYI GÖR","personalGoal":"KİŞİSEL HEDEF","firstGoal":"İlk hedefin","recordZero":"Rekorun: 0.00s","achievementsUpper":"BAŞARIMLAR","playerProgress":"Oyuncu ilerlemen","back":"← Geri","globalLeaderboard":"Global Sıralama","bestScores":"EN İYİ SKORLAR","leaderboardLoading":"Sıralama yükleniyor…","loadMore":"DAHA FAZLA GÖSTER","profile":"Profil","playerInitial":"Oyuncu #-","gamesCount":"Oyun sayısı","bestScore":"En iyi skor","averageScore":"Ortalama skor","maxCollapse":"En fazla çöküş","totalPlayTime":"Toplam oyun süresi","globalRank":"Global sıra","last10":"SON 10 OYUN","scoreTrend":"Skor trendi · eski → yeni","trendEmpty":"Grafik için en az 2 oyun gerekiyor.","achievements":"Başarımlar","progress":"İLERLEME","completed10":"/ 10 tamamlandı","settings":"Ayarlar","account":"Hesap","accountDesc":"Kullanıcı adını görüntüle veya güncelle.","updateUsername":"KULLANICI ADINI GÜNCELLE","sound":"Ses","soundDesc":"Oyun içi ses geri bildirimlerini yönet.","gameSounds":"Oyun sesleri","gameSoundsDesc":"Geçiş, başarım ve oyun sonu sesleri.","on":"AÇIK","off":"KAPALI","language":"Dil","languageDesc":"Arayüz dilini seç.","appLanguage":"Uygulama dili","languageSaved":"Seçimin bu cihazda hatırlanır.","changePassword":"Şifre değiştir","changePasswordDesc":"Hesap şifreni güvenli şekilde güncelle.","currentPassword":"Mevcut şifre","newPassword":"Yeni şifre","newPasswordRepeat":"Yeni şifre tekrar","changePasswordBtn":"ŞİFREYİ DEĞİŞTİR","recoveryCode":"Kurtarma kodu","recoveryDesc":"Şifreni unutursan hesabına yeniden erişmeni sağlar.","checking":"Kontrol ediliyor…","codeActive":"Kod aktif","codeMissing":"Kod yok","keepRecovery":"Kurtarma kodunu güvenli bir yerde sakla.","recoveryBody":"Şifreni unutursan hesabını bu kodla geri alabilirsin. Yeni kod oluşturduğunda eski kod anında geçersiz olur.","generateRecovery":"YENİ KURTARMA KODU OLUŞTUR","logout":"ÇIKIŞ YAP","deleteAccount":"Hesabı sil","deleteDesc":"Hesabını ve skorlarını kalıcı olarak sil.","deleteWarn":"Bu işlem geri alınamaz. Tüm skorların ve hesap bilgilerin kalıcı olarak silinir.","deleteBtn":"HESABI SİL","time":"SÜRE","collapse":"ÇÖKÜŞ","pause":"Duraklat","paused":"OYUN DURAKLATILDI","continue":"DEVAM ET","exit":"ÇIKIŞ","ready":"Hazır ol…","safeWait":"Güvenli bölgeyi bekle…","safeOpen":"GÜVENLİ BÖLGE AÇIK — {time}s","safe":"GÜVENDESİN","difficultyUp":"Zorluk arttı · +1 daire","roundOver":"TUR BİTTİ","achievementUnlocked":"BAŞARIM AÇILDI","guestScore":"Misafir skoru","guestResultDesc":"Bu skor yalnızca bu tur için gösterilir. Skorlarını kaydetmek, başarımları açmak ve global sıralamaya katılmak için ücretsiz hesap oluştur.","retry":"TEKRAR OYNA","mainMenu":"ANA MENÜ","guest":"Misafir","forgotTitle":"Şifreni yenile","forgotDesc":"Kayıt sırasında verilen kurtarma kodunu kullan. Kodun yoksa ve hesabına giriş yapabiliyorsan Ayarlar’dan yeni bir kod oluşturabilirsin.","yourUsername":"Kullanıcı adın","resetPassword":"ŞİFREYİ YENİLE","close":"Kapat","recoveryTitle":"Kurtarma kodun","recoveryModalHelp":"Bu kodu güvenli bir yerde sakla. Kaybedersen yalnızca hesabına giriş yapmışken yeni bir kod oluşturabilirsin.","copy":"KOPYALA","saved":"KAYDETTİM","tutorialTitle":"Nasıl oynanır?","tutorialIntro":"İlk turun öncesinde üç şeyi bilmen yeterli.","tutorial1Title":"Parlayan bölgeyi bul","tutorial1Desc":"Çöküşten kısa süre önce gerçek güvenli halka camgöbeği renkle belirginleşir.","tutorial2Title":"Halkaya dokun","tutorial2Desc":"Karakterin seçtiğin halkaya gider ve halkanın içinde onunla birlikte hareket eder.","tutorial3Title":"Çöküş anında içeride kal","tutorial3Desc":"Doğru halkanın içindeysen devam edersin. Her tur tempo yükselir; amaç mümkün olduğunca uzun yaşamaktır.","notNow":"ŞİMDİ DEĞİL","start":"BAŞLA","deletePermanent":"Hesabı kalıcı sil","deleteIntro1":"Devam etmek için mevcut şifreni yaz ve aşağıdaki alana","deleteIntro2":"yaz. Hesabınla birlikte tüm skorların silinir.","deleteSubmit":"HESABIMI KALICI SİL","cancel":"Vazgeç","recordTo":"REKORA {time}s","newRecord":"YENİ REKOR","recordAhead":"REKOR +{time}s","firstRecord":"İLK REKOR","achievementMore":"+{count} başarım daha","opened":"Açıldı","openedUpper":"AÇILDI","lockedUpper":"KİLİTLİ","completed":"Tamamlandı","noScoresFirst":"Henüz skor yok. İlk rekoru sen koy.","noScores":"Henüz skor yok.","leaderboardUnavailable":"Sıralama şu an yüklenemedi.","leaderboardToast":"Sıralama yüklenemedi.","playersCount":"{count} oyuncu","yourRank":"sen #{rank}","showingFirst":"ilk {count} gösteriliyor","noLeaderboard":"Henüz sıralama oluşmadı.","playerDefault":"Oyuncu","wavesLabel":"{count} çöküş","recordLabel":"Rekorun: {score}s","secondsLeft":"{seconds} saniye kaldı","guestNotSaved":"Skor kaydedilmedi · misafir modu","scoreSaveError":"Skor kaydedilemedi. İnternet bağlantını kontrol et.","connectionBack":"Bağlantı geri geldi.","serverUnavailable":"Sunucuya bağlanılamadı. Bağlantını kontrol et.","startBusy":"HAZIR OL…","startFailed":"Oyun başlatılamadı.","copyCode":"Kurtarma kodu kopyalandı.","copyManual":"Kodu seçip kopyalayabilirsin.","hourUnit":"sa","minUnit":"dk","secUnit":"sn","achFirstTitle":"İlk Adım","achFirstDesc":"İlk oyununu tamamla","achTenTitle":"Isındım","achTenDesc":"10 saniye hayatta kal","achWavesTitle":"Güvenli Eller","achWavesDesc":"10 çöküşten sağ çık","achThirtyTitle":"30 Saniye Kulübü","achThirtyDesc":"30 saniyeyi geç","achFiftyTitle":"Usta Kaçışçı","achFiftyDesc":"50 saniyeyi geç","ach25Title":"Dayanıklı","ach25Desc":"25 oyun tamamla","ach100Title":"Bağımlılık Başlıyor","ach100Desc":"100 oyun tamamla","achStreakTitle":"İstikrarlı","achStreakDesc":"5 oyunda üst üste 15s+","achRecordsTitle":"Rekor Avcısı","achRecordsDesc":"Kendi rekorunu 10 kez kır","achHourTitle":"Veteran","achHourDesc":"Toplam 1 saat oyunda kal"},"en":{"offline":"Offline · score may not be saved","heroEyebrow":"Think fast. Pick the right zone.","heroSub":"Catch the glowing safe zone, survive the collapse, and beat your record.","pillAccount":"Persistent account","pillStats":"Personal stats","pillMobile":"Mobile friendly","loginTab":"Sign In","registerTab":"Register","username":"Username","password":"Password","loginBtn":"SIGN IN","noAccount":"No account? Use the Register tab.","forgot":"Forgot password","passwordRepeat":"Repeat password","createAccount":"CREATE ACCOUNT","registerFine":"No email required. When your account is created, you will receive a one-time recovery code. Keep it somewhere safe.","or":"or","guestPlay":"PLAY AS GUEST","guestPlayDesc":"Start instantly without an account · score will not be ranked","profileUpper":"PROFILE","bestUpper":"BEST","globalUpper":"GLOBAL","gameUpper":"GAMES","startGame":"START GAME","globalLeaderboardUpper":"GLOBAL LEADERBOARD","top5":"Top 5 players","refresh":"Refresh","scoresLoading":"Loading scores…","viewAll":"VIEW FULL LEADERBOARD","personalGoal":"PERSONAL GOAL","firstGoal":"Your first goal","recordZero":"Record: 0.00s","achievementsUpper":"ACHIEVEMENTS","playerProgress":"Your progress","back":"← Back","globalLeaderboard":"Global Leaderboard","bestScores":"BEST SCORES","leaderboardLoading":"Loading leaderboard…","loadMore":"SHOW MORE","profile":"Profile","playerInitial":"Player #-","gamesCount":"Games played","bestScore":"Best score","averageScore":"Average score","maxCollapse":"Most collapses","totalPlayTime":"Total play time","globalRank":"Global rank","last10":"LAST 10 GAMES","scoreTrend":"Score trend · old → new","trendEmpty":"At least 2 games are needed for the chart.","achievements":"Achievements","progress":"PROGRESS","completed10":"/ 10 completed","settings":"Settings","account":"Account","accountDesc":"View or update your username.","updateUsername":"UPDATE USERNAME","sound":"Sound","soundDesc":"Manage in-game audio feedback.","gameSounds":"Game sounds","gameSoundsDesc":"Transition, achievement, and game-over sounds.","on":"ON","off":"OFF","language":"Language","languageDesc":"Choose the interface language.","appLanguage":"App language","languageSaved":"Your choice is remembered on this device.","changePassword":"Change password","changePasswordDesc":"Securely update your account password.","currentPassword":"Current password","newPassword":"New password","newPasswordRepeat":"Repeat new password","changePasswordBtn":"CHANGE PASSWORD","recoveryCode":"Recovery code","recoveryDesc":"Lets you regain access if you forget your password.","checking":"Checking…","codeActive":"Code active","codeMissing":"No code","keepRecovery":"Keep your recovery code somewhere safe.","recoveryBody":"Use this code to recover your account if you forget your password. Creating a new code immediately invalidates the old one.","generateRecovery":"GENERATE NEW RECOVERY CODE","logout":"SIGN OUT","deleteAccount":"Delete account","deleteDesc":"Permanently delete your account and scores.","deleteWarn":"This cannot be undone. All scores and account information will be permanently deleted.","deleteBtn":"DELETE ACCOUNT","time":"TIME","collapse":"COLLAPSES","pause":"Pause","paused":"GAME PAUSED","continue":"CONTINUE","exit":"EXIT","ready":"Get ready…","safeWait":"Wait for the safe zone…","safeOpen":"SAFE ZONE OPEN — {time}s","safe":"SAFE","difficultyUp":"Difficulty increased · +1 circle","roundOver":"RUN OVER","achievementUnlocked":"ACHIEVEMENT UNLOCKED","guestScore":"Guest score","guestResultDesc":"This score is shown only for this run. Create a free account to save scores, unlock achievements, and join the global leaderboard.","retry":"PLAY AGAIN","mainMenu":"MAIN MENU","guest":"Guest","forgotTitle":"Reset password","forgotDesc":"Use the recovery code you received when registering. If you do not have one but can still sign in, generate a new code from Settings.","yourUsername":"Your username","resetPassword":"RESET PASSWORD","close":"Close","recoveryTitle":"Your recovery code","recoveryModalHelp":"Keep this code somewhere safe. If you lose it, you can generate a new one only while signed in.","copy":"COPY","saved":"SAVED","tutorialTitle":"How to play","tutorialIntro":"You only need to know three things before your first run.","tutorial1Title":"Find the glowing zone","tutorial1Desc":"Shortly before a collapse, the real safe circle glows cyan.","tutorial2Title":"Tap the circle","tutorial2Desc":"Your character dashes to the selected circle and moves with it while inside.","tutorial3Title":"Stay inside at collapse","tutorial3Desc":"If you are inside the correct circle when the collapse hits, you survive. The pace rises every round; survive as long as possible.","notNow":"NOT NOW","start":"START","deletePermanent":"Permanently delete account","deleteIntro1":"Enter your current password and type","deleteIntro2":"below. Your account and all scores will be deleted.","deleteSubmit":"PERMANENTLY DELETE","cancel":"Cancel","recordTo":"RECORD IN {time}s","newRecord":"NEW RECORD","recordAhead":"RECORD +{time}s","firstRecord":"FIRST RECORD","achievementMore":"+{count} more achievement(s)","opened":"Unlocked","openedUpper":"UNLOCKED","lockedUpper":"LOCKED","completed":"Completed","noScoresFirst":"No scores yet. Set the first record.","noScores":"No scores yet.","leaderboardUnavailable":"Leaderboard is unavailable right now.","leaderboardToast":"Could not load leaderboard.","playersCount":"{count} players","yourRank":"you #{rank}","showingFirst":"showing first {count}","noLeaderboard":"No leaderboard yet.","playerDefault":"Player","wavesLabel":"{count} collapses","recordLabel":"Record: {score}s","secondsLeft":"{seconds}s left","guestNotSaved":"Score not saved · guest mode","scoreSaveError":"Score could not be saved. Check your internet connection.","connectionBack":"Connection restored.","serverUnavailable":"Could not connect to the server. Check your connection.","startBusy":"GET READY…","startFailed":"Could not start the game.","copyCode":"Recovery code copied.","copyManual":"Select and copy the code manually.","hourUnit":"h","minUnit":"min","secUnit":"s","achFirstTitle":"First Step","achFirstDesc":"Complete your first game","achTenTitle":"Warmed Up","achTenDesc":"Survive for 10 seconds","achWavesTitle":"Safe Hands","achWavesDesc":"Survive 10 collapses","achThirtyTitle":"30 Second Club","achThirtyDesc":"Survive past 30 seconds","achFiftyTitle":"Escape Master","achFiftyDesc":"Survive past 50 seconds","ach25Title":"Enduring","ach25Desc":"Complete 25 games","ach100Title":"Getting Hooked","ach100Desc":"Complete 100 games","achStreakTitle":"Consistent","achStreakDesc":"Get 15s+ in 5 games in a row","achRecordsTitle":"Record Hunter","achRecordsDesc":"Beat your own record 10 times","achHourTitle":"Veteran","achHourDesc":"Spend a total of 1 hour in-game"},"de":{"offline":"Offline · Punktestand wird evtl. nicht gespeichert","heroEyebrow":"Denk schnell. Wähle die richtige Zone.","heroSub":"Erreiche die leuchtende Sicherheitszone, überlebe den Kollaps und verbessere deinen Rekord.","pillAccount":"Dauerhaftes Konto","pillStats":"Persönliche Statistiken","pillMobile":"Für Mobilgeräte","loginTab":"Anmelden","registerTab":"Registrieren","username":"Benutzername","password":"Passwort","loginBtn":"ANMELDEN","noAccount":"Noch kein Konto? Nutze den Tab Registrieren.","forgot":"Passwort vergessen","passwordRepeat":"Passwort wiederholen","createAccount":"KONTO ERSTELLEN","registerFine":"Keine E-Mail nötig. Nach der Registrierung erhältst du einen einmaligen Wiederherstellungscode. Bewahre ihn sicher auf.","or":"oder","guestPlay":"ALS GAST SPIELEN","guestPlayDesc":"Sofort ohne Konto starten · der Punktestand wird nicht gewertet","profileUpper":"PROFIL","bestUpper":"BESTE","globalUpper":"GLOBAL","gameUpper":"SPIELE","startGame":"SPIEL STARTEN","globalLeaderboardUpper":"GLOBALE RANGLISTE","top5":"Top 5 Spieler","refresh":"Aktualisieren","scoresLoading":"Punkte werden geladen…","viewAll":"GESAMTE RANGLISTE","personalGoal":"PERSÖNLICHES ZIEL","firstGoal":"Dein erstes Ziel","recordZero":"Rekord: 0.00s","achievementsUpper":"ERFOLGE","playerProgress":"Dein Fortschritt","back":"← Zurück","globalLeaderboard":"Globale Rangliste","bestScores":"BESTE PUNKTE","leaderboardLoading":"Rangliste wird geladen…","loadMore":"MEHR ANZEIGEN","profile":"Profil","playerInitial":"Spieler #-","gamesCount":"Gespielte Spiele","bestScore":"Bester Wert","averageScore":"Durchschnitt","maxCollapse":"Meiste Kollapse","totalPlayTime":"Gesamtspielzeit","globalRank":"Globaler Rang","last10":"LETZTE 10 SPIELE","scoreTrend":"Punktetrend · alt → neu","trendEmpty":"Für das Diagramm sind mindestens 2 Spiele nötig.","achievements":"Erfolge","progress":"FORTSCHRITT","completed10":"/ 10 abgeschlossen","settings":"Einstellungen","account":"Konto","accountDesc":"Benutzernamen anzeigen oder ändern.","updateUsername":"BENUTZERNAME ÄNDERN","sound":"Ton","soundDesc":"Audiofeedback im Spiel verwalten.","gameSounds":"Spielgeräusche","gameSoundsDesc":"Übergangs-, Erfolgs- und Game-over-Sounds.","on":"AN","off":"AUS","language":"Sprache","languageDesc":"Wähle die Sprache der Oberfläche.","appLanguage":"App-Sprache","languageSaved":"Deine Auswahl wird auf diesem Gerät gespeichert.","changePassword":"Passwort ändern","changePasswordDesc":"Ändere dein Kontopasswort sicher.","currentPassword":"Aktuelles Passwort","newPassword":"Neues Passwort","newPasswordRepeat":"Neues Passwort wiederholen","changePasswordBtn":"PASSWORT ÄNDERN","recoveryCode":"Wiederherstellungscode","recoveryDesc":"Damit erhältst du bei vergessenem Passwort wieder Zugriff.","checking":"Prüfen…","codeActive":"Code aktiv","codeMissing":"Kein Code","keepRecovery":"Bewahre deinen Wiederherstellungscode sicher auf.","recoveryBody":"Mit diesem Code kannst du dein Konto wiederherstellen. Ein neuer Code macht den alten sofort ungültig.","generateRecovery":"NEUEN WIEDERHERSTELLUNGSCODE","logout":"ABMELDEN","deleteAccount":"Konto löschen","deleteDesc":"Konto und Punktestände dauerhaft löschen.","deleteWarn":"Dies kann nicht rückgängig gemacht werden. Alle Punkte und Kontodaten werden dauerhaft gelöscht.","deleteBtn":"KONTO LÖSCHEN","time":"ZEIT","collapse":"KOLLAPSE","pause":"Pause","paused":"SPIEL PAUSIERT","continue":"WEITER","exit":"BEENDEN","ready":"Mach dich bereit…","safeWait":"Warte auf die Sicherheitszone…","safeOpen":"SICHERHEITSZONE OFFEN — {time}s","safe":"SICHER","difficultyUp":"Schwierigkeit erhöht · +1 Kreis","roundOver":"RUNDE BEENDET","achievementUnlocked":"ERFOLG FREIGESCHALTET","guestScore":"Gast-Punktestand","guestResultDesc":"Dieser Wert gilt nur für diese Runde. Erstelle ein kostenloses Konto, um Punkte zu speichern, Erfolge freizuschalten und an der Rangliste teilzunehmen.","retry":"NOCHMAL SPIELEN","mainMenu":"HAUPTMENÜ","guest":"Gast","forgotTitle":"Passwort zurücksetzen","forgotDesc":"Nutze den Wiederherstellungscode aus der Registrierung. Wenn du keinen hast, aber noch angemeldet bist, kannst du in den Einstellungen einen neuen erstellen.","yourUsername":"Dein Benutzername","resetPassword":"PASSWORT ZURÜCKSETZEN","close":"Schließen","recoveryTitle":"Dein Wiederherstellungscode","recoveryModalHelp":"Bewahre diesen Code sicher auf. Einen neuen kannst du nur erstellen, solange du angemeldet bist.","copy":"KOPIEREN","saved":"GESPEICHERT","tutorialTitle":"So wird gespielt","tutorialIntro":"Vor deiner ersten Runde musst du nur drei Dinge wissen.","tutorial1Title":"Finde die leuchtende Zone","tutorial1Desc":"Kurz vor einem Kollaps leuchtet der echte sichere Kreis cyan.","tutorial2Title":"Tippe auf den Kreis","tutorial2Desc":"Deine Figur bewegt sich zum gewählten Kreis und bleibt mit ihm in Bewegung.","tutorial3Title":"Beim Kollaps innen bleiben","tutorial3Desc":"Bist du beim Kollaps im richtigen Kreis, überlebst du. Das Tempo steigt jede Runde.","notNow":"NICHT JETZT","start":"START","deletePermanent":"Konto dauerhaft löschen","deleteIntro1":"Gib dein aktuelles Passwort ein und tippe","deleteIntro2":"unten ein. Dein Konto und alle Punktestände werden gelöscht.","deleteSubmit":"DAUERHAFT LÖSCHEN","cancel":"Abbrechen","recordTo":"REKORD IN {time}s","newRecord":"NEUER REKORD","recordAhead":"REKORD +{time}s","firstRecord":"ERSTER REKORD","achievementMore":"+{count} weitere Erfolge","opened":"Freigeschaltet","openedUpper":"FREIGESCHALTET","lockedUpper":"GESPERRT","completed":"Abgeschlossen","noScoresFirst":"Noch keine Punkte. Setze den ersten Rekord.","noScores":"Noch keine Punkte.","leaderboardUnavailable":"Rangliste derzeit nicht verfügbar.","leaderboardToast":"Rangliste konnte nicht geladen werden.","playersCount":"{count} Spieler","yourRank":"du #{rank}","showingFirst":"erste {count} werden angezeigt","noLeaderboard":"Noch keine Rangliste.","playerDefault":"Spieler","wavesLabel":"{count} Kollapse","recordLabel":"Rekord: {score}s","secondsLeft":"noch {seconds}s","guestNotSaved":"Nicht gespeichert · Gastmodus","scoreSaveError":"Punktestand konnte nicht gespeichert werden. Prüfe deine Internetverbindung.","connectionBack":"Verbindung wiederhergestellt.","serverUnavailable":"Server nicht erreichbar. Prüfe deine Verbindung.","startBusy":"BEREIT MACHEN…","startFailed":"Spiel konnte nicht gestartet werden.","copyCode":"Wiederherstellungscode kopiert.","copyManual":"Wähle den Code aus und kopiere ihn manuell.","hourUnit":"Std.","minUnit":"Min.","secUnit":"Sek.","achFirstTitle":"Erster Schritt","achFirstDesc":"Beende dein erstes Spiel","achTenTitle":"Aufgewärmt","achTenDesc":"Überlebe 10 Sekunden","achWavesTitle":"Sichere Hände","achWavesDesc":"Überlebe 10 Kollapse","achThirtyTitle":"30-Sekunden-Club","achThirtyDesc":"Überlebe länger als 30 Sekunden","achFiftyTitle":"Fluchtmeister","achFiftyDesc":"Überlebe länger als 50 Sekunden","ach25Title":"Ausdauernd","ach25Desc":"Beende 25 Spiele","ach100Title":"Es wird ernst","ach100Desc":"Beende 100 Spiele","achStreakTitle":"Konstant","achStreakDesc":"Erreiche 5 Spiele in Folge 15s+","achRecordsTitle":"Rekordjäger","achRecordsDesc":"Schlage deinen eigenen Rekord 10-mal","achHourTitle":"Veteran","achHourDesc":"Spiele insgesamt 1 Stunde"},"fr":{"offline":"Hors ligne · le score peut ne pas être enregistré","heroEyebrow":"Réfléchis vite. Choisis la bonne zone.","heroSub":"Atteins la zone sûre lumineuse, survis à l’effondrement et bats ton record.","pillAccount":"Compte permanent","pillStats":"Stats personnelles","pillMobile":"Adapté au mobile","loginTab":"Connexion","registerTab":"Inscription","username":"Nom d’utilisateur","password":"Mot de passe","loginBtn":"SE CONNECTER","noAccount":"Pas de compte ? Utilise l’onglet Inscription.","forgot":"Mot de passe oublié","passwordRepeat":"Répéter le mot de passe","createAccount":"CRÉER UN COMPTE","registerFine":"Aucun e-mail requis. À la création du compte, tu recevras un code de récupération à usage unique. Garde-le en lieu sûr.","or":"ou","guestPlay":"JOUER EN INVITÉ","guestPlayDesc":"Commence sans compte · le score ne sera pas classé","profileUpper":"PROFIL","bestUpper":"MEILLEUR","globalUpper":"GLOBAL","gameUpper":"PARTIES","startGame":"JOUER","globalLeaderboardUpper":"CLASSEMENT MONDIAL","top5":"Top 5 joueurs","refresh":"Actualiser","scoresLoading":"Chargement des scores…","viewAll":"VOIR TOUT LE CLASSEMENT","personalGoal":"OBJECTIF PERSONNEL","firstGoal":"Ton premier objectif","recordZero":"Record : 0.00s","achievementsUpper":"SUCCÈS","playerProgress":"Ta progression","back":"← Retour","globalLeaderboard":"Classement mondial","bestScores":"MEILLEURS SCORES","leaderboardLoading":"Chargement du classement…","loadMore":"AFFICHER PLUS","profile":"Profil","playerInitial":"Joueur #-","gamesCount":"Parties jouées","bestScore":"Meilleur score","averageScore":"Score moyen","maxCollapse":"Effondrements max.","totalPlayTime":"Temps de jeu total","globalRank":"Rang mondial","last10":"10 DERNIÈRES PARTIES","scoreTrend":"Tendance · ancien → récent","trendEmpty":"Il faut au moins 2 parties pour afficher le graphique.","achievements":"Succès","progress":"PROGRESSION","completed10":"/ 10 terminés","settings":"Paramètres","account":"Compte","accountDesc":"Afficher ou modifier ton nom d’utilisateur.","updateUsername":"MODIFIER LE NOM","sound":"Son","soundDesc":"Gérer les sons du jeu.","gameSounds":"Sons du jeu","gameSoundsDesc":"Sons de transition, de succès et de fin de partie.","on":"ACTIVÉ","off":"DÉSACTIVÉ","language":"Langue","languageDesc":"Choisis la langue de l’interface.","appLanguage":"Langue de l’app","languageSaved":"Ton choix est mémorisé sur cet appareil.","changePassword":"Changer le mot de passe","changePasswordDesc":"Modifie ton mot de passe en toute sécurité.","currentPassword":"Mot de passe actuel","newPassword":"Nouveau mot de passe","newPasswordRepeat":"Répéter le nouveau mot de passe","changePasswordBtn":"CHANGER LE MOT DE PASSE","recoveryCode":"Code de récupération","recoveryDesc":"Permet de récupérer ton compte si tu oublies ton mot de passe.","checking":"Vérification…","codeActive":"Code actif","codeMissing":"Aucun code","keepRecovery":"Garde ton code de récupération en lieu sûr.","recoveryBody":"Ce code permet de récupérer ton compte. Générer un nouveau code invalide immédiatement l’ancien.","generateRecovery":"NOUVEAU CODE DE RÉCUPÉRATION","logout":"SE DÉCONNECTER","deleteAccount":"Supprimer le compte","deleteDesc":"Supprimer définitivement le compte et les scores.","deleteWarn":"Cette action est irréversible. Tous les scores et les données du compte seront supprimés.","deleteBtn":"SUPPRIMER LE COMPTE","time":"TEMPS","collapse":"EFFONDREMENTS","pause":"Pause","paused":"JEU EN PAUSE","continue":"CONTINUER","exit":"QUITTER","ready":"Prépare-toi…","safeWait":"Attends la zone sûre…","safeOpen":"ZONE SÛRE OUVERTE — {time}s","safe":"EN SÉCURITÉ","difficultyUp":"Difficulté augmentée · +1 cercle","roundOver":"PARTIE TERMINÉE","achievementUnlocked":"SUCCÈS DÉBLOQUÉ","guestScore":"Score invité","guestResultDesc":"Ce score n’est affiché que pour cette partie. Crée un compte gratuit pour enregistrer tes scores, débloquer des succès et rejoindre le classement mondial.","retry":"REJOUER","mainMenu":"MENU PRINCIPAL","guest":"Invité","forgotTitle":"Réinitialiser le mot de passe","forgotDesc":"Utilise le code de récupération reçu à l’inscription. Si tu n’en as pas mais peux encore te connecter, génère-en un nouveau dans Paramètres.","yourUsername":"Ton nom d’utilisateur","resetPassword":"RÉINITIALISER","close":"Fermer","recoveryTitle":"Ton code de récupération","recoveryModalHelp":"Garde ce code en lieu sûr. Si tu le perds, tu ne pourras en créer un nouveau qu’en étant connecté.","copy":"COPIER","saved":"ENREGISTRÉ","tutorialTitle":"Comment jouer","tutorialIntro":"Trois choses suffisent avant ta première partie.","tutorial1Title":"Trouve la zone lumineuse","tutorial1Desc":"Peu avant l’effondrement, le vrai cercle sûr s’illumine en cyan.","tutorial2Title":"Touche le cercle","tutorial2Desc":"Ton personnage rejoint le cercle choisi et se déplace avec lui.","tutorial3Title":"Reste dedans au moment de l’effondrement","tutorial3Desc":"Si tu es dans le bon cercle au moment de l’effondrement, tu survis. Le rythme augmente à chaque manche.","notNow":"PAS MAINTENANT","start":"COMMENCER","deletePermanent":"Supprimer définitivement le compte","deleteIntro1":"Saisis ton mot de passe actuel et tape","deleteIntro2":"ci-dessous. Ton compte et tous tes scores seront supprimés.","deleteSubmit":"SUPPRIMER DÉFINITIVEMENT","cancel":"Annuler","recordTo":"RECORD DANS {time}s","newRecord":"NOUVEAU RECORD","recordAhead":"RECORD +{time}s","firstRecord":"PREMIER RECORD","achievementMore":"+{count} autre(s) succès","opened":"Débloqué","openedUpper":"DÉBLOQUÉ","lockedUpper":"VERROUILLÉ","completed":"Terminé","noScoresFirst":"Aucun score. Établis le premier record.","noScores":"Aucun score.","leaderboardUnavailable":"Classement indisponible pour le moment.","leaderboardToast":"Impossible de charger le classement.","playersCount":"{count} joueurs","yourRank":"toi #{rank}","showingFirst":"{count} premiers affichés","noLeaderboard":"Aucun classement pour le moment.","playerDefault":"Joueur","wavesLabel":"{count} effondrements","recordLabel":"Record : {score}s","secondsLeft":"encore {seconds}s","guestNotSaved":"Score non enregistré · mode invité","scoreSaveError":"Impossible d’enregistrer le score. Vérifie ta connexion.","connectionBack":"Connexion rétablie.","serverUnavailable":"Impossible de joindre le serveur. Vérifie ta connexion.","startBusy":"PRÉPARE-TOI…","startFailed":"Impossible de démarrer la partie.","copyCode":"Code de récupération copié.","copyManual":"Sélectionne et copie le code manuellement.","hourUnit":"h","minUnit":"min","secUnit":"s","achFirstTitle":"Premier pas","achFirstDesc":"Termine ta première partie","achTenTitle":"Échauffé","achTenDesc":"Survis 10 secondes","achWavesTitle":"Mains sûres","achWavesDesc":"Survis à 10 effondrements","achThirtyTitle":"Club des 30 secondes","achThirtyDesc":"Dépasse 30 secondes","achFiftyTitle":"Maître de l’évasion","achFiftyDesc":"Dépasse 50 secondes","ach25Title":"Endurant","ach25Desc":"Termine 25 parties","ach100Title":"Accro","ach100Desc":"Termine 100 parties","achStreakTitle":"Régulier","achStreakDesc":"Fais 15s+ sur 5 parties d’affilée","achRecordsTitle":"Chasseur de records","achRecordsDesc":"Bats ton record 10 fois","achHourTitle":"Vétéran","achHourDesc":"Joue 1 heure au total"},"es":{"offline":"Sin conexión · puede que el puntaje no se guarde","heroEyebrow":"Piensa rápido. Elige la zona correcta.","heroSub":"Alcanza la zona segura brillante, sobrevive al colapso y supera tu récord.","pillAccount":"Cuenta permanente","pillStats":"Estadísticas personales","pillMobile":"Adaptado a móvil","loginTab":"Iniciar sesión","registerTab":"Registrarse","username":"Usuario","password":"Contraseña","loginBtn":"INICIAR SESIÓN","noAccount":"¿No tienes cuenta? Usa la pestaña Registrarse.","forgot":"Olvidé mi contraseña","passwordRepeat":"Repetir contraseña","createAccount":"CREAR CUENTA","registerFine":"No se necesita correo. Al crear la cuenta recibirás un código de recuperación de un solo uso. Guárdalo en un lugar seguro.","or":"o","guestPlay":"JUGAR COMO INVITADO","guestPlayDesc":"Empieza sin cuenta · el puntaje no entrará al ranking","profileUpper":"PERFIL","bestUpper":"MEJOR","globalUpper":"GLOBAL","gameUpper":"PARTIDAS","startGame":"JUGAR","globalLeaderboardUpper":"CLASIFICACIÓN GLOBAL","top5":"Top 5 jugadores","refresh":"Actualizar","scoresLoading":"Cargando puntajes…","viewAll":"VER CLASIFICACIÓN COMPLETA","personalGoal":"OBJETIVO PERSONAL","firstGoal":"Tu primer objetivo","recordZero":"Récord: 0.00s","achievementsUpper":"LOGROS","playerProgress":"Tu progreso","back":"← Atrás","globalLeaderboard":"Clasificación global","bestScores":"MEJORES PUNTAJES","leaderboardLoading":"Cargando clasificación…","loadMore":"MOSTRAR MÁS","profile":"Perfil","playerInitial":"Jugador #-","gamesCount":"Partidas jugadas","bestScore":"Mejor puntaje","averageScore":"Puntaje medio","maxCollapse":"Máx. colapsos","totalPlayTime":"Tiempo total","globalRank":"Rango global","last10":"ÚLTIMAS 10 PARTIDAS","scoreTrend":"Tendencia · antiguo → nuevo","trendEmpty":"Se necesitan al menos 2 partidas para el gráfico.","achievements":"Logros","progress":"PROGRESO","completed10":"/ 10 completados","settings":"Ajustes","account":"Cuenta","accountDesc":"Ver o actualizar tu nombre de usuario.","updateUsername":"ACTUALIZAR USUARIO","sound":"Sonido","soundDesc":"Gestiona los sonidos del juego.","gameSounds":"Sonidos del juego","gameSoundsDesc":"Sonidos de transición, logros y fin de partida.","on":"ACTIVO","off":"INACTIVO","language":"Idioma","languageDesc":"Elige el idioma de la interfaz.","appLanguage":"Idioma de la app","languageSaved":"Tu elección se recuerda en este dispositivo.","changePassword":"Cambiar contraseña","changePasswordDesc":"Actualiza la contraseña de tu cuenta de forma segura.","currentPassword":"Contraseña actual","newPassword":"Nueva contraseña","newPasswordRepeat":"Repetir nueva contraseña","changePasswordBtn":"CAMBIAR CONTRASEÑA","recoveryCode":"Código de recuperación","recoveryDesc":"Permite recuperar el acceso si olvidas tu contraseña.","checking":"Comprobando…","codeActive":"Código activo","codeMissing":"Sin código","keepRecovery":"Guarda tu código de recuperación en un lugar seguro.","recoveryBody":"Usa este código para recuperar tu cuenta. Crear uno nuevo invalida inmediatamente el anterior.","generateRecovery":"NUEVO CÓDIGO DE RECUPERACIÓN","logout":"CERRAR SESIÓN","deleteAccount":"Eliminar cuenta","deleteDesc":"Eliminar para siempre tu cuenta y puntajes.","deleteWarn":"Esta acción no se puede deshacer. Todos los puntajes y datos de la cuenta se eliminarán.","deleteBtn":"ELIMINAR CUENTA","time":"TIEMPO","collapse":"COLAPSOS","pause":"Pausa","paused":"JUEGO EN PAUSA","continue":"CONTINUAR","exit":"SALIR","ready":"Prepárate…","safeWait":"Espera la zona segura…","safeOpen":"ZONA SEGURA ABIERTA — {time}s","safe":"A SALVO","difficultyUp":"Dificultad aumentada · +1 círculo","roundOver":"PARTIDA TERMINADA","achievementUnlocked":"LOGRO DESBLOQUEADO","guestScore":"Puntaje de invitado","guestResultDesc":"Este puntaje solo se muestra en esta partida. Crea una cuenta gratis para guardar puntajes, desbloquear logros y entrar a la clasificación global.","retry":"JUGAR DE NUEVO","mainMenu":"MENÚ PRINCIPAL","guest":"Invitado","forgotTitle":"Restablecer contraseña","forgotDesc":"Usa el código de recuperación que recibiste al registrarte. Si no lo tienes pero aún puedes entrar, genera uno nuevo desde Ajustes.","yourUsername":"Tu usuario","resetPassword":"RESTABLECER CONTRASEÑA","close":"Cerrar","recoveryTitle":"Tu código de recuperación","recoveryModalHelp":"Guarda este código en un lugar seguro. Si lo pierdes, solo podrás crear uno nuevo mientras tengas la sesión iniciada.","copy":"COPIAR","saved":"GUARDADO","tutorialTitle":"Cómo jugar","tutorialIntro":"Solo necesitas saber tres cosas antes de tu primera partida.","tutorial1Title":"Encuentra la zona brillante","tutorial1Desc":"Poco antes del colapso, el círculo seguro real brilla en cian.","tutorial2Title":"Toca el círculo","tutorial2Desc":"Tu personaje va al círculo elegido y se mueve con él.","tutorial3Title":"Quédate dentro en el colapso","tutorial3Desc":"Si estás dentro del círculo correcto cuando llega el colapso, sobrevives. El ritmo aumenta en cada ronda.","notNow":"AHORA NO","start":"EMPEZAR","deletePermanent":"Eliminar cuenta para siempre","deleteIntro1":"Introduce tu contraseña actual y escribe","deleteIntro2":"abajo. Tu cuenta y todos los puntajes se eliminarán.","deleteSubmit":"ELIMINAR PARA SIEMPRE","cancel":"Cancelar","recordTo":"RÉCORD EN {time}s","newRecord":"NUEVO RÉCORD","recordAhead":"RÉCORD +{time}s","firstRecord":"PRIMER RÉCORD","achievementMore":"+{count} logro(s) más","opened":"Desbloqueado","openedUpper":"DESBLOQUEADO","lockedUpper":"BLOQUEADO","completed":"Completado","noScoresFirst":"Aún no hay puntajes. Marca el primer récord.","noScores":"Aún no hay puntajes.","leaderboardUnavailable":"La clasificación no está disponible ahora.","leaderboardToast":"No se pudo cargar la clasificación.","playersCount":"{count} jugadores","yourRank":"tú #{rank}","showingFirst":"mostrando los primeros {count}","noLeaderboard":"Aún no hay clasificación.","playerDefault":"Jugador","wavesLabel":"{count} colapsos","recordLabel":"Récord: {score}s","secondsLeft":"faltan {seconds}s","guestNotSaved":"Puntaje no guardado · modo invitado","scoreSaveError":"No se pudo guardar el puntaje. Revisa tu conexión.","connectionBack":"Conexión restablecida.","serverUnavailable":"No se pudo conectar al servidor. Revisa tu conexión.","startBusy":"PREPÁRATE…","startFailed":"No se pudo iniciar la partida.","copyCode":"Código de recuperación copiado.","copyManual":"Selecciona y copia el código manualmente.","hourUnit":"h","minUnit":"min","secUnit":"s","achFirstTitle":"Primer paso","achFirstDesc":"Completa tu primera partida","achTenTitle":"Calentando","achTenDesc":"Sobrevive 10 segundos","achWavesTitle":"Manos seguras","achWavesDesc":"Sobrevive 10 colapsos","achThirtyTitle":"Club de los 30 segundos","achThirtyDesc":"Supera 30 segundos","achFiftyTitle":"Maestro de escape","achFiftyDesc":"Supera 50 segundos","ach25Title":"Resistente","ach25Desc":"Completa 25 partidas","ach100Title":"Enganchado","ach100Desc":"Completa 100 partidas","achStreakTitle":"Constante","achStreakDesc":"Consigue 15s+ en 5 partidas seguidas","achRecordsTitle":"Cazarrécords","achRecordsDesc":"Supera tu propio récord 10 veces","achHourTitle":"Veterano","achHourDesc":"Juega un total de 1 hora"}};
+const STATIC_TR_KEYS={"Bağlantı yok · skor kaydedilemeyebilir":"offline","Hızlı düşün. Doğru bölgeyi seç.":"heroEyebrow","Parlayan güvenli bölgeyi yakala, çöküşten sağ çık ve rekorunu geliştir.":"heroSub","Kalıcı hesap":"pillAccount","Kişisel istatistikler":"pillStats","Mobil uyumlu":"pillMobile","Giriş Yap":"loginTab","Kayıt Ol":"registerTab","Kullanıcı adı":"username","Şifre":"password","GİRİŞ YAP":"loginBtn","Hesabın yoksa Kayıt Ol sekmesini kullan.":"noAccount","Şifremi unuttum":"forgot","Şifre tekrar":"passwordRepeat","HESAP OLUŞTUR":"createAccount","E-posta gerekmez. Hesap oluşturulduğunda sana tek kullanımlık bir kurtarma kodu verilir; bu kodu güvenli bir yerde sakla.":"registerFine","veya":"or","MİSAFİR OLARAK OYNA":"guestPlay","Hesap açmadan hemen başla · skor sıralamaya kaydedilmez":"guestPlayDesc","PROFİL":"profileUpper","EN İYİ":"bestUpper","GLOBAL":"globalUpper","OYUN":"gameUpper","OYUNA BAŞLA":"startGame","GLOBAL SIRALAMA":"globalLeaderboardUpper","En iyi 5 oyuncu":"top5","Yenile":"refresh","Skorlar yükleniyor…":"scoresLoading","TÜM SIRALAMAYI GÖR":"viewAll","KİŞİSEL HEDEF":"personalGoal","İlk hedefin":"firstGoal","Rekorun: 0.00s":"recordZero","BAŞARIMLAR":"achievementsUpper","Oyuncu ilerlemen":"playerProgress","← Geri":"back","Global Sıralama":"globalLeaderboard","EN İYİ SKORLAR":"bestScores","Sıralama yükleniyor…":"leaderboardLoading","DAHA FAZLA GÖSTER":"loadMore","Profil":"profile","Oyuncu #-":"playerInitial","Oyun sayısı":"gamesCount","En iyi skor":"bestScore","Ortalama skor":"averageScore","En fazla çöküş":"maxCollapse","Toplam oyun süresi":"totalPlayTime","Global sıra":"globalRank","SON 10 OYUN":"last10","Skor trendi · eski → yeni":"scoreTrend","Grafik için en az 2 oyun gerekiyor.":"trendEmpty","Başarımlar":"achievements","İLERLEME":"progress","/ 10 tamamlandı":"completed10","Ayarlar":"settings","Hesap":"account","Kullanıcı adını görüntüle veya güncelle.":"accountDesc","KULLANICI ADINI GÜNCELLE":"updateUsername","Ses":"sound","Oyun içi ses geri bildirimlerini yönet.":"soundDesc","Oyun sesleri":"gameSounds","Geçiş, başarım ve oyun sonu sesleri.":"gameSoundsDesc","Dil":"language","Arayüz dilini seç.":"languageDesc","Uygulama dili":"appLanguage","Seçimin bu cihazda hatırlanır.":"languageSaved","Şifre değiştir":"changePassword","Hesap şifreni güvenli şekilde güncelle.":"changePasswordDesc","Mevcut şifre":"currentPassword","Yeni şifre":"newPassword","Yeni şifre tekrar":"newPasswordRepeat","ŞİFREYİ DEĞİŞTİR":"changePasswordBtn","Kurtarma kodu":"recoveryCode","Şifreni unutursan hesabına yeniden erişmeni sağlar.":"recoveryDesc","Kontrol ediliyor…":"checking","Kurtarma kodunu güvenli bir yerde sakla.":"keepRecovery","Şifreni unutursan hesabını bu kodla geri alabilirsin. Yeni kod oluşturduğunda eski kod anında geçersiz olur.":"recoveryBody","YENİ KURTARMA KODU OLUŞTUR":"generateRecovery","ÇIKIŞ YAP":"logout","Hesabı sil":"deleteAccount","Hesabını ve skorlarını kalıcı olarak sil.":"deleteDesc","Bu işlem geri alınamaz. Tüm skorların ve hesap bilgilerin kalıcı olarak silinir.":"deleteWarn","HESABI SİL":"deleteBtn","SÜRE":"time","ÇÖKÜŞ":"collapse","OYUN DURAKLATILDI":"paused","DEVAM ET":"continue","ÇIKIŞ":"exit","Hazır ol…":"ready","TUR BİTTİ":"roundOver","BAŞARIM AÇILDI":"achievementUnlocked","Misafir skoru":"guestScore","Bu skor yalnızca bu tur için gösterilir. Skorlarını kaydetmek, başarımları açmak ve global sıralamaya katılmak için ücretsiz hesap oluştur.":"guestResultDesc","TEKRAR OYNA":"retry","ANA MENÜ":"mainMenu","Şifreni yenile":"forgotTitle","Kayıt sırasında verilen kurtarma kodunu kullan. Kodun yoksa ve hesabına giriş yapabiliyorsan Ayarlar’dan yeni bir kod oluşturabilirsin.":"forgotDesc","Kurtarma kodun":"recoveryTitle","Bu kodu güvenli bir yerde sakla. Kaybedersen yalnızca hesabına giriş yapmışken yeni bir kod oluşturabilirsin.":"recoveryModalHelp","KOPYALA":"copy","KAYDETTİM":"saved","Nasıl oynanır?":"tutorialTitle","İlk turun öncesinde üç şeyi bilmen yeterli.":"tutorialIntro","Parlayan bölgeyi bul":"tutorial1Title","Çöküşten kısa süre önce gerçek güvenli halka camgöbeği renkle belirginleşir.":"tutorial1Desc","Halkaya dokun":"tutorial2Title","Karakterin seçtiğin halkaya gider ve halkanın içinde onunla birlikte hareket eder.":"tutorial2Desc","Çöküş anında içeride kal":"tutorial3Title","Doğru halkanın içindeysen devam edersin. Her tur tempo yükselir; amaç mümkün olduğunca uzun yaşamaktır.":"tutorial3Desc","ŞİMDİ DEĞİL":"notNow","BAŞLA":"start","Hesabı kalıcı sil":"deletePermanent","Devam etmek için mevcut şifreni yaz ve aşağıdaki alana":"deleteIntro1","yaz. Hesabınla birlikte tüm skorların silinir.":"deleteIntro2","HESABIMI KALICI SİL":"deleteSubmit","Vazgeç":"cancel","Kapat":"close","ŞİFREYİ YENİLE":"resetPassword"};
+const PLACEHOLDER_TR_KEYS={"3-16 karakter, harf / rakam / _":"username","En az 8 karakter":"newPassword","Şifreni tekrar yaz":"newPasswordRepeat","Kullanıcı adın":"yourUsername","Yeni şifre":"newPassword","Yeni şifre tekrar":"newPasswordRepeat","Mevcut şifren":"currentPassword"};
+const ARIA_TR_KEYS={"Profil":"profile","Ayarlar":"settings","Duraklat":"pause","Dil":"language","Son 10 oyun skor grafiği":"scoreTrend"};
+const SUPPORTED_LANGS=['tr','en','de','fr','es'];
+const savedLang=localStorage.getItem('safe_zone_language');
+const detectedLang=String((navigator.languages&&navigator.languages[0])||navigator.language||'en').slice(0,2).toLowerCase();
+let currentLang=SUPPORTED_LANGS.includes(savedLang)?savedLang:(SUPPORTED_LANGS.includes(detectedLang)?detectedLang:'en');
+let i18nTextBindings=[],i18nAttrBindings=[],i18nReady=false;
+function t(key,vars={}){
+  let out=(I18N[currentLang]&&I18N[currentLang][key])||I18N.en[key]||I18N.tr[key]||key;
+  return String(out).replace(/\{(\w+)\}/g,(_,k)=>vars[k]??'');
+}
+function collectStaticI18n(){
+  if(i18nTextBindings.length)return;
+  const walker=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT);
+  let node;
+  while((node=walker.nextNode())){
+    const tag=node.parentElement?.tagName;
+    if(tag==='SCRIPT'||tag==='STYLE'||tag==='OPTION')continue;
+    const raw=node.nodeValue||'',trim=raw.trim(),key=STATIC_TR_KEYS[trim];
+    if(!key)continue;
+    const start=raw.indexOf(trim),prefix=start>=0?raw.slice(0,start):'',suffix=start>=0?raw.slice(start+trim.length):'';
+    i18nTextBindings.push({node,key,prefix,suffix});
+  }
+  document.querySelectorAll('[placeholder]').forEach(el=>{const key=PLACEHOLDER_TR_KEYS[el.getAttribute('placeholder')];if(key)i18nAttrBindings.push({el,attr:'placeholder',key})});
+  document.querySelectorAll('[aria-label]').forEach(el=>{const key=ARIA_TR_KEYS[el.getAttribute('aria-label')];if(key)i18nAttrBindings.push({el,attr:'aria-label',key})});
+}
+function applyStaticLanguage(){
+  document.documentElement.lang=currentLang;
+  i18nTextBindings.forEach(b=>{if(b.node.isConnected)b.node.nodeValue=b.prefix+t(b.key)+b.suffix});
+  i18nAttrBindings.forEach(b=>{if(b.el.isConnected)b.el.setAttribute(b.attr,t(b.key))});
+  ['authLanguageSelect','settingsLanguageSelect'].forEach(id=>{const el=$('#'+id);if(el)el.value=currentLang});
+}
+function refreshLocalizedDynamicUI(){
+  updateSoundButton();
+  if(currentProfile){
+    const rs=$('#recoveryStatus');
+    if(rs){rs.textContent=currentProfile.recovery_ready?t('codeActive'):t('codeMissing');rs.className=currentProfile.recovery_ready?'ready':'missing'}
+    $('#profileMemberNo').textContent=t('playerDefault')+' #'+currentProfile.member_number;
+  }
+  if(myStats){renderHomeInsights();renderAchievements()}
+  if(running)updateHud();
+  const visible=screens.find(id=>!$('#'+id)?.classList.contains('hidden'));
+  if(currentUser&&visible==='homeScreen')loadLeaderboard();
+  if(currentUser&&visible==='leaderboardScreen')loadFullLeaderboard(true);
+}
+function setLanguage(lang,save=true){
+  if(!SUPPORTED_LANGS.includes(lang))lang='en';
+  currentLang=lang;
+  if(save)localStorage.setItem('safe_zone_language',lang);
+  applyStaticLanguage();
+  if(i18nReady)refreshLocalizedDynamicUI();
+}
+function initLanguageUI(){
+  collectStaticI18n();applyStaticLanguage();
+  const bind=id=>{const el=$('#'+id);if(el)el.addEventListener('change',e=>setLanguage(e.target.value))};
+  bind('authLanguageSelect');bind('settingsLanguageSelect');
+  i18nReady=true;refreshLocalizedDynamicUI();
+}
+
 const UA=navigator.userAgent||'';
 const IS_ANDROID_WEBVIEW=/\bwv\b/i.test(UA);
 const HAS_NATIVE_INSETS=/GuvenliBolgeApp\/2/i.test(UA);
@@ -1294,9 +1384,10 @@ function showToast(text,type=''){
 }
 function updateConnectionState(){
   const offline=!navigator.onLine;
+  $('#connectionPill').textContent=t('offline');
   $('#connectionPill').classList.toggle('hidden',!offline);
 }
-window.addEventListener('online',()=>{updateConnectionState();showToast('Bağlantı geri geldi.','ok')});
+window.addEventListener('online',()=>{updateConnectionState();showToast(t('connectionBack'),'ok')});
 window.addEventListener('offline',updateConnectionState);
 updateConnectionState();
 function setMsg(el,text,type=''){el.textContent=text;el.className='msg'+(type?' '+type:'')}
@@ -1315,9 +1406,9 @@ async function loadProfile(){
   $('#profileAvatar').textContent=(data.username[0]||'G').toUpperCase();
   $('#accountUsername').value=data.username;
   $('#homeMemberTag').textContent='#'+data.member_number;
-  $('#profileMemberNo').textContent='Oyuncu #'+data.member_number;
+  $('#profileMemberNo').textContent=t('playerDefault')+' #'+data.member_number;
   $('#profileUsernameDisplay').textContent=data.username;
-  const rs=$('#recoveryStatus');if(rs){rs.textContent=data.recovery_ready?'Kod aktif':'Kod yok';rs.className=data.recovery_ready?'ready':'missing'}
+  const rs=$('#recoveryStatus');if(rs){rs.textContent=data.recovery_ready?t('codeActive'):t('codeMissing');rs.className=data.recovery_ready?'ready':'missing'}
   return data
 }
 
@@ -1325,9 +1416,9 @@ function formatTotalTime(ms){
   let sec=Math.floor((Number(ms)||0)/1000);
   const h=Math.floor(sec/3600);sec%=3600;
   const m=Math.floor(sec/60);sec%=60;
-  if(h)return h+' sa '+m+' dk';
-  if(m)return m+' dk '+sec+' sn';
-  return sec+' sn'
+  if(h)return h+' '+t('hourUnit')+' '+m+' '+t('minUnit');
+  if(m)return m+' '+t('minUnit')+' '+sec+' '+t('secUnit');
+  return sec+' '+t('secUnit')
 }
 
 async function loadMyStats(){
@@ -1490,24 +1581,24 @@ function getAchievements(){
   const breaks=Number(achievementMetrics?.record_breaks||0);
 
   return [
-    {id:'first',icon:'1',title:'İlk Adım',desc:'İlk oyununu tamamla',current:games,target:1,unit:' oyun'},
-    {id:'tensec',icon:'10s',title:'Isındım',desc:'10 saniye hayatta kal',current:bestMs/1000,target:10,unit:'s'},
-    {id:'tenwaves',icon:'10×',title:'Güvenli Eller',desc:'10 çöküşten sağ çık',current:maxWaves,target:10,unit:' çöküş'},
-    {id:'thirty',icon:'30s',title:'30 Saniye Kulübü',desc:'30 saniyeyi geç',current:bestMs/1000,target:30,unit:'s'},
-    {id:'fifty',icon:'50s',title:'Usta Kaçışçı',desc:'50 saniyeyi geç',current:bestMs/1000,target:50,unit:'s'},
-    {id:'games25',icon:'25×',title:'Dayanıklı',desc:'25 oyun tamamla',current:games,target:25,unit:' oyun'},
-    {id:'games100',icon:'100',title:'Bağımlılık Başlıyor',desc:'100 oyun tamamla',current:games,target:100,unit:' oyun'},
-    {id:'streak',icon:'5×',title:'İstikrarlı',desc:'5 oyunda üst üste 15s+',current:streak,target:5,unit:' seri'},
-    {id:'records',icon:'★',title:'Rekor Avcısı',desc:'Kendi rekorunu 10 kez kır',current:breaks,target:10,unit:' rekor'},
-    {id:'hour',icon:'1h',title:'Veteran',desc:'Toplam 1 saat oyunda kal',current:totalMs,target:3600000,unit:'ms'}
+    {id:'first',icon:'1',title:t('achFirstTitle'),desc:t('achFirstDesc'),current:games,target:1},
+    {id:'tensec',icon:'10s',title:t('achTenTitle'),desc:t('achTenDesc'),current:bestMs/1000,target:10},
+    {id:'tenwaves',icon:'10×',title:t('achWavesTitle'),desc:t('achWavesDesc'),current:maxWaves,target:10},
+    {id:'thirty',icon:'30s',title:t('achThirtyTitle'),desc:t('achThirtyDesc'),current:bestMs/1000,target:30},
+    {id:'fifty',icon:'50s',title:t('achFiftyTitle'),desc:t('achFiftyDesc'),current:bestMs/1000,target:50},
+    {id:'games25',icon:'25×',title:t('ach25Title'),desc:t('ach25Desc'),current:games,target:25},
+    {id:'games100',icon:'100',title:t('ach100Title'),desc:t('ach100Desc'),current:games,target:100},
+    {id:'streak',icon:'5×',title:t('achStreakTitle'),desc:t('achStreakDesc'),current:streak,target:5},
+    {id:'records',icon:'★',title:t('achRecordsTitle'),desc:t('achRecordsDesc'),current:breaks,target:10},
+    {id:'hour',icon:'1h',title:t('achHourTitle'),desc:t('achHourDesc'),current:totalMs,target:3600000}
   ].map(a=>({...a,unlocked:a.current>=a.target,progress:Math.min(1,a.current/a.target)}));
 }
 
 function achievementProgressText(a){
-  if(a.unlocked)return'Tamamlandı';
+  if(a.unlocked)return t('completed');
   if(a.id==='hour'){
     const mins=Math.floor(a.current/60000);
-    return mins+' / 60 dk';
+    return mins+' / 60 '+t('minUnit');
   }
   if(['tensec','thirty','fifty'].includes(a.id)){
     return Math.min(a.current,a.target).toFixed(1)+' / '+a.target+'s';
@@ -1539,7 +1630,7 @@ function renderAchievements(){
     const icon=document.createElement('div');icon.className='achievement-mini-icon';icon.textContent=a.icon;
     const txt=document.createElement('div');txt.className='achievement-mini-text';
     const title=document.createElement('b');title.textContent=a.title;
-    const status=document.createElement('span');status.textContent=a.unlocked?'Açıldı':Math.round(a.progress*100)+'%';
+    const status=document.createElement('span');status.textContent=a.unlocked?t('opened'):Math.round(a.progress*100)+'%';
     txt.append(title,status);el.append(icon,txt);mini.appendChild(el);
   });
 
@@ -1550,7 +1641,7 @@ function renderAchievements(){
     el.className='achievement-card'+(a.unlocked?' unlocked':' locked');
     const top=document.createElement('div');top.className='achievement-card-top';
     const icon=document.createElement('div');icon.className='achievement-icon';icon.textContent=a.icon;
-    const state=document.createElement('div');state.className='achievement-state';state.textContent=a.unlocked?'AÇILDI':'KİLİTLİ';
+    const state=document.createElement('div');state.className='achievement-state';state.textContent=a.unlocked?t('openedUpper'):t('lockedUpper');
     top.append(icon,state);
     const title=document.createElement('b');title.className='achievement-title';title.textContent=a.title;
     const desc=document.createElement('span');desc.className='achievement-desc';desc.textContent=a.desc;
@@ -1569,10 +1660,10 @@ function renderHomeInsights(){
   const remaining=Math.max(0,target-best);
   const progress=target?Math.min(100,(best/target)*100):0;
   $('#goalTarget').textContent=target.toFixed(2)+'s';
-  $('#goalBestLabel').textContent='Rekorun: '+best.toFixed(2)+'s';
+  $('#goalBestLabel').textContent=t('recordLabel',{score:best.toFixed(2)});
   $('#goalPercent').textContent=Math.round(progress)+'%';
   $('#goalProgressBar').style.width=progress+'%';
-  $('#goalRemaining').textContent=best<=0?'İlk hedefin':remaining.toFixed(2)+' saniye kaldı';
+  $('#goalRemaining').textContent=best<=0?t('firstGoal'):t('secondsLeft',{seconds:remaining.toFixed(2)});
   renderAchievements();
 }
 
@@ -1596,16 +1687,16 @@ async function fetchLeaderboardPage(limit,offset){
 function renderBoard(target,rows,{append=false}={}){
   if(!target)return;
   if(!append)target.innerHTML='';
-  if(!rows.length&&!append){target.innerHTML='<div class="tiny board-empty">Henüz skor yok. İlk rekoru sen koy.</div>';return}
+  if(!rows.length&&!append){target.innerHTML='<div class="tiny board-empty">'+t('noScoresFirst')+'</div>';return}
   rows.forEach((r,i)=>{
-    const username=r.username||r.safe_zone_profiles?.username||'Oyuncu';
+    const username=r.username||r.safe_zone_profiles?.username||t('playerDefault');
     const member=r.member_number||r.safe_zone_profiles?.member_number;
     const rank=Number(r.global_rank||i+1);
     const el=document.createElement('div');el.className='row'+(currentUser&&r.user_id===currentUser.id?' me':'');
     const rankEl=document.createElement('div');rankEl.className='rank';rankEl.textContent=rank;
     const center=document.createElement('div');
     const name=document.createElement('div');name.className='name';name.textContent=username+(member?' · #'+member:'');
-    const small=document.createElement('div');small.className='tiny';small.textContent=(Number(r.waves)||0)+' çöküş';
+    const small=document.createElement('div');small.className='tiny';small.textContent=t('wavesLabel',{count:Number(r.waves)||0});
     center.append(name,small);
     const score=document.createElement('div');score.className='score';score.textContent=((Number(r.survival_ms)||0)/1000).toFixed(2)+'s';
     el.append(rankEl,center,score);target.appendChild(el)
@@ -1614,7 +1705,7 @@ function renderBoard(target,rows,{append=false}={}){
 async function loadLeaderboard(){
   const target=$('#homeBoard');
   if(!currentUser)return;
-  if(target)target.innerHTML='<div class="tiny">Skorlar yükleniyor…</div>';
+  if(target)target.innerHTML='<div class="tiny">'+t('scoresLoading')+'</div>';
   try{
     const rows=await fetchLeaderboardPage(5,0);
     renderBoard(target,rows);
@@ -1622,7 +1713,7 @@ async function loadLeaderboard(){
     await loadMyStats();
     await loadHomeInsights();
   }catch(e){
-    if(target)target.innerHTML='<div class="tiny">Sıralama şu an yüklenemedi.</div>';
+    if(target)target.innerHTML='<div class="tiny">'+t('leaderboardUnavailable')+'</div>';
     try{await loadMyStats()}catch{}
   }
 }
@@ -1630,10 +1721,10 @@ function updateLeaderboardSummary(){
   const shown=Math.min(leaderboardOffset,leaderboardTotal);
   const rank=Number(myStats?.global_rank||0);
   const parts=[];
-  if(leaderboardTotal)parts.push(leaderboardTotal+' oyuncu');
-  if(rank)parts.push('sen #'+rank);
-  if(shown&&leaderboardTotal>shown)parts.push('ilk '+shown+' gösteriliyor');
-  $('#leaderboardSummary').textContent=parts.length?parts.join(' · '):'Henüz sıralama oluşmadı.';
+  if(leaderboardTotal)parts.push(t('playersCount',{count:leaderboardTotal}));
+  if(rank)parts.push(t('yourRank',{rank}));
+  if(shown&&leaderboardTotal>shown)parts.push(t('showingFirst',{count:shown}));
+  $('#leaderboardSummary').textContent=parts.length?parts.join(' · '):t('noLeaderboard');
 }
 async function loadFullLeaderboard(reset=false){
   if(!currentUser||leaderboardLoading)return;
@@ -1641,7 +1732,7 @@ async function loadFullLeaderboard(reset=false){
   const target=$('#leaderboardBoard'),more=$('#leaderboardLoadMore'),refresh=$('#leaderboardRefresh');
   if(reset){
     leaderboardOffset=0;leaderboardTotal=0;
-    target.innerHTML='<div class="tiny">Skorlar yükleniyor…</div>';
+    target.innerHTML='<div class="tiny">'+t('scoresLoading')+'</div>';
     more.classList.add('hidden');
   }
   refresh.disabled=true;more.disabled=true;
@@ -1653,13 +1744,13 @@ async function loadFullLeaderboard(reset=false){
       leaderboardTotal=Number(rows[0].total_players||leaderboardTotal);
       leaderboardOffset+=rows.length;
     }else if(reset){
-      target.innerHTML='<div class="tiny board-empty">Henüz skor yok.</div>';
+      target.innerHTML='<div class="tiny board-empty">'+t('noScores')+'</div>';
     }
     updateLeaderboardSummary();
     more.classList.toggle('hidden',leaderboardOffset>=leaderboardTotal||rows.length===0);
   }catch(e){
-    if(reset)target.innerHTML='<div class="tiny board-empty">Sıralama şu an yüklenemedi.</div>';
-    showToast('Sıralama yüklenemedi.','error');
+    if(reset)target.innerHTML='<div class="tiny board-empty">'+t('leaderboardUnavailable')+'</div>';
+    showToast(t('leaderboardToast'),'error');
   }finally{
     refresh.disabled=false;more.disabled=false;leaderboardLoading=false;
   }
@@ -1675,7 +1766,7 @@ async function refreshAuthState(){
   }catch(e){
     currentUser=null;currentProfile=null;
     show('authScreen');
-    showToast('Sunucuya bağlanılamadı. Bağlantını kontrol et.','error');
+    showToast(t('serverUnavailable'),'error');
   }finally{
     $('#loading').classList.add('hidden');
   }
@@ -1726,7 +1817,7 @@ $('#recoveryCodeForm').addEventListener('submit',async e=>{e.preventDefault();co
 $('#deleteForm').addEventListener('submit',async e=>{e.preventDefault();if($('#deleteConfirm').value.trim().toUpperCase()!=='SIL'){setMsg($('#deleteMsg'),'Onay alanına SIL yazmalısın.','error');return}const password=$('#deletePassword').value;setMsg($('#deleteMsg'),'Hesap siliniyor…');try{const {data,error}=await sb.functions.invoke('safe-zone-delete-account',{body:{password}});if(error)throw error;if(!data?.ok)throw new Error(data?.message||'Hesap silinemedi.');currentUser=null;currentProfile=null;$('#deleteModal').classList.add('hidden');await sb.auth.signOut({scope:'local'}).catch(()=>{});switchAuth('login');show('authScreen');setMsg($('#loginMsg'),'Hesabın ve skorların kalıcı olarak silindi.','ok')}catch(err){setMsg($('#deleteMsg'),err.message||'Hesap silinemedi.','error')}});
 
 function resetForgotModal(){$('#forgotUsername').value='';$('#forgotRecoveryCode').value='';$('#forgotNewPassword').value='';$('#forgotNewPassword2').value='';setMsg($('#forgotMsg'),'')}
-$('#loginTab').onclick=()=>switchAuth('login');$('#registerTab').onclick=()=>switchAuth('register');$('#forgotBtn').onclick=()=>{resetForgotModal();$('#forgotModal').classList.remove('hidden')};$('#closeForgot').onclick=()=>{resetForgotModal();$('#forgotModal').classList.add('hidden')};$('#copyRecoveryCode').onclick=async()=>{const code=$('#recoveryCodeValue').textContent;try{await navigator.clipboard.writeText(code);showToast('Kurtarma kodu kopyalandı.','ok')}catch{showToast('Kodu seçip kopyalayabilirsin.','error')}};$('#closeRecoveryCode').onclick=()=>$('#recoveryCodeModal').classList.add('hidden');$('#openDeleteBtn').onclick=()=>{setMsg($('#deleteMsg'),'');$('#deletePassword').value='';$('#deleteConfirm').value='';$('#deleteModal').classList.remove('hidden')};$('#closeDelete').onclick=()=>$('#deleteModal').classList.add('hidden');$('#profileBtn').onclick=()=>{show('profileScreen');resetSubscreenScroll('profileScreen');Promise.all([loadMyStats(),loadScoreTrend()]).catch(()=>{})};$('#profileBack').onclick=()=>show('homeScreen');$('#achievementsBtn').onclick=()=>{show('achievementsScreen');resetSubscreenScroll('achievementsScreen');renderAchievements()};$('#achievementsBack').onclick=()=>show('homeScreen');$('#settingsBtn').onclick=()=>{closeAllSettingsAccordions();show('settingsScreen');resetSubscreenScroll('settingsScreen')};$('#settingsBack').onclick=()=>{closeAllSettingsAccordions();show('homeScreen')};$('#logoutBtn').onclick=async()=>{await sb.auth.signOut();currentUser=null;currentProfile=null;myStats=null;switchAuth('login');show('authScreen')};$('#homeRefreshBoard').onclick=loadLeaderboard;$('#leaderboardBtn').onclick=()=>{show('leaderboardScreen');resetSubscreenScroll('leaderboardScreen');loadFullLeaderboard(true)};$('#leaderboardBack').onclick=()=>show('homeScreen');$('#leaderboardRefresh').onclick=()=>loadFullLeaderboard(true);$('#leaderboardLoadMore').onclick=()=>loadFullLeaderboard(false);
+$('#loginTab').onclick=()=>switchAuth('login');$('#registerTab').onclick=()=>switchAuth('register');$('#forgotBtn').onclick=()=>{resetForgotModal();$('#forgotModal').classList.remove('hidden')};$('#closeForgot').onclick=()=>{resetForgotModal();$('#forgotModal').classList.add('hidden')};$('#copyRecoveryCode').onclick=async()=>{const code=$('#recoveryCodeValue').textContent;try{await navigator.clipboard.writeText(code);showToast(t('copyCode'),'ok')}catch{showToast(t('copyManual'),'error')}};$('#closeRecoveryCode').onclick=()=>$('#recoveryCodeModal').classList.add('hidden');$('#openDeleteBtn').onclick=()=>{setMsg($('#deleteMsg'),'');$('#deletePassword').value='';$('#deleteConfirm').value='';$('#deleteModal').classList.remove('hidden')};$('#closeDelete').onclick=()=>$('#deleteModal').classList.add('hidden');$('#profileBtn').onclick=()=>{show('profileScreen');resetSubscreenScroll('profileScreen');Promise.all([loadMyStats(),loadScoreTrend()]).catch(()=>{})};$('#profileBack').onclick=()=>show('homeScreen');$('#achievementsBtn').onclick=()=>{show('achievementsScreen');resetSubscreenScroll('achievementsScreen');renderAchievements()};$('#achievementsBack').onclick=()=>show('homeScreen');$('#settingsBtn').onclick=()=>{closeAllSettingsAccordions();show('settingsScreen');resetSubscreenScroll('settingsScreen')};$('#settingsBack').onclick=()=>{closeAllSettingsAccordions();show('homeScreen')};$('#logoutBtn').onclick=async()=>{await sb.auth.signOut();currentUser=null;currentProfile=null;myStats=null;switchAuth('login');show('authScreen')};$('#homeRefreshBoard').onclick=loadLeaderboard;$('#leaderboardBtn').onclick=()=>{show('leaderboardScreen');resetSubscreenScroll('leaderboardScreen');loadFullLeaderboard(true)};$('#leaderboardBack').onclick=()=>show('homeScreen');$('#leaderboardRefresh').onclick=()=>loadFullLeaderboard(true);$('#leaderboardLoadMore').onclick=()=>loadFullLeaderboard(false);
 
 function zoneCount(){if(MOBILE_GAME)return wave<5?5:wave<12?6:wave<22?7:8;return wave<5?4:wave<12?5:wave<24?6:7}
 function cycleDuration(){return Math.max(1.55,3.2-wave*.085)}
@@ -1766,7 +1857,7 @@ function addChallengeZone(){
   zones.push(z);
   addRing(z.x,z.y,z.r+4,'255,255,255',105,.55,3);
   spawnParticles(z.x,z.y,6,'spawn');
-  showToast('Zorluk arttı · +1 daire');
+  showToast(t('difficultyUp'));
 }
 function prepareCycle(){
   cycle=0;revealCuePlayed=false;dangerCuePlayed=false;revealPulse=0;collapseAt=cycleDuration();revealAt=collapseAt-revealLead();
@@ -1777,7 +1868,7 @@ function prepareCycle(){
   safeIndex=pick.i;lastSafeZone=pick.z;
   decoyIndex=-1;
   if(wave>=7&&zones.length>2&&Math.random()<Math.min(.72,.18+wave*.035)){do{decoyIndex=Math.floor(Math.random()*zones.length)}while(decoyIndex===safeIndex);zones[decoyIndex].fakePulse=.24}
-  $('#gameStatus').textContent='Güvenli bölgeyi bekle…';
+  $('#gameStatus').textContent=t('safeWait');
   $('#gameStatus').classList.remove('active','danger')
 }
 function pulseHud(el,className='hud-pop'){if(!el||REDUCED_MOTION)return;el.classList.remove(className);void el.offsetWidth;el.classList.add(className)}
@@ -1814,24 +1905,24 @@ function updateHud(){
   chase.classList.remove('hidden');
   if(remaining>0){
     chase.className='record-chase approaching';
-    chase.textContent='REKORA '+remaining.toFixed(2)+'s';
+    chase.textContent=t('recordTo',{time:remaining.toFixed(2)});
     return;
   }
 
   if(recordCrossedAt<0){
     recordCrossedAt=elapsed;
     chase.className='record-chase record-hit';
-    chase.textContent='YENİ REKOR';
+    chase.textContent=t('newRecord');
     pulseHud(chase,'record-hit-pop');
     return;
   }
 
   if(elapsed-recordCrossedAt<1.25){
     chase.className='record-chase record-hit';
-    chase.textContent='YENİ REKOR';
+    chase.textContent=t('newRecord');
   }else{
     chase.className='record-chase record-ahead';
-    chase.textContent='REKOR +'+(elapsed-best).toFixed(2)+'s';
+    chase.textContent=t('recordAhead',{time:(elapsed-best).toFixed(2)});
   }
 }
 async function callRunService(body){
@@ -1854,8 +1945,8 @@ async function startGame(){
   if((!guestMode&&(!currentUser||!currentProfile))||startGamePending)return;
   if(soundEnabled)getAudioCtx();
   startGamePending=true;
-  setBusy($('#playBtn'),true,'OYUNA BAŞLA','HAZIR OL…');setBusy($('#retryBtn'),true,'TEKRAR OYNA','HAZIR OL…');
-  const guestBtn=$('#guestPlayBtn');if(guestBtn){guestBtn.disabled=true;const gb=guestBtn.querySelector('b');if(gb)gb.textContent='HAZIR OL…'}
+  setBusy($('#playBtn'),true,t('startGame'),t('startBusy'));setBusy($('#retryBtn'),true,t('retry'),t('startBusy'));
+  const guestBtn=$('#guestPlayBtn');if(guestBtn){guestBtn.disabled=true;const gb=guestBtn.querySelector('b');if(gb)gb.textContent=t('startBusy')}
   try{
     if(guestMode){
       activeRunSession=null;
@@ -1874,11 +1965,11 @@ async function startGame(){
     show('gameScreen');draw();last=performance.now();raf=requestAnimationFrame(loop);
   }catch(e){
     activeRunSession=null;
-    showToast(e?.message||'Oyun başlatılamadı.','error');
+    showToast(currentLang==='tr'?(e?.message||t('startFailed')):t('startFailed'),'error');
   }finally{
     startGamePending=false;
-    setBusy($('#playBtn'),false,'OYUNA BAŞLA');setBusy($('#retryBtn'),false,'TEKRAR OYNA');
-    const guestBtn=$('#guestPlayBtn');if(guestBtn){guestBtn.disabled=false;const gb=guestBtn.querySelector('b');if(gb)gb.textContent='MİSAFİR OLARAK OYNA'}
+    setBusy($('#playBtn'),false,t('startGame'));setBusy($('#retryBtn'),false,t('retry'));
+    const guestBtn=$('#guestPlayBtn');if(guestBtn){guestBtn.disabled=false;const gb=guestBtn.querySelector('b');if(gb)gb.textContent=t('guestPlay')}
   }
 }
 function stopGameToHome(){running=false;paused=false;dying=false;activeRunSession=null;clearTimeout(deathTimer);stopAmbientSound();cancelAnimationFrame(raf);$('#pauseOverlay').classList.add('hidden');if(guestMode){show('authScreen')}else{show('homeScreen');loadLeaderboard()}}
@@ -1894,7 +1985,7 @@ function pointInZone(x,y,z,m=0){const dx=x-z.x,dy=y-z.y;return dx*dx+dy*dy<=Math
 function dashTo(z){if(!running||paused)return;player.sx=player.x;player.sy=player.y;player.tx=z.x;player.ty=z.y;player.targetZone=z;player.attachedZone=null;player.progress=0;player.moving=true}
 canvas.addEventListener('pointerdown',e=>{if(!running||paused||dying||cycle<revealAt)return;const r=canvas.getBoundingClientRect(),x=(e.clientX-r.left)*W/r.width,y=(e.clientY-r.top)*H/r.height;let picked=null,d0=Infinity;for(const z of zones){const d=(x-z.x)**2+(y-z.y)**2;if(d<=Math.pow(z.r+16,2)&&d<d0){picked=z;d0=d}}if(picked)dashTo(picked)});
 let soundEnabled=localStorage.getItem('safe_zone_sound')!=='off',audioCtx=null,ambientNodes=null;
-function updateSoundButton(){const b=$('#soundToggle');if(!b)return;b.textContent=soundEnabled?'AÇIK':'KAPALI';b.classList.toggle('off',!soundEnabled)}
+function updateSoundButton(){const b=$('#soundToggle');if(!b)return;b.textContent=soundEnabled?t('on'):t('off');b.classList.toggle('off',!soundEnabled)}
 function getAudioCtx(){try{audioCtx=audioCtx||new (window.AudioContext||window.webkitAudioContext)();if(audioCtx.state==='suspended')audioCtx.resume().catch(()=>{});return audioCtx}catch{return null}}
 function tone(freq,duration=.09,delay=0,volume=.04,type='sine',endFreq=null){
   if(!soundEnabled)return;
@@ -1960,7 +2051,7 @@ function showNewAchievements(){
   const box=$('#resultAchievement');
   if(!newlyUnlocked.length){box.classList.add('hidden');return}
   $('#resultAchievementTitle').textContent=newlyUnlocked[0].title;
-  $('#resultAchievementMore').textContent=newlyUnlocked.length>1?('+'+(newlyUnlocked.length-1)+' başarım daha'):'';
+  $('#resultAchievementMore').textContent=newlyUnlocked.length>1?t('achievementMore',{count:newlyUnlocked.length-1}):'';
   box.classList.remove('hidden');
   if(!REDUCED_MOTION){box.classList.remove('achievement-pop');void box.offsetWidth;box.classList.add('achievement-pop')}
   playAchievementSound();
@@ -1969,7 +2060,7 @@ async function endGame(){
   if(!running)return;
   running=false;paused=false;dying=false;clearTimeout(deathTimer);stopAmbientSound();cancelAnimationFrame(raf);
   const ms=Math.round(elapsed*1000),previousGames=Number(myStats?.games_played||0),previousBest=Number(myStats?.best_survival_ms||0);
-  $('#finalTime').textContent=elapsed.toFixed(2)+'s';$('#finalWaves').textContent=wave;$('#finalUsername').textContent=guestMode?'Misafir':currentProfile.username;
+  $('#finalTime').textContent=elapsed.toFixed(2)+'s';$('#finalWaves').textContent=wave;$('#finalUsername').textContent=guestMode?t('guest'):currentProfile.username;
   setMsg($('#resultMsg'),'');
   const badge=$('#recordBadge');badge.classList.add('hidden');badge.textContent='';
   $('#resultAchievement').classList.add('hidden');
@@ -1977,18 +2068,18 @@ async function endGame(){
   show('resultScreen');
   const rc=$('.resultcard');if(rc&&!REDUCED_MOTION){rc.classList.remove('result-arrive');void rc.offsetWidth;rc.classList.add('result-arrive')}
   if(guestMode){
-    setMsg($('#resultMsg'),'Skor kaydedilmedi · misafir modu');
+    setMsg($('#resultMsg'),t('guestNotSaved'));
     return;
   }
   try{
     await saveRun();
-    if(previousGames===0){badge.textContent='İLK REKOR';badge.classList.remove('hidden');pulseHud(badge,'badge-pop')}
-    else if(ms>previousBest){badge.textContent='YENİ REKOR';badge.classList.remove('hidden');pulseHud(badge,'badge-pop')}
+    if(previousGames===0){badge.textContent=t('firstRecord');badge.classList.remove('hidden');pulseHud(badge,'badge-pop')}
+    else if(ms>previousBest){badge.textContent=t('newRecord');badge.classList.remove('hidden');pulseHud(badge,'badge-pop')}
     await loadLeaderboard();
     showNewAchievements();
   }catch(err){
     activeRunSession=null;
-    setMsg($('#resultMsg'),err?.message||'Skor kaydedilemedi. İnternet bağlantını kontrol et.','error');
+    setMsg($('#resultMsg'),currentLang==='tr'?(err?.message||t('scoreSaveError')):t('scoreSaveError'),'error');
   }
 }
 function addRing(x,y,r,color='34,211,238',speed=90,life=.42,width=4){
@@ -2042,7 +2133,7 @@ function collapse(){
   wave++;
   player.x=safe.x;player.y=safe.y;player.tx=safe.x;player.ty=safe.y;player.moving=false;player.targetZone=null;player.attachedZone=safe;
   if(wave%10===0&&wave<=30)addChallengeZone();
-  $('#gameStatus').textContent='GÜVENDESİN';
+  $('#gameStatus').textContent=t('safe');
   prepareCycle()
 }
 function update(dt){
@@ -2077,7 +2168,7 @@ function update(dt){
   }
   if(cycle>=revealAt&&cycle<collapseAt){
     const left=collapseAt-cycle;
-    $('#gameStatus').textContent='GÜVENLİ BÖLGE AÇIK — '+left.toFixed(2)+'s';
+    $('#gameStatus').textContent=t('safeOpen',{time:left.toFixed(2)});
     $('#gameStatus').classList.toggle('danger',left<.45);
     if(left<.30&&!dangerCuePlayed){dangerCuePlayed=true;playDangerSound()}
   }
@@ -2194,6 +2285,7 @@ window.safeZoneHandleBack=()=>{
   return false
 };
 
+initLanguageUI();
 sb.auth.onAuthStateChange((event,session)=>{if(event==='SIGNED_OUT'){currentUser=null;currentProfile=null}else if(session?.user){guestMode=false;currentUser=session.user}});
 refreshAuthState();
 })();
