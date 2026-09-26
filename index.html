@@ -387,6 +387,51 @@ button:disabled{opacity:.55;cursor:not-allowed}
 .recovery-code-input{text-transform:uppercase;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;letter-spacing:.035em}
 @media(max-width:600px){.recovery-code-value{font-size:14px;letter-spacing:.04em}.recovery-code-actions{grid-template-columns:1fr}}
 
+
+/* v12 profesyonel kompakt ayarlar */
+.settings-panel{padding:18px}
+.settings-static-block{padding:2px 2px 0}
+.settings-block-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:12px}
+.settings-block-head .sectiontitle{margin:0;font-size:18px}
+.settings-block-head p{margin:4px 0 0;color:var(--muted);font-size:10px;line-height:1.45}
+.settings-separator{height:1px;background:var(--line);margin:18px 0}
+.compact-setting-row{border:1px solid var(--line);border-radius:14px;background:#0a1018;padding:11px 12px}
+.settings-accordion{border:1px solid var(--line);border-radius:15px;background:#0a1018;overflow:hidden;margin-top:9px;transition:border-color .18s ease,background .18s ease}
+.settings-accordion.open{border-color:rgba(41,215,238,.22);background:#0b121b}
+.settings-accordion-trigger{width:100%;min-height:64px;padding:12px 13px;border:0;background:transparent;color:var(--text);display:flex;align-items:center;justify-content:space-between;gap:12px;text-align:left}
+.settings-accordion-copy{min-width:0}
+.settings-accordion-copy b{display:block;font-size:13px}
+.settings-accordion-copy small{display:block;margin-top:4px;color:var(--muted);font-size:9px;line-height:1.35;font-weight:500}
+.settings-accordion-meta{display:flex;align-items:center;gap:9px;flex:0 0 auto}
+.settings-accordion-meta em{font-style:normal;font-size:9px;font-weight:850;color:var(--muted);white-space:nowrap}
+.settings-accordion-meta em.ready{color:#86efac}
+.settings-accordion-meta em.missing{color:#fbbf24}
+.settings-chevron{display:grid;place-items:center;width:25px;height:25px;border-radius:8px;border:1px solid var(--line);color:var(--muted);font-size:16px;line-height:1;transition:transform .18s ease,color .18s ease}
+.settings-accordion.open .settings-chevron{transform:rotate(180deg);color:var(--accent2)}
+.settings-accordion-body{padding:0 13px 13px;border-top:1px solid rgba(255,255,255,.045)}
+.settings-accordion-body .form{padding-top:12px}
+.recovery-note{display:flex;gap:9px;align-items:flex-start;margin-top:12px;padding:10px 11px;border-radius:12px;border:1px solid rgba(41,215,238,.14);background:rgba(41,215,238,.035)}
+.recovery-note-icon{color:var(--accent2);font-size:10px;margin-top:2px}
+.recovery-note p{margin:0;color:var(--muted);font-size:9px;line-height:1.55}
+.recovery-note p b{color:var(--text);font-weight:800}
+.settings-logout{height:50px}
+.danger-accordion{border-color:rgba(251,113,133,.16);background:rgba(251,113,133,.025)}
+.danger-accordion.open{border-color:rgba(251,113,133,.30);background:rgba(251,113,133,.045)}
+.danger-trigger .settings-accordion-copy b{color:#fecdd3}
+.danger-inline-note{margin-top:12px;padding:10px 11px;border-radius:11px;background:rgba(251,113,133,.055);color:#d6a8ae;font-size:9px;line-height:1.5}
+.danger-accordion .settings-accordion-body .danger{margin-top:10px}
+@media(max-width:600px){
+  .settings-panel{padding:14px}
+  .settings-block-head{margin-bottom:9px}
+  .settings-block-head .sectiontitle{font-size:17px}
+  .settings-accordion{border-radius:13px}
+  .settings-accordion-trigger{min-height:59px;padding:10px 11px}
+  .settings-accordion-copy b{font-size:12px}
+  .settings-accordion-copy small{font-size:8.5px}
+  .settings-accordion-body{padding:0 11px 11px}
+  .settings-separator{margin:15px 0}
+}
+
 </style>
 </head>
 <body>
@@ -512,23 +557,56 @@ button:disabled{opacity:.55;cursor:not-allowed}
 
   <section id="settingsScreen" class="screen hidden">
     <div class="top"><button id="settingsBack" class="iconbtn" type="button">← Geri</button><div class="tiny">AYARLAR</div></div>
-    <div class="panel accountpanel">
-      <h2 class="sectiontitle">Hesap</h2>
-      <form id="usernameForm" class="form"><div class="field"><label class="label">Kullanıcı adı</label><input id="accountUsername" class="input" maxlength="16" autocomplete="username" /></div><button class="secondary" type="submit">KULLANICI ADINI GÜNCELLE</button><div id="usernameMsg" class="msg"></div></form>
-      <div class="divider"></div>
-      <h2 class="sectiontitle">Ses</h2>
-      <div class="setting-row"><div><b>Oyun sesleri</b><span>Başarılı geçişlerde ve oyun sonunda ses çal.</span></div><button id="soundToggle" class="toggle-btn" type="button">AÇIK</button></div>
-      <div class="divider"></div>
-      <h2 class="sectiontitle">Şifre değiştir</h2>
-      <form id="passwordForm" class="form"><div class="field"><label class="label">Mevcut şifre</label><input id="currentPassword" class="input" type="password" autocomplete="current-password" /></div><div class="field"><label class="label">Yeni şifre</label><input id="newPassword" class="input" type="password" minlength="8" autocomplete="new-password" /></div><div class="field"><label class="label">Yeni şifre tekrar</label><input id="newPassword2" class="input" type="password" minlength="8" autocomplete="new-password" /></div><button class="secondary" type="submit">ŞİFREYİ DEĞİŞTİR</button><div id="passwordMsg" class="msg"></div></form>
-      <div class="divider"></div>
-      <h2 class="sectiontitle">Kurtarma kodu</h2><p class="sectiondesc">Güvenlik sorusu kullanılmaz. Kurtarma kodun tahmin edilemez ve yalnızca senin hesabın içindir. Yeni kod oluşturursan eski kod anında geçersiz olur.</p>
-      <div class="recovery-status"><span>Durum</span><b id="recoveryStatus">Kontrol ediliyor…</b></div>
-      <form id="recoveryCodeForm" class="form"><div class="field"><label class="label">Mevcut şifre</label><input id="recoveryPassword" class="input" type="password" autocomplete="current-password" required /></div><button id="generateRecoveryBtn" class="secondary" type="submit">YENİ KURTARMA KODU OLUŞTUR</button><div id="recoveryCodeMsg" class="msg"></div></form>
-      <div class="divider"></div>
-      <button id="logoutBtn" class="secondary full-btn" type="button">ÇIKIŞ YAP</button>
-      <div class="divider"></div>
-      <div class="dangerzone"><h3>Hesabı sil</h3><p>Bu işlem hesabını ve Güvenli Bölge skorlarını kalıcı olarak siler. Geri alınamaz.</p><button id="openDeleteBtn" class="danger" type="button">HESABI SİL</button></div>
+    <div class="panel accountpanel settings-panel">
+      <div class="settings-static-block">
+        <div class="settings-block-head"><div><h2 class="sectiontitle">Hesap</h2><p>Kullanıcı adını görüntüle veya güncelle.</p></div></div>
+        <form id="usernameForm" class="form"><div class="field"><label class="label">Kullanıcı adı</label><input id="accountUsername" class="input" maxlength="16" autocomplete="username" /></div><button class="secondary" type="submit">KULLANICI ADINI GÜNCELLE</button><div id="usernameMsg" class="msg"></div></form>
+      </div>
+
+      <div class="settings-separator"></div>
+
+      <div class="settings-static-block">
+        <div class="settings-block-head"><div><h2 class="sectiontitle">Ses</h2><p>Oyun içi ses geri bildirimlerini yönet.</p></div></div>
+        <div class="setting-row compact-setting-row"><div><b>Oyun sesleri</b><span>Geçiş, başarım ve oyun sonu sesleri.</span></div><button id="soundToggle" class="toggle-btn" type="button">AÇIK</button></div>
+      </div>
+
+      <div class="settings-separator"></div>
+
+      <div class="settings-accordion" id="passwordAccordion">
+        <button id="passwordAccordionBtn" class="settings-accordion-trigger" type="button" aria-expanded="false" aria-controls="passwordAccordionBody">
+          <span class="settings-accordion-copy"><b>Şifre değiştir</b><small>Hesap şifreni güvenli şekilde güncelle.</small></span>
+          <span class="settings-chevron" aria-hidden="true">⌄</span>
+        </button>
+        <div id="passwordAccordionBody" class="settings-accordion-body hidden">
+          <form id="passwordForm" class="form"><div class="field"><label class="label">Mevcut şifre</label><input id="currentPassword" class="input" type="password" autocomplete="current-password" /></div><div class="field"><label class="label">Yeni şifre</label><input id="newPassword" class="input" type="password" minlength="8" autocomplete="new-password" /></div><div class="field"><label class="label">Yeni şifre tekrar</label><input id="newPassword2" class="input" type="password" minlength="8" autocomplete="new-password" /></div><button class="secondary" type="submit">ŞİFREYİ DEĞİŞTİR</button><div id="passwordMsg" class="msg"></div></form>
+        </div>
+      </div>
+
+      <div class="settings-accordion" id="recoveryAccordion">
+        <button id="recoveryAccordionBtn" class="settings-accordion-trigger" type="button" aria-expanded="false" aria-controls="recoveryAccordionBody">
+          <span class="settings-accordion-copy"><b>Kurtarma kodu</b><small>Şifreni unutursan hesabına yeniden erişmeni sağlar.</small></span>
+          <span class="settings-accordion-meta"><em id="recoveryStatus">Kontrol ediliyor…</em><span class="settings-chevron" aria-hidden="true">⌄</span></span>
+        </button>
+        <div id="recoveryAccordionBody" class="settings-accordion-body hidden">
+          <div class="recovery-note"><span class="recovery-note-icon">◆</span><p><b>Kurtarma kodunu güvenli bir yerde sakla.</b> Şifreni unutursan hesabını bu kodla geri alabilirsin. Yeni kod oluşturduğunda eski kod anında geçersiz olur.</p></div>
+          <form id="recoveryCodeForm" class="form"><div class="field"><label class="label">Mevcut şifre</label><input id="recoveryPassword" class="input" type="password" autocomplete="current-password" required /></div><button id="generateRecoveryBtn" class="secondary" type="submit">YENİ KURTARMA KODU OLUŞTUR</button><div id="recoveryCodeMsg" class="msg"></div></form>
+        </div>
+      </div>
+
+      <div class="settings-separator"></div>
+      <button id="logoutBtn" class="secondary full-btn settings-logout" type="button">ÇIKIŞ YAP</button>
+      <div class="settings-separator"></div>
+
+      <div class="settings-accordion danger-accordion" id="dangerAccordion">
+        <button id="dangerAccordionBtn" class="settings-accordion-trigger danger-trigger" type="button" aria-expanded="false" aria-controls="dangerAccordionBody">
+          <span class="settings-accordion-copy"><b>Hesabı sil</b><small>Hesabını ve skorlarını kalıcı olarak sil.</small></span>
+          <span class="settings-chevron" aria-hidden="true">⌄</span>
+        </button>
+        <div id="dangerAccordionBody" class="settings-accordion-body hidden">
+          <div class="danger-inline-note">Bu işlem geri alınamaz. Tüm skorların ve hesap bilgilerin kalıcı olarak silinir.</div>
+          <button id="openDeleteBtn" class="danger full-btn" type="button">HESABI SİL</button>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -632,7 +710,7 @@ async function loadProfile(){
   $('#homeMemberTag').textContent='#'+data.member_number;
   $('#profileMemberNo').textContent='Oyuncu #'+data.member_number;
   $('#profileUsernameDisplay').textContent=data.username;
-  const rs=$('#recoveryStatus');if(rs){rs.textContent=data.recovery_ready?'Kod aktif':'Kod oluşturulmadı';rs.className=data.recovery_ready?'ready':'missing'}
+  const rs=$('#recoveryStatus');if(rs){rs.textContent=data.recovery_ready?'Kod aktif':'Kod yok';rs.className=data.recovery_ready?'ready':'missing'}
   return data
 }
 
@@ -966,17 +1044,42 @@ $('#forgotResetForm').addEventListener('submit',async e=>{e.preventDefault();con
 
 $('#usernameForm').addEventListener('submit',async e=>{e.preventDefault();const u=$('#accountUsername').value.trim();if(!validUsername(u)){setMsg($('#usernameMsg'),'3-16 karakter; yalnızca harf, rakam ve _ kullan.','error');return}try{const {error}=await sb.from('safe_zone_profiles').update({username:u,updated_at:new Date().toISOString()}).eq('user_id',currentUser.id);if(error)throw error;currentProfile.username=u;$('#avatar').textContent=u[0].toUpperCase();$('#profileAvatar').textContent=u[0].toUpperCase();$('#profileUsernameDisplay').textContent=u;setMsg($('#usernameMsg'),'Kullanıcı adı güncellendi.','ok');await loadLeaderboard()}catch(err){setMsg($('#usernameMsg'),err?.code==='23505'?'Bu kullanıcı adı alınmış.':'Kullanıcı adı güncellenemedi.','error')}});
 
-$('#passwordForm').addEventListener('submit',async e=>{e.preventDefault();const cur=$('#currentPassword').value,nw=$('#newPassword').value,nw2=$('#newPassword2').value;if(nw.length<8){setMsg($('#passwordMsg'),'Yeni şifre en az 8 karakter olmalı.','error');return}if(nw!==nw2){setMsg($('#passwordMsg'),'Yeni şifreler eşleşmiyor.','error');return}try{const {error:verify}=await sb.auth.signInWithPassword({email:currentUser.email,password:cur});if(verify)throw new Error('Mevcut şifre yanlış.');const {error}=await sb.auth.updateUser({password:nw});if(error)throw error;$('#currentPassword').value=$('#newPassword').value=$('#newPassword2').value='';setMsg($('#passwordMsg'),'Şifren güncellendi.','ok')}catch(err){setMsg($('#passwordMsg'),err.message||'Şifre değiştirilemedi.','error')}});
+function setSettingsAccordion(name,open){
+  const btn=$('#'+name+'AccordionBtn'),body=$('#'+name+'AccordionBody'),root=$('#'+name+'Accordion');
+  if(!btn||!body||!root)return;
+  btn.setAttribute('aria-expanded',String(open));
+  body.classList.toggle('hidden',!open);
+  root.classList.toggle('open',open);
+  if(!open){
+    if(name==='password'){
+      $('#currentPassword').value='';$('#newPassword').value='';$('#newPassword2').value='';setMsg($('#passwordMsg'),'');
+    }
+    if(name==='recovery'){
+      $('#recoveryPassword').value='';setMsg($('#recoveryCodeMsg'),'');
+    }
+  }
+}
+function toggleSettingsAccordion(name){
+  const btn=$('#'+name+'AccordionBtn');
+  const willOpen=btn?.getAttribute('aria-expanded')!=='true';
+  ['password','recovery','danger'].forEach(n=>setSettingsAccordion(n,n===name?willOpen:false));
+}
+function closeAllSettingsAccordions(){['password','recovery','danger'].forEach(n=>setSettingsAccordion(n,false))}
+$('#passwordAccordionBtn').onclick=()=>toggleSettingsAccordion('password');
+$('#recoveryAccordionBtn').onclick=()=>toggleSettingsAccordion('recovery');
+$('#dangerAccordionBtn').onclick=()=>toggleSettingsAccordion('danger');
+
+$('#passwordForm').addEventListener('submit',async e=>{e.preventDefault();const cur=$('#currentPassword').value,nw=$('#newPassword').value,nw2=$('#newPassword2').value;if(nw.length<8){setMsg($('#passwordMsg'),'Yeni şifre en az 8 karakter olmalı.','error');return}if(nw!==nw2){setMsg($('#passwordMsg'),'Yeni şifreler eşleşmiyor.','error');return}try{const {error:verify}=await sb.auth.signInWithPassword({email:currentUser.email,password:cur});if(verify)throw new Error('Mevcut şifre yanlış.');const {error}=await sb.auth.updateUser({password:nw});if(error)throw error;$('#currentPassword').value=$('#newPassword').value=$('#newPassword2').value='';setMsg($('#passwordMsg'),'Şifren güncellendi.','ok');setTimeout(()=>setSettingsAccordion('password',false),700)}catch(err){setMsg($('#passwordMsg'),err.message||'Şifre değiştirilemedi.','error')}});
 
 function showRecoveryCode(code,title='Kurtarma kodun',help='Bu kodu güvenli bir yerde sakla.'){
   $('#recoveryCodeTitle').textContent=title;$('#recoveryCodeHelp').textContent=help;$('#recoveryCodeValue').textContent=code;$('#recoveryCodeModal').classList.remove('hidden')
 }
-$('#recoveryCodeForm').addEventListener('submit',async e=>{e.preventDefault();const btn=$('#generateRecoveryBtn'),password=$('#recoveryPassword').value;setBusy(btn,true,'YENİ KURTARMA KODU OLUŞTUR');setMsg($('#recoveryCodeMsg'),'');try{const {data,error}=await sb.functions.invoke('safe-zone-update-recovery',{body:{current_password:password,action:'generate_code'}});if(error)throw error;if(!data?.ok||!data?.recovery_code)throw new Error(data?.message||'Kurtarma kodu oluşturulamadı.');$('#recoveryPassword').value='';currentProfile.recovery_ready=true;$('#recoveryStatus').textContent='Kod aktif';$('#recoveryStatus').className='ready';showRecoveryCode(data.recovery_code,'Yeni kurtarma kodun','Eski kurtarma kodun artık geçersiz. Bu yeni kodu güvenli bir yerde sakla.')}catch(err){setMsg($('#recoveryCodeMsg'),err.message||'Kurtarma kodu oluşturulamadı.','error')}finally{setBusy(btn,false,'YENİ KURTARMA KODU OLUŞTUR')}});
+$('#recoveryCodeForm').addEventListener('submit',async e=>{e.preventDefault();const btn=$('#generateRecoveryBtn'),password=$('#recoveryPassword').value;setBusy(btn,true,'YENİ KURTARMA KODU OLUŞTUR');setMsg($('#recoveryCodeMsg'),'');try{const {data,error}=await sb.functions.invoke('safe-zone-update-recovery',{body:{current_password:password,action:'generate_code'}});if(error)throw error;if(!data?.ok||!data?.recovery_code)throw new Error(data?.message||'Kurtarma kodu oluşturulamadı.');$('#recoveryPassword').value='';currentProfile.recovery_ready=true;$('#recoveryStatus').textContent='Kod aktif';$('#recoveryStatus').className='ready';showRecoveryCode(data.recovery_code,'Yeni kurtarma kodun','Eski kurtarma kodun artık geçersiz. Bu yeni kodu güvenli bir yerde sakla.');setSettingsAccordion('recovery',false)}catch(err){setMsg($('#recoveryCodeMsg'),err.message||'Kurtarma kodu oluşturulamadı.','error')}finally{setBusy(btn,false,'YENİ KURTARMA KODU OLUŞTUR')}});
 
 $('#deleteForm').addEventListener('submit',async e=>{e.preventDefault();if($('#deleteConfirm').value.trim().toUpperCase()!=='SIL'){setMsg($('#deleteMsg'),'Onay alanına SIL yazmalısın.','error');return}const password=$('#deletePassword').value;setMsg($('#deleteMsg'),'Hesap siliniyor…');try{const {data,error}=await sb.functions.invoke('safe-zone-delete-account',{body:{password}});if(error)throw error;if(!data?.ok)throw new Error(data?.message||'Hesap silinemedi.');currentUser=null;currentProfile=null;$('#deleteModal').classList.add('hidden');await sb.auth.signOut({scope:'local'}).catch(()=>{});switchAuth('login');show('authScreen');setMsg($('#loginMsg'),'Hesabın ve skorların kalıcı olarak silindi.','ok')}catch(err){setMsg($('#deleteMsg'),err.message||'Hesap silinemedi.','error')}});
 
 function resetForgotModal(){$('#forgotUsername').value='';$('#forgotRecoveryCode').value='';$('#forgotNewPassword').value='';$('#forgotNewPassword2').value='';setMsg($('#forgotMsg'),'')}
-$('#loginTab').onclick=()=>switchAuth('login');$('#registerTab').onclick=()=>switchAuth('register');$('#forgotBtn').onclick=()=>{resetForgotModal();$('#forgotModal').classList.remove('hidden')};$('#closeForgot').onclick=()=>{resetForgotModal();$('#forgotModal').classList.add('hidden')};$('#copyRecoveryCode').onclick=async()=>{const code=$('#recoveryCodeValue').textContent;try{await navigator.clipboard.writeText(code);showToast('Kurtarma kodu kopyalandı.','ok')}catch{showToast('Kodu seçip kopyalayabilirsin.','error')}};$('#closeRecoveryCode').onclick=()=>$('#recoveryCodeModal').classList.add('hidden');$('#openDeleteBtn').onclick=()=>{setMsg($('#deleteMsg'),'');$('#deletePassword').value='';$('#deleteConfirm').value='';$('#deleteModal').classList.remove('hidden')};$('#closeDelete').onclick=()=>$('#deleteModal').classList.add('hidden');$('#profileBtn').onclick=()=>{show('profileScreen');Promise.all([loadMyStats(),loadScoreTrend()]).catch(()=>{})};$('#profileBack').onclick=()=>show('homeScreen');$('#achievementsBtn').onclick=()=>{show('achievementsScreen');renderAchievements()};$('#achievementsBack').onclick=()=>show('homeScreen');$('#settingsBtn').onclick=()=>show('settingsScreen');$('#settingsBack').onclick=()=>show('homeScreen');$('#logoutBtn').onclick=async()=>{await sb.auth.signOut();currentUser=null;currentProfile=null;myStats=null;switchAuth('login');show('authScreen')};$('#homeRefreshBoard').onclick=loadLeaderboard;
+$('#loginTab').onclick=()=>switchAuth('login');$('#registerTab').onclick=()=>switchAuth('register');$('#forgotBtn').onclick=()=>{resetForgotModal();$('#forgotModal').classList.remove('hidden')};$('#closeForgot').onclick=()=>{resetForgotModal();$('#forgotModal').classList.add('hidden')};$('#copyRecoveryCode').onclick=async()=>{const code=$('#recoveryCodeValue').textContent;try{await navigator.clipboard.writeText(code);showToast('Kurtarma kodu kopyalandı.','ok')}catch{showToast('Kodu seçip kopyalayabilirsin.','error')}};$('#closeRecoveryCode').onclick=()=>$('#recoveryCodeModal').classList.add('hidden');$('#openDeleteBtn').onclick=()=>{setMsg($('#deleteMsg'),'');$('#deletePassword').value='';$('#deleteConfirm').value='';$('#deleteModal').classList.remove('hidden')};$('#closeDelete').onclick=()=>$('#deleteModal').classList.add('hidden');$('#profileBtn').onclick=()=>{show('profileScreen');Promise.all([loadMyStats(),loadScoreTrend()]).catch(()=>{})};$('#profileBack').onclick=()=>show('homeScreen');$('#achievementsBtn').onclick=()=>{show('achievementsScreen');renderAchievements()};$('#achievementsBack').onclick=()=>show('homeScreen');$('#settingsBtn').onclick=()=>{closeAllSettingsAccordions();show('settingsScreen')};$('#settingsBack').onclick=()=>{closeAllSettingsAccordions();show('homeScreen')};$('#logoutBtn').onclick=async()=>{await sb.auth.signOut();currentUser=null;currentProfile=null;myStats=null;switchAuth('login');show('authScreen')};$('#homeRefreshBoard').onclick=loadLeaderboard;
 
 function zoneCount(){if(MOBILE_GAME)return wave<5?5:wave<12?6:wave<22?7:8;return wave<5?4:wave<12?5:wave<24?6:7}
 function cycleDuration(){return Math.max(1.55,3.2-wave*.085)}
@@ -1126,7 +1229,12 @@ window.safeZoneHandleBack=()=>{
   if(!$('#forgotModal').classList.contains('hidden')){$('#forgotModal').classList.add('hidden');return true}
   if(!$('#tutorialModal').classList.contains('hidden')){$('#tutorialModal').classList.add('hidden');return true}
   if(!$('#recoveryCodeModal').classList.contains('hidden')){$('#recoveryCodeModal').classList.add('hidden');return true}
-  if(visible==='profileScreen'||visible==='achievementsScreen'||visible==='settingsScreen'||visible==='resultScreen'){show('homeScreen');return true}
+  if(visible==='settingsScreen'){
+    const open=['password','recovery','danger'].find(n=>$('#'+n+'AccordionBtn')?.getAttribute('aria-expanded')==='true');
+    if(open){setSettingsAccordion(open,false);return true}
+    show('homeScreen');return true
+  }
+  if(visible==='profileScreen'||visible==='achievementsScreen'||visible==='resultScreen'){show('homeScreen');return true}
   if(visible==='gameScreen'){
     if(paused){togglePause();return true}
     togglePause();return true
