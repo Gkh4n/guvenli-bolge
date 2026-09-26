@@ -1547,6 +1547,65 @@ body::-webkit-scrollbar,
   100%{opacity:1;transform:scale(1)}
 }
 
+
+/* v28 yönetici paneli */
+.admin-btn{
+  border-color:rgba(99,231,255,.18)!important;
+  color:#92f3ff!important;
+}
+.admin-glyph{font-size:14px;line-height:1;filter:drop-shadow(0 0 8px rgba(99,231,255,.22))}
+.admin-page{padding:18px;display:grid;gap:14px}
+.admin-overview{padding:20px}
+.admin-overview-head{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;margin-bottom:16px}
+.admin-kicker{font-size:9px;font-weight:900;letter-spacing:.17em;color:#63e7ff;margin-bottom:5px}
+.admin-overview h2{margin:0;font-size:23px}
+.admin-overview p{margin:5px 0 0;color:var(--muted);font-size:10px}
+.admin-private-badge{padding:7px 10px;border:1px solid rgba(99,231,255,.20);border-radius:999px;background:rgba(99,231,255,.055);color:#92f3ff;font-size:8px;font-weight:900;letter-spacing:.12em}
+.admin-summary-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.admin-stat-card{min-width:0;padding:13px;border:1px solid var(--premium-line);border-radius:14px;background:#0a1119}
+.admin-stat-card span{display:block;color:#718194;font-size:8px;font-weight:850;letter-spacing:.08em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.admin-stat-card b{display:block;margin-top:5px;font-size:21px;line-height:1.05;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.admin-stat-card.accent{border-color:rgba(99,231,255,.25);background:rgba(41,215,238,.045)}
+.admin-stat-card.accent b{color:#92f3ff}
+.admin-section{padding:16px}
+.admin-section-head{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin-bottom:10px}
+.admin-section-head b{display:block;font-size:11px;letter-spacing:.10em}
+.admin-section-head span{display:block;margin-top:3px;color:var(--muted);font-size:9px}
+.admin-section-count{margin:0!important;padding:5px 8px;border:1px solid var(--premium-line);border-radius:999px;background:#0a1119;color:#8798a9!important;font-size:8px!important;font-weight:800}
+.admin-player-list,.admin-feed{display:grid;gap:6px}
+.admin-player-row{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:10px 11px;border:1px solid var(--premium-line);border-radius:12px;background:#0a1119}
+.admin-player-main{min-width:0;flex:1}
+.admin-player-main b{display:block;font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.admin-player-main span{display:block;margin-top:3px;color:var(--muted);font-size:8px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.admin-player-metrics{display:grid;grid-template-columns:repeat(4,minmax(54px,1fr));gap:5px;flex:0 0 min(54%,390px)}
+.admin-player-metrics>span{padding:6px 7px;border-radius:9px;background:#0d151e;text-align:right}
+.admin-player-metrics small{display:block;color:#627386;font-size:7px;font-weight:850;letter-spacing:.06em}
+.admin-player-metrics b{display:block;margin-top:2px;font-size:10px;white-space:nowrap}
+.admin-two-column{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.admin-feed-row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px 10px;border:1px solid var(--premium-line);border-radius:11px;background:#0a1119}
+.admin-feed-row>div:first-child{min-width:0}
+.admin-feed-row b{display:block;font-size:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.admin-feed-row span{display:block;margin-top:2px;color:var(--muted);font-size:8px}
+.admin-feed-value{text-align:right;flex:0 0 auto}
+.admin-feed-value b{font-size:11px;color:#dffbff}
+.admin-session-status{flex:0 0 auto;padding:5px 7px;border-radius:999px;border:1px solid var(--premium-line);color:#7f90a3;font-size:7px;font-weight:850}
+.admin-session-status.active{border-color:rgba(74,222,128,.25);background:rgba(74,222,128,.055);color:#86efac}
+.admin-activity-note{margin-top:9px;color:#607184;font-size:8px;line-height:1.45}
+#adminError:empty{display:none}
+@media(max-width:760px){
+  .admin-page{padding:10px;gap:10px}
+  .admin-overview{padding:14px}
+  .admin-summary-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
+  .admin-stat-card{padding:11px}
+  .admin-stat-card b{font-size:18px}
+  .admin-two-column{grid-template-columns:1fr;gap:10px}
+  .admin-section{padding:12px}
+  .admin-player-row{align-items:flex-start;flex-direction:column;gap:8px}
+  .admin-player-main{width:100%}
+  .admin-player-metrics{width:100%;flex:none;grid-template-columns:repeat(4,1fr)}
+  .admin-player-metrics>span{text-align:left}
+}
+
 </style>
 </head>
 <body>
@@ -1600,6 +1659,7 @@ body::-webkit-scrollbar,
           <div id="avatar" class="avatar home-header-avatar">G</div>
           <div class="home-profile-meta"><span>PROFİL</span><b id="homeMemberTag">#-</b></div>
         </button>
+        <button id="adminBtn" class="settings-btn home-settings-btn admin-btn hidden" type="button" aria-label="Yönetici paneli"><span class="admin-glyph" aria-hidden="true">◆</span></button>
         <button id="settingsBtn" class="settings-btn home-settings-btn" type="button" aria-label="Ayarlar"><span class="settings-glyph" aria-hidden="true">⚙</span></button>
       </div>
     </header>
@@ -1636,6 +1696,66 @@ body::-webkit-scrollbar,
           <div id="homeAchievements" class="achievement-mini-grid"></div>
           <div class="achievement-progress"><div id="achievementProgressBar" class="achievement-progress-bar"></div></div>
         </div>
+      </div>
+    </div>
+  </section>
+
+
+  <section id="adminScreen" class="screen app-subscreen hidden">
+    <header class="subscreen-header">
+      <button id="adminBack" class="subscreen-back" type="button">← Geri</button>
+      <div class="subscreen-title">Yönetici Paneli</div>
+      <button id="adminRefresh" class="subscreen-action" type="button">Yenile</button>
+    </header>
+    <div class="subscreen-scroll">
+      <div class="admin-page">
+        <div class="panel admin-overview">
+          <div class="admin-overview-head">
+            <div>
+              <div class="admin-kicker">OYUN ANALİTİĞİ</div>
+              <h2>Genel görünüm</h2>
+              <p id="adminUpdatedAt">Veriler yükleniyor…</p>
+            </div>
+            <div class="admin-private-badge">YÖNETİCİ</div>
+          </div>
+          <div class="admin-summary-grid">
+            <div class="admin-stat-card"><span>TOPLAM HESAP</span><b id="adminTotalAccounts">—</b></div>
+            <div class="admin-stat-card"><span>OYUN OYNAYAN</span><b id="adminPlayersPlayed">—</b></div>
+            <div class="admin-stat-card"><span>TOPLAM OYUN</span><b id="adminTotalGames">—</b></div>
+            <div class="admin-stat-card"><span>TOPLAM SÜRE</span><b id="adminTotalPlayTime">—</b></div>
+            <div class="admin-stat-card"><span>BUGÜN OYUN</span><b id="adminGamesToday">—</b></div>
+            <div class="admin-stat-card"><span>BUGÜN OYUNCU</span><b id="adminPlayersToday">—</b></div>
+            <div class="admin-stat-card"><span>BUGÜN YENİ HESAP</span><b id="adminNewToday">—</b></div>
+            <div class="admin-stat-card accent"><span>SON 15 DK OYUNCU</span><b id="adminRecentPlayers">—</b></div>
+          </div>
+        </div>
+
+        <div class="panel admin-section">
+          <div class="admin-section-head">
+            <div><b>OYUNCULAR</b><span>En çok oynayandan en aza</span></div>
+            <span id="adminPlayerCount" class="admin-section-count">—</span>
+          </div>
+          <div id="adminPlayers" class="admin-player-list"><div class="tiny">Yükleniyor…</div></div>
+        </div>
+
+        <div class="admin-two-column">
+          <div class="panel admin-section">
+            <div class="admin-section-head">
+              <div><b>SON OYUNLAR</b><span>En yeni 20 skor</span></div>
+            </div>
+            <div id="adminRecentRuns" class="admin-feed"><div class="tiny">Yükleniyor…</div></div>
+          </div>
+
+          <div class="panel admin-section">
+            <div class="admin-section-head">
+              <div><b>SON 15 DAKİKA</b><span>Bu sürede oyun başlatan oyuncular</span></div>
+            </div>
+            <div id="adminRecentStarts" class="admin-feed"><div class="tiny">Yükleniyor…</div></div>
+            <div class="admin-activity-note">Bu alan “şu an çevrimiçi” sayacı değildir; son 15 dakika içinde tur başlatan oyuncuları gösterir.</div>
+          </div>
+        </div>
+
+        <div id="adminError" class="msg"></div>
       </div>
     </div>
   </section>
@@ -1972,8 +2092,8 @@ const IS_ANDROID_WEBVIEW=/\bwv\b/i.test(UA);
 const HAS_NATIVE_INSETS=/GuvenliBolgeApp\/2/i.test(UA);
 if(HAS_NATIVE_INSETS)document.body.classList.add('native-webview');
 if(IS_ANDROID_WEBVIEW&&!HAS_NATIVE_INSETS)document.body.classList.add('legacy-webview-insets');
-const screens=['authScreen','homeScreen','leaderboardScreen','profileScreen','achievementsScreen','settingsScreen','gameScreen','resultScreen'];
-let currentUser=null,currentProfile=null,myStats=null,trendRows=[],achievementMetrics={record_breaks:0,max_streak_15s:0},activeRunSession=null,startGamePending=false,achievementSnapshot=new Set(),guestMode=false,leaderboardOffset=0,leaderboardTotal=0,leaderboardLoading=false;
+const screens=['authScreen','homeScreen','adminScreen','leaderboardScreen','profileScreen','achievementsScreen','settingsScreen','gameScreen','resultScreen'];
+let currentUser=null,currentProfile=null,myStats=null,trendRows=[],achievementMetrics={record_breaks:0,max_streak_15s:0},activeRunSession=null,startGamePending=false,achievementSnapshot=new Set(),guestMode=false,leaderboardOffset=0,leaderboardTotal=0,leaderboardLoading=false,isAdmin=false,adminDashboardData=null,adminLoading=false;
 let running=false,paused=false,dying=false,elapsed=0,wave=0,raf=0,last=0,cycle=0,collapseAt=3.2,revealAt=2.15,safeIndex=-1,decoyIndex=-1,flash=0,shake=0,zones=[],lastSafeZone=null,revealCuePlayed=false,dangerCuePlayed=false,revealPulse=0,successPulse=0,deathPulse=0,bgPhase=0,particles=[],fxRings=[],lastHudSecond=-1,lastHudWave=0,deathTimer=0,recordCrossedAt=-1,resumeCountdownTimer=0,resumeCountdownActive=false;
 const MOBILE_GAME=window.matchMedia('(max-width:600px)').matches;
 const REDUCED_MOTION=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -2039,6 +2159,148 @@ function formatTotalTime(ms){
   if(m)return m+' '+t('minUnit')+' '+sec+' '+t('secUnit');
   return sec+' '+t('secUnit')
 }
+
+function formatAdminDate(iso,timeOnly=false){
+  if(!iso)return '—';
+  const d=new Date(iso);
+  if(Number.isNaN(d.getTime()))return '—';
+  const locale={tr:'tr-TR',en:'en-US',de:'de-DE',fr:'fr-FR',es:'es-ES'}[currentLang]||'tr-TR';
+  return new Intl.DateTimeFormat(locale,timeOnly
+    ?{timeZone:'Europe/Istanbul',hour:'2-digit',minute:'2-digit'}
+    :{timeZone:'Europe/Istanbul',day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}
+  ).format(d);
+}
+function adminScore(ms){return ((Number(ms)||0)/1000).toFixed(2)+'s'}
+function setAdminText(id,value){const el=$('#'+id);if(el)el.textContent=String(value)}
+async function refreshAdminAccess(){
+  const btn=$('#adminBtn');
+  if(!currentUser){isAdmin=false;btn?.classList.add('hidden');return false}
+  try{
+    const {data:{user},error}=await sb.auth.getUser();
+    if(error||!user)throw error||new Error('user');
+    currentUser=user;
+    isAdmin=user.app_metadata?.safe_zone_admin===true;
+  }catch{
+    isAdmin=false;
+  }
+  btn?.classList.toggle('hidden',!isAdmin);
+  return isAdmin;
+}
+async function callAdminDashboard(){
+  const {data:{session},error}=await sb.auth.getSession();
+  if(error||!session?.access_token)throw new Error('Oturum doğrulanamadı.');
+  const r=await fetch(SUPABASE_URL+'/functions/v1/safe-zone-admin-stats',{
+    method:'POST',
+    headers:{
+      'apikey':SUPABASE_KEY,
+      'Authorization':'Bearer '+session.access_token,
+      'Content-Type':'application/json'
+    },
+    body:'{}'
+  });
+  const body=await r.json().catch(()=>({}));
+  if(r.status===403){
+    isAdmin=false;
+    $('#adminBtn')?.classList.add('hidden');
+    throw new Error('Yönetici yetkisi bulunamadı.');
+  }
+  if(!r.ok||!body?.dashboard)throw new Error(body?.message||'Yönetici verileri alınamadı.');
+  return body.dashboard;
+}
+function renderAdminDashboard(data){
+  if(!data)return;
+  adminDashboardData=data;
+  const sm=data.summary||{};
+  setAdminText('adminTotalAccounts',sm.total_accounts??0);
+  setAdminText('adminPlayersPlayed',sm.players_who_played??0);
+  setAdminText('adminTotalGames',sm.total_games??0);
+  setAdminText('adminTotalPlayTime',formatTotalTime(sm.total_play_time_ms||0));
+  setAdminText('adminGamesToday',sm.games_today??0);
+  setAdminText('adminPlayersToday',sm.players_today??0);
+  setAdminText('adminNewToday',sm.new_accounts_today??0);
+  setAdminText('adminRecentPlayers',sm.starters_last_15m??0);
+  setAdminText('adminUpdatedAt','Son güncelleme · '+formatAdminDate(data.generated_at));
+
+  const players=Array.isArray(data.players)?data.players:[];
+  setAdminText('adminPlayerCount',players.length+' hesap');
+  const playerTarget=$('#adminPlayers');
+  if(playerTarget){
+    playerTarget.innerHTML='';
+    if(!players.length)playerTarget.innerHTML='<div class="tiny">Oyuncu verisi yok.</div>';
+    players.forEach(p=>{
+      const row=document.createElement('div');row.className='admin-player-row';
+      const main=document.createElement('div');main.className='admin-player-main';
+      const name=document.createElement('b');name.textContent=String(p.username||'-');
+      const meta=document.createElement('span');meta.textContent='#'+String(p.member_number||'-')+' · Son: '+(p.last_played_at?formatAdminDate(p.last_played_at):'Henüz oynamadı');
+      main.append(name,meta);
+      const metrics=document.createElement('div');metrics.className='admin-player-metrics';
+      [
+        ['OYUN',p.games_played??0],
+        ['EN İYİ',adminScore(p.best_survival_ms)],
+        ['ORT.',adminScore(p.avg_survival_ms)],
+        ['ÇÖKÜŞ',p.max_waves??0]
+      ].forEach(([k,v])=>{
+        const box=document.createElement('span');
+        const small=document.createElement('small');small.textContent=String(k);
+        const strong=document.createElement('b');strong.textContent=String(v);
+        box.append(small,strong);metrics.append(box);
+      });
+      row.append(main,metrics);playerTarget.append(row);
+    });
+  }
+
+  const runs=Array.isArray(data.recent_runs)?data.recent_runs:[];
+  const runTarget=$('#adminRecentRuns');
+  if(runTarget){
+    runTarget.innerHTML='';
+    if(!runs.length)runTarget.innerHTML='<div class="tiny">Henüz oyun yok.</div>';
+    runs.forEach(r=>{
+      const row=document.createElement('div');row.className='admin-feed-row';
+      const left=document.createElement('div');
+      const name=document.createElement('b');name.textContent=String(r.username||'-');
+      const meta=document.createElement('span');meta.textContent='#'+String(r.member_number||'-')+' · '+formatAdminDate(r.created_at,true);
+      left.append(name,meta);
+      const right=document.createElement('div');right.className='admin-feed-value';
+      const score=document.createElement('b');score.textContent=adminScore(r.survival_ms);
+      const waves=document.createElement('span');waves.textContent=String(r.waves??0)+' çöküş';
+      right.append(score,waves);
+      row.append(left,right);runTarget.append(row);
+    });
+  }
+
+  const starts=Array.isArray(data.recent_starts)?data.recent_starts:[];
+  const startTarget=$('#adminRecentStarts');
+  if(startTarget){
+    startTarget.innerHTML='';
+    if(!starts.length)startTarget.innerHTML='<div class="tiny">Son 15 dakikada oyun başlatan yok.</div>';
+    starts.forEach(r=>{
+      const row=document.createElement('div');row.className='admin-feed-row';
+      const left=document.createElement('div');
+      const name=document.createElement('b');name.textContent=String(r.username||'-');
+      const meta=document.createElement('span');meta.textContent='#'+String(r.member_number||'-')+' · '+formatAdminDate(r.started_at,true);
+      left.append(name,meta);
+      const status=document.createElement('div');status.className='admin-session-status '+(r.status==='active'?'active':'');
+      status.textContent=r.status==='active'?'Tur açık':'Tur tamamlandı';
+      row.append(left,status);startTarget.append(row);
+    });
+  }
+}
+async function loadAdminDashboard(){
+  if(adminLoading)return;
+  if(!isAdmin&&!(await refreshAdminAccess()))return;
+  adminLoading=true;
+  const refresh=$('#adminRefresh');if(refresh)refresh.disabled=true;
+  setMsg($('#adminError'),'');
+  try{
+    const data=await callAdminDashboard();
+    renderAdminDashboard(data);
+  }catch(e){
+    setMsg($('#adminError'),e?.message||'Yönetici verileri alınamadı.','error');
+  }finally{
+    adminLoading=false;if(refresh)refresh.disabled=false;
+  }
+}
+
 
 async function loadMyStats(){
   if(!currentUser)return;
@@ -2374,7 +2636,7 @@ async function loadFullLeaderboard(reset=false){
     refresh.disabled=false;more.disabled=false;leaderboardLoading=false;
   }
 }
-async function enterAuthenticatedHome(){await loadProfile();await loadLeaderboard();show('homeScreen')}
+async function enterAuthenticatedHome(){await loadProfile();await loadLeaderboard();show('homeScreen');refreshAdminAccess().catch(()=>{})}
 async function refreshAuthState(){
   try{
     const {data:{session},error}=await sb.auth.getSession();
@@ -2436,7 +2698,7 @@ $('#recoveryCodeForm').addEventListener('submit',async e=>{e.preventDefault();co
 $('#deleteForm').addEventListener('submit',async e=>{e.preventDefault();if($('#deleteConfirm').value.trim().toUpperCase()!=='SIL'){setMsg($('#deleteMsg'),t('deleteConfirmSil'),'error');return}const password=$('#deletePassword').value;setMsg($('#deleteMsg'),t('deletingAccount'));try{const {data,error}=await sb.functions.invoke('safe-zone-delete-account',{body:{password}});if(error)throw error;if(!data?.ok)throw new Error(currentLang==='tr'?(data?.message||t('deleteFailed')):t('deleteFailed'));currentUser=null;currentProfile=null;$('#deleteModal').classList.add('hidden');await sb.auth.signOut({scope:'local'}).catch(()=>{});switchAuth('login');show('authScreen');setMsg($('#loginMsg'),t('accountDeleted'),'ok')}catch(err){setMsg($('#deleteMsg'),currentLang==='tr'?(err.message||t('deleteFailed')):t('deleteFailed'),'error')}});
 
 function resetForgotModal(){$('#forgotUsername').value='';$('#forgotRecoveryCode').value='';$('#forgotNewPassword').value='';$('#forgotNewPassword2').value='';setMsg($('#forgotMsg'),'')}
-$('#loginTab').onclick=()=>switchAuth('login');$('#registerTab').onclick=()=>switchAuth('register');$('#forgotBtn').onclick=()=>{resetForgotModal();$('#forgotModal').classList.remove('hidden')};$('#closeForgot').onclick=()=>{resetForgotModal();$('#forgotModal').classList.add('hidden')};$('#copyRecoveryCode').onclick=async()=>{const code=$('#recoveryCodeValue').textContent;try{await navigator.clipboard.writeText(code);showToast(t('copyCode'),'ok')}catch{showToast(t('copyManual'),'error')}};$('#closeRecoveryCode').onclick=()=>$('#recoveryCodeModal').classList.add('hidden');$('#openDeleteBtn').onclick=()=>{setMsg($('#deleteMsg'),'');$('#deletePassword').value='';$('#deleteConfirm').value='';$('#deleteModal').classList.remove('hidden')};$('#closeDelete').onclick=()=>$('#deleteModal').classList.add('hidden');$('#profileBtn').onclick=()=>{show('profileScreen');resetSubscreenScroll('profileScreen');Promise.all([loadMyStats(),loadScoreTrend()]).catch(()=>{})};$('#profileBack').onclick=()=>show('homeScreen');$('#achievementsBtn').onclick=()=>{show('achievementsScreen');resetSubscreenScroll('achievementsScreen');renderAchievements()};$('#achievementsBack').onclick=()=>show('homeScreen');$('#settingsBtn').onclick=()=>{closeAllSettingsAccordions();show('settingsScreen');resetSubscreenScroll('settingsScreen')};$('#settingsBack').onclick=()=>{closeAllSettingsAccordions();show('homeScreen')};$('#logoutBtn').onclick=async()=>{await sb.auth.signOut();currentUser=null;currentProfile=null;myStats=null;switchAuth('login');show('authScreen')};$('#homeRefreshBoard').onclick=loadLeaderboard;$('#leaderboardBtn').onclick=()=>{show('leaderboardScreen');resetSubscreenScroll('leaderboardScreen');loadFullLeaderboard(true)};$('#leaderboardBack').onclick=()=>show('homeScreen');$('#leaderboardRefresh').onclick=()=>loadFullLeaderboard(true);$('#leaderboardLoadMore').onclick=()=>loadFullLeaderboard(false);
+$('#loginTab').onclick=()=>switchAuth('login');$('#registerTab').onclick=()=>switchAuth('register');$('#forgotBtn').onclick=()=>{resetForgotModal();$('#forgotModal').classList.remove('hidden')};$('#closeForgot').onclick=()=>{resetForgotModal();$('#forgotModal').classList.add('hidden')};$('#copyRecoveryCode').onclick=async()=>{const code=$('#recoveryCodeValue').textContent;try{await navigator.clipboard.writeText(code);showToast(t('copyCode'),'ok')}catch{showToast(t('copyManual'),'error')}};$('#closeRecoveryCode').onclick=()=>$('#recoveryCodeModal').classList.add('hidden');$('#openDeleteBtn').onclick=()=>{setMsg($('#deleteMsg'),'');$('#deletePassword').value='';$('#deleteConfirm').value='';$('#deleteModal').classList.remove('hidden')};$('#closeDelete').onclick=()=>$('#deleteModal').classList.add('hidden');$('#profileBtn').onclick=()=>{show('profileScreen');resetSubscreenScroll('profileScreen');Promise.all([loadMyStats(),loadScoreTrend()]).catch(()=>{})};$('#profileBack').onclick=()=>show('homeScreen');$('#achievementsBtn').onclick=()=>{show('achievementsScreen');resetSubscreenScroll('achievementsScreen');renderAchievements()};$('#achievementsBack').onclick=()=>show('homeScreen');$('#adminBtn').onclick=async()=>{if(!isAdmin&&!(await refreshAdminAccess()))return;show('adminScreen');resetSubscreenScroll('adminScreen');loadAdminDashboard()};$('#adminBack').onclick=()=>show('homeScreen');$('#adminRefresh').onclick=loadAdminDashboard;$('#settingsBtn').onclick=()=>{closeAllSettingsAccordions();show('settingsScreen');resetSubscreenScroll('settingsScreen')};$('#settingsBack').onclick=()=>{closeAllSettingsAccordions();show('homeScreen')};$('#logoutBtn').onclick=async()=>{await sb.auth.signOut();currentUser=null;currentProfile=null;myStats=null;isAdmin=false;adminDashboardData=null;$('#adminBtn')?.classList.add('hidden');switchAuth('login');show('authScreen')};$('#homeRefreshBoard').onclick=loadLeaderboard;$('#leaderboardBtn').onclick=()=>{show('leaderboardScreen');resetSubscreenScroll('leaderboardScreen');loadFullLeaderboard(true)};$('#leaderboardBack').onclick=()=>show('homeScreen');$('#leaderboardRefresh').onclick=()=>loadFullLeaderboard(true);$('#leaderboardLoadMore').onclick=()=>loadFullLeaderboard(false);
 
 function zoneCount(){if(MOBILE_GAME)return wave<5?5:wave<12?6:wave<22?7:8;return wave<5?4:wave<12?5:wave<24?6:7}
 function cycleDuration(){return Math.max(1.55,3.2-wave*.085)}
@@ -2946,7 +3208,7 @@ window.safeZoneHandleBack=()=>{
     show('homeScreen');return true
   }
   if(visible==='resultScreen'){if(guestMode)show('authScreen');else show('homeScreen');return true}
-  if(visible==='leaderboardScreen'||visible==='profileScreen'||visible==='achievementsScreen'){show('homeScreen');return true}
+  if(visible==='adminScreen'||visible==='leaderboardScreen'||visible==='profileScreen'||visible==='achievementsScreen'){show('homeScreen');return true}
   if(visible==='gameScreen'){
     if(paused){togglePause();return true}
     togglePause();return true
