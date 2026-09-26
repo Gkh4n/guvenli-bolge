@@ -487,6 +487,34 @@ button:disabled{opacity:.55;cursor:not-allowed}
   .guest-result-box{padding:11px}
 }
 
+
+/* v15 ölçeklenebilir liderlik ekranı */
+.board-subtitle{display:block;margin-top:3px;color:var(--muted);font-size:9px;letter-spacing:.02em}
+.board-more-btn{width:100%;min-height:43px;margin-top:10px;padding:0 11px;border:1px solid var(--line);border-radius:12px;background:#0a1018;color:var(--text);display:flex;align-items:center;justify-content:space-between;font-size:10px;font-weight:850;letter-spacing:.045em;transition:transform .14s ease,border-color .18s ease,background .18s ease}
+.board-more-btn:hover{border-color:rgba(41,215,238,.28);background:#0b141d}
+.board-more-btn:active{transform:scale(.985)}
+.board-more-btn b{color:var(--accent2);font-size:15px}
+.leaderboard-page{padding:16px;display:flex;flex-direction:column;min-height:0}
+.leaderboard-page-head{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;margin-bottom:12px}
+.leaderboard-kicker{font-size:9px;color:var(--accent2);font-weight:900;letter-spacing:.12em}
+.leaderboard-page-title{font-size:23px;font-weight:950;letter-spacing:-.025em;margin-top:2px}
+.leaderboard-summary{margin-top:4px;color:var(--muted);font-size:10px}
+.leaderboard-refresh{padding:6px 2px}
+.leaderboard-scroll{max-height:min(68dvh,650px);overflow-y:auto;overscroll-behavior:contain;padding-right:3px;scrollbar-width:thin;scrollbar-color:#263647 transparent}
+.leaderboard-scroll::-webkit-scrollbar{width:5px}
+.leaderboard-scroll::-webkit-scrollbar-thumb{background:#263647;border-radius:999px}
+.leaderboard-scroll .row{flex:0 0 auto}
+.leaderboard-load-more{width:100%;margin-top:11px;min-height:44px}
+.board-empty{padding:20px 4px;text-align:center}
+@media(max-width:600px){
+  .home-board .board .row:nth-child(n+11){display:none}
+  .leaderboard-page{padding:12px}
+  .leaderboard-page-title{font-size:20px}
+  .leaderboard-scroll{max-height:calc(100dvh - 205px)}
+  .leaderboard-scroll .row{padding:9px 10px}
+  .board-more-btn{min-height:41px}
+}
+
 </style>
 </head>
 <body>
@@ -547,8 +575,9 @@ button:disabled{opacity:.55;cursor:not-allowed}
       </div>
 
       <div class="panel boardcard home-board">
-        <div class="cardtitle"><h3>GLOBAL SIRALAMA</h3><button id="homeRefreshBoard" class="refresh" type="button">Yenile</button></div>
+        <div class="cardtitle"><div><h3>GLOBAL SIRALAMA</h3><span class="board-subtitle">En iyi 10 oyuncu</span></div><button id="homeRefreshBoard" class="refresh" type="button">Yenile</button></div>
         <div id="homeBoard" class="board"><div class="tiny">Skorlar yükleniyor…</div></div>
+        <button id="leaderboardBtn" class="board-more-btn" type="button"><span>TÜM SIRALAMAYI GÖR</span><b aria-hidden="true">→</b></button>
       </div>
 
       <div class="panel home-insights">
@@ -567,6 +596,22 @@ button:disabled{opacity:.55;cursor:not-allowed}
           <div class="achievement-progress"><div id="achievementProgressBar" class="achievement-progress-bar"></div></div>
         </div>
       </div>
+    </div>
+  </section>
+
+  <section id="leaderboardScreen" class="screen hidden">
+    <div class="top"><button id="leaderboardBack" class="iconbtn" type="button">← Geri</button><div class="tiny">GLOBAL SIRALAMA</div></div>
+    <div class="panel leaderboard-page">
+      <div class="leaderboard-page-head">
+        <div>
+          <div class="leaderboard-kicker">EN İYİ SKORLAR</div>
+          <div class="leaderboard-page-title">Global Sıralama</div>
+          <div id="leaderboardSummary" class="leaderboard-summary">Sıralama yükleniyor…</div>
+        </div>
+        <button id="leaderboardRefresh" class="refresh leaderboard-refresh" type="button">Yenile</button>
+      </div>
+      <div id="leaderboardBoard" class="board leaderboard-scroll"><div class="tiny">Skorlar yükleniyor…</div></div>
+      <button id="leaderboardLoadMore" class="secondary leaderboard-load-more hidden" type="button">DAHA FAZLA GÖSTER</button>
     </div>
   </section>
 
@@ -724,8 +769,8 @@ const UA=navigator.userAgent||'';
 const IS_ANDROID_WEBVIEW=/\bwv\b/i.test(UA);
 const HAS_NATIVE_INSETS=/GuvenliBolgeApp\/2/i.test(UA);
 if(IS_ANDROID_WEBVIEW&&!HAS_NATIVE_INSETS)document.body.classList.add('legacy-webview-insets');
-const screens=['authScreen','homeScreen','profileScreen','achievementsScreen','settingsScreen','gameScreen','resultScreen'];
-let currentUser=null,currentProfile=null,currentBoard=[],allBoardRows=[],myStats=null,trendRows=[],achievementMetrics={record_breaks:0,max_streak_15s:0},activeRunSession=null,startGamePending=false,achievementSnapshot=new Set(),guestMode=false;
+const screens=['authScreen','homeScreen','leaderboardScreen','profileScreen','achievementsScreen','settingsScreen','gameScreen','resultScreen'];
+let currentUser=null,currentProfile=null,myStats=null,trendRows=[],achievementMetrics={record_breaks:0,max_streak_15s:0},activeRunSession=null,startGamePending=false,achievementSnapshot=new Set(),guestMode=false,leaderboardOffset=0,leaderboardTotal=0,leaderboardLoading=false;
 let running=false,paused=false,dying=false,elapsed=0,wave=0,raf=0,last=0,cycle=0,collapseAt=3.2,revealAt=2.15,safeIndex=-1,decoyIndex=-1,flash=0,shake=0,zones=[],lastSafeZone=null,revealCuePlayed=false,dangerCuePlayed=false,revealPulse=0,successPulse=0,deathPulse=0,bgPhase=0,particles=[],fxRings=[],lastHudSecond=-1,lastHudWave=0,deathTimer=0;
 const MOBILE_GAME=window.matchMedia('(max-width:600px)').matches;
 const REDUCED_MOTION=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -1045,18 +1090,37 @@ async function loadHomeInsights(){
   renderHomeInsights();
 }
 
+async function fetchLeaderboardPage(limit,offset){
+  const {data,error}=await sb.rpc('safe_zone_leaderboard',{p_limit:limit,p_offset:offset});
+  if(error)throw error;
+  return data||[]
+}
+function renderBoard(target,rows,{append=false}={}){
+  if(!target)return;
+  if(!append)target.innerHTML='';
+  if(!rows.length&&!append){target.innerHTML='<div class="tiny board-empty">Henüz skor yok. İlk rekoru sen koy.</div>';return}
+  rows.forEach((r,i)=>{
+    const username=r.username||r.safe_zone_profiles?.username||'Oyuncu';
+    const member=r.member_number||r.safe_zone_profiles?.member_number;
+    const rank=Number(r.global_rank||i+1);
+    const el=document.createElement('div');el.className='row'+(currentUser&&r.user_id===currentUser.id?' me':'');
+    const rankEl=document.createElement('div');rankEl.className='rank';rankEl.textContent=rank;
+    const center=document.createElement('div');
+    const name=document.createElement('div');name.className='name';name.textContent=username+(member?' · #'+member:'');
+    const small=document.createElement('div');small.className='tiny';small.textContent=(Number(r.waves)||0)+' çöküş';
+    center.append(name,small);
+    const score=document.createElement('div');score.className='score';score.textContent=((Number(r.survival_ms)||0)/1000).toFixed(2)+'s';
+    el.append(rankEl,center,score);target.appendChild(el)
+  })
+}
 async function loadLeaderboard(){
   const target=$('#homeBoard');
-  if(!currentUser){return}
+  if(!currentUser)return;
   if(target)target.innerHTML='<div class="tiny">Skorlar yükleniyor…</div>';
   try{
-    const {data,error}=await sb.from('safe_zone_runs').select('user_id,survival_ms,waves,created_at,safe_zone_profiles!inner(username,member_number)').order('survival_ms',{ascending:false}).order('waves',{ascending:false}).limit(300);
-    if(error)throw error;
-    allBoardRows=data||[];
-    const best=new Map();
-    for(const r of allBoardRows){if(!best.has(r.user_id))best.set(r.user_id,r)}
-    currentBoard=[...best.values()].sort((a,b)=>b.survival_ms-a.survival_ms||b.waves-a.waves||new Date(a.created_at)-new Date(b.created_at));
-    renderBoard(target,currentBoard.slice(0,10));
+    const rows=await fetchLeaderboardPage(10,0);
+    renderBoard(target,rows);
+    leaderboardTotal=Number(rows[0]?.total_players||0);
     await loadMyStats();
     await loadHomeInsights();
   }catch(e){
@@ -1064,22 +1128,43 @@ async function loadLeaderboard(){
     try{await loadMyStats()}catch{}
   }
 }
-function renderBoard(target,rows){
-  if(!target)return;
-  target.innerHTML='';
-  if(!rows.length){target.innerHTML='<div class="tiny">Henüz skor yok. İlk rekoru sen koy.</div>';return}
-  rows.forEach((r,i)=>{
-    const username=r.safe_zone_profiles?.username||'Oyuncu';
-    const member=r.safe_zone_profiles?.member_number;
-    const el=document.createElement('div');el.className='row'+(currentUser&&r.user_id===currentUser.id?' me':'');
-    const rank=document.createElement('div');rank.className='rank';rank.textContent=i+1;
-    const center=document.createElement('div');
-    const name=document.createElement('div');name.className='name';name.textContent=username+(member?' · #'+member:'');
-    const small=document.createElement('div');small.className='tiny';small.textContent=r.waves+' çöküş';
-    center.append(name,small);
-    const score=document.createElement('div');score.className='score';score.textContent=(r.survival_ms/1000).toFixed(2)+'s';
-    el.append(rank,center,score);target.appendChild(el)
-  })
+function updateLeaderboardSummary(){
+  const shown=Math.min(leaderboardOffset,leaderboardTotal);
+  const rank=Number(myStats?.global_rank||0);
+  const parts=[];
+  if(leaderboardTotal)parts.push(leaderboardTotal+' oyuncu');
+  if(rank)parts.push('sen #'+rank);
+  if(shown&&leaderboardTotal>shown)parts.push('ilk '+shown+' gösteriliyor');
+  $('#leaderboardSummary').textContent=parts.length?parts.join(' · '):'Henüz sıralama oluşmadı.';
+}
+async function loadFullLeaderboard(reset=false){
+  if(!currentUser||leaderboardLoading)return;
+  leaderboardLoading=true;
+  const target=$('#leaderboardBoard'),more=$('#leaderboardLoadMore'),refresh=$('#leaderboardRefresh');
+  if(reset){
+    leaderboardOffset=0;leaderboardTotal=0;
+    target.innerHTML='<div class="tiny">Skorlar yükleniyor…</div>';
+    more.classList.add('hidden');
+  }
+  refresh.disabled=true;more.disabled=true;
+  try{
+    const rows=await fetchLeaderboardPage(25,leaderboardOffset);
+    if(reset)target.innerHTML='';
+    renderBoard(target,rows,{append:leaderboardOffset>0});
+    if(rows.length){
+      leaderboardTotal=Number(rows[0].total_players||leaderboardTotal);
+      leaderboardOffset+=rows.length;
+    }else if(reset){
+      target.innerHTML='<div class="tiny board-empty">Henüz skor yok.</div>';
+    }
+    updateLeaderboardSummary();
+    more.classList.toggle('hidden',leaderboardOffset>=leaderboardTotal||rows.length===0);
+  }catch(e){
+    if(reset)target.innerHTML='<div class="tiny board-empty">Sıralama şu an yüklenemedi.</div>';
+    showToast('Sıralama yüklenemedi.','error');
+  }finally{
+    refresh.disabled=false;more.disabled=false;leaderboardLoading=false;
+  }
 }
 async function enterAuthenticatedHome(){await loadProfile();await loadLeaderboard();show('homeScreen')}
 async function refreshAuthState(){
@@ -1143,7 +1228,7 @@ $('#recoveryCodeForm').addEventListener('submit',async e=>{e.preventDefault();co
 $('#deleteForm').addEventListener('submit',async e=>{e.preventDefault();if($('#deleteConfirm').value.trim().toUpperCase()!=='SIL'){setMsg($('#deleteMsg'),'Onay alanına SIL yazmalısın.','error');return}const password=$('#deletePassword').value;setMsg($('#deleteMsg'),'Hesap siliniyor…');try{const {data,error}=await sb.functions.invoke('safe-zone-delete-account',{body:{password}});if(error)throw error;if(!data?.ok)throw new Error(data?.message||'Hesap silinemedi.');currentUser=null;currentProfile=null;$('#deleteModal').classList.add('hidden');await sb.auth.signOut({scope:'local'}).catch(()=>{});switchAuth('login');show('authScreen');setMsg($('#loginMsg'),'Hesabın ve skorların kalıcı olarak silindi.','ok')}catch(err){setMsg($('#deleteMsg'),err.message||'Hesap silinemedi.','error')}});
 
 function resetForgotModal(){$('#forgotUsername').value='';$('#forgotRecoveryCode').value='';$('#forgotNewPassword').value='';$('#forgotNewPassword2').value='';setMsg($('#forgotMsg'),'')}
-$('#loginTab').onclick=()=>switchAuth('login');$('#registerTab').onclick=()=>switchAuth('register');$('#forgotBtn').onclick=()=>{resetForgotModal();$('#forgotModal').classList.remove('hidden')};$('#closeForgot').onclick=()=>{resetForgotModal();$('#forgotModal').classList.add('hidden')};$('#copyRecoveryCode').onclick=async()=>{const code=$('#recoveryCodeValue').textContent;try{await navigator.clipboard.writeText(code);showToast('Kurtarma kodu kopyalandı.','ok')}catch{showToast('Kodu seçip kopyalayabilirsin.','error')}};$('#closeRecoveryCode').onclick=()=>$('#recoveryCodeModal').classList.add('hidden');$('#openDeleteBtn').onclick=()=>{setMsg($('#deleteMsg'),'');$('#deletePassword').value='';$('#deleteConfirm').value='';$('#deleteModal').classList.remove('hidden')};$('#closeDelete').onclick=()=>$('#deleteModal').classList.add('hidden');$('#profileBtn').onclick=()=>{show('profileScreen');Promise.all([loadMyStats(),loadScoreTrend()]).catch(()=>{})};$('#profileBack').onclick=()=>show('homeScreen');$('#achievementsBtn').onclick=()=>{show('achievementsScreen');renderAchievements()};$('#achievementsBack').onclick=()=>show('homeScreen');$('#settingsBtn').onclick=()=>{closeAllSettingsAccordions();show('settingsScreen')};$('#settingsBack').onclick=()=>{closeAllSettingsAccordions();show('homeScreen')};$('#logoutBtn').onclick=async()=>{await sb.auth.signOut();currentUser=null;currentProfile=null;myStats=null;switchAuth('login');show('authScreen')};$('#homeRefreshBoard').onclick=loadLeaderboard;
+$('#loginTab').onclick=()=>switchAuth('login');$('#registerTab').onclick=()=>switchAuth('register');$('#forgotBtn').onclick=()=>{resetForgotModal();$('#forgotModal').classList.remove('hidden')};$('#closeForgot').onclick=()=>{resetForgotModal();$('#forgotModal').classList.add('hidden')};$('#copyRecoveryCode').onclick=async()=>{const code=$('#recoveryCodeValue').textContent;try{await navigator.clipboard.writeText(code);showToast('Kurtarma kodu kopyalandı.','ok')}catch{showToast('Kodu seçip kopyalayabilirsin.','error')}};$('#closeRecoveryCode').onclick=()=>$('#recoveryCodeModal').classList.add('hidden');$('#openDeleteBtn').onclick=()=>{setMsg($('#deleteMsg'),'');$('#deletePassword').value='';$('#deleteConfirm').value='';$('#deleteModal').classList.remove('hidden')};$('#closeDelete').onclick=()=>$('#deleteModal').classList.add('hidden');$('#profileBtn').onclick=()=>{show('profileScreen');Promise.all([loadMyStats(),loadScoreTrend()]).catch(()=>{})};$('#profileBack').onclick=()=>show('homeScreen');$('#achievementsBtn').onclick=()=>{show('achievementsScreen');renderAchievements()};$('#achievementsBack').onclick=()=>show('homeScreen');$('#settingsBtn').onclick=()=>{closeAllSettingsAccordions();show('settingsScreen')};$('#settingsBack').onclick=()=>{closeAllSettingsAccordions();show('homeScreen')};$('#logoutBtn').onclick=async()=>{await sb.auth.signOut();currentUser=null;currentProfile=null;myStats=null;switchAuth('login');show('authScreen')};$('#homeRefreshBoard').onclick=loadLeaderboard;$('#leaderboardBtn').onclick=()=>{show('leaderboardScreen');loadFullLeaderboard(true)};$('#leaderboardBack').onclick=()=>show('homeScreen');$('#leaderboardRefresh').onclick=()=>loadFullLeaderboard(true);$('#leaderboardLoadMore').onclick=()=>loadFullLeaderboard(false);
 
 function zoneCount(){if(MOBILE_GAME)return wave<5?5:wave<12?6:wave<22?7:8;return wave<5?4:wave<12?5:wave<24?6:7}
 function cycleDuration(){return Math.max(1.55,3.2-wave*.085)}
@@ -1564,7 +1649,7 @@ window.safeZoneHandleBack=()=>{
     show('homeScreen');return true
   }
   if(visible==='resultScreen'){if(guestMode)show('authScreen');else show('homeScreen');return true}
-  if(visible==='profileScreen'||visible==='achievementsScreen'){show('homeScreen');return true}
+  if(visible==='leaderboardScreen'||visible==='profileScreen'||visible==='achievementsScreen'){show('homeScreen');return true}
   if(visible==='gameScreen'){
     if(paused){togglePause();return true}
     togglePause();return true
