@@ -239,6 +239,38 @@ button,input{font:inherit}button{cursor:pointer}.hidden{display:none!important}
   .trend-empty{min-height:180px}
 }
 
+
+/* v7 ana ekran kişisel hedef */
+.home-insights{grid-column:1/-1;display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:18px;padding:18px}
+.goal-side,.recent-side{min-width:0}
+.insight-kicker{font-size:11px;font-weight:900;letter-spacing:.12em;color:var(--muted)}
+.goal-main{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin-top:10px}
+.goal-main b{font-size:34px;line-height:1;font-weight:950;letter-spacing:-.04em}
+.goal-main span{font-size:12px;color:var(--accent2);font-weight:800;text-align:right}
+.goal-progress{height:8px;background:#111925;border:1px solid var(--line);border-radius:999px;overflow:hidden;margin-top:16px}
+.goal-progress-bar{height:100%;width:0;border-radius:inherit;background:linear-gradient(90deg,#29d7ee,#92f3ff);transition:width .35s ease}
+.goal-foot{display:flex;justify-content:space-between;gap:12px;margin-top:8px;color:var(--muted);font-size:10px}
+.recent-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:5px}
+.recent-head b{display:block;font-size:12px;letter-spacing:.08em}
+.recent-head span{display:block;font-size:9px;color:var(--muted);margin-top:3px}
+.recent-delta{font-size:11px;font-weight:900;padding:5px 8px;border:1px solid var(--line);border-radius:999px;background:#0d141e}
+.recent-delta.up{color:#86efac;border-color:rgba(74,222,128,.25);background:rgba(74,222,128,.06)}
+.recent-delta.down{color:#fda4af;border-color:rgba(251,113,133,.25);background:rgba(251,113,133,.06)}
+.recent-empty{height:118px;display:grid;place-items:center;color:var(--muted);font-size:11px;text-align:center;padding:12px}
+#homeTrendCanvas{display:block;width:100%;height:132px}
+@media(max-width:820px){
+  .home-insights{grid-template-columns:1fr;gap:14px;padding:15px}
+}
+@media(max-width:600px){
+  .home-insights{padding:13px;gap:12px}
+  .goal-main{margin-top:8px}
+  .goal-main b{font-size:29px}
+  .goal-main span{font-size:11px}
+  .goal-progress{margin-top:12px}
+  #homeTrendCanvas{height:118px}
+  .recent-empty{height:105px}
+}
+
 </style>
 </head>
 <body>
@@ -299,6 +331,20 @@ button,input{font:inherit}button{cursor:pointer}.hidden{display:none!important}
       <div class="panel boardcard home-board">
         <div class="cardtitle"><h3>GLOBAL SIRALAMA</h3><button id="homeRefreshBoard" class="refresh" type="button">Yenile</button></div>
         <div id="homeBoard" class="board"><div class="tiny">Skorlar yükleniyor…</div></div>
+      </div>
+
+      <div class="panel home-insights">
+        <div class="goal-side">
+          <div class="insight-kicker">KİŞİSEL HEDEF</div>
+          <div class="goal-main"><b id="goalTarget">10.00s</b><span id="goalRemaining">İlk hedefin</span></div>
+          <div class="goal-progress"><div id="goalProgressBar" class="goal-progress-bar"></div></div>
+          <div class="goal-foot"><span id="goalBestLabel">Rekorun: 0.00s</span><span id="goalPercent">0%</span></div>
+        </div>
+        <div class="recent-side">
+          <div class="recent-head"><div><b>SON 5 OYUN</b><span>Yakın performansın</span></div><div id="recentDelta" class="recent-delta">-</div></div>
+          <div id="recentEmpty" class="recent-empty hidden">İlk oyunundan sonra burada gelişimini göreceksin.</div>
+          <canvas id="homeTrendCanvas" width="520" height="150" aria-label="Son 5 oyun skor grafiği"></canvas>
+        </div>
       </div>
     </div>
   </section>
@@ -402,7 +448,7 @@ const IS_ANDROID_WEBVIEW=/\bwv\b/i.test(UA);
 const HAS_NATIVE_INSETS=/GuvenliBolgeApp\/2/i.test(UA);
 if(IS_ANDROID_WEBVIEW&&!HAS_NATIVE_INSETS)document.body.classList.add('legacy-webview-insets');
 const screens=['authScreen','homeScreen','profileScreen','settingsScreen','gameScreen','resultScreen'];
-let currentUser=null,currentProfile=null,currentBoard=[],allBoardRows=[],myStats=null,recoveryUsername='',trendRows=[];
+let currentUser=null,currentProfile=null,currentBoard=[],allBoardRows=[],myStats=null,recoveryUsername='',trendRows=[],homeInsightRows=[];
 let running=false,paused=false,elapsed=0,wave=0,raf=0,last=0,cycle=0,collapseAt=3.2,revealAt=2.15,safeIndex=-1,decoyIndex=-1,flash=0,shake=0,zones=[],lastSafeZone=null;
 const MOBILE_GAME=window.matchMedia('(max-width:600px)').matches;
 const W=MOBILE_GAME?620:760,H=MOBILE_GAME?1000:620,PLAYER_R=10,canvas=$('#gameCanvas'),ctx=canvas.getContext('2d');
@@ -459,6 +505,7 @@ async function loadMyStats(){
   $('#profileWaves').textContent=waves;
   $('#profileTotal').textContent=formatTotalTime(total);
   $('#profileRank').textContent=rank;
+  if($('#homeScreen'))renderHomeInsights();
 }
 
 
@@ -585,6 +632,116 @@ function renderScoreTrend(){
 }
 let trendResizeTimer=0;
 window.addEventListener('resize',()=>{clearTimeout(trendResizeTimer);trendResizeTimer=setTimeout(()=>{if(!$('#profileScreen').classList.contains('hidden'))renderScoreTrend()},120)});
+
+function nextScoreTarget(bestSeconds){
+  if(bestSeconds<=0)return 10;
+  const step=bestSeconds<20?5:10;
+  const next=Math.ceil(bestSeconds/step)*step;
+  return next<=bestSeconds+0.001?next+step:next;
+}
+
+function renderHomeInsights(){
+  const bestMs=Number(myStats?.best_survival_ms||0);
+  const best=bestMs/1000;
+  const target=nextScoreTarget(best);
+  const remaining=Math.max(0,target-best);
+  const progress=target?Math.min(100,(best/target)*100):0;
+  $('#goalTarget').textContent=target.toFixed(2)+'s';
+  $('#goalBestLabel').textContent='Rekorun: '+best.toFixed(2)+'s';
+  $('#goalPercent').textContent=Math.round(progress)+'%';
+  $('#goalProgressBar').style.width=progress+'%';
+  $('#goalRemaining').textContent=best<=0?'İlk hedefin':remaining.toFixed(2)+' saniye kaldı';
+
+  const canvas=$('#homeTrendCanvas'),empty=$('#recentEmpty'),deltaEl=$('#recentDelta');
+  if(!canvas||!empty||!deltaEl)return;
+  if(!homeInsightRows.length){
+    canvas.classList.add('hidden');
+    empty.classList.remove('hidden');
+    deltaEl.textContent='-';
+    deltaEl.className='recent-delta';
+    return;
+  }
+
+  empty.classList.add('hidden');
+  canvas.classList.remove('hidden');
+  const scores=homeInsightRows.map(r=>(Number(r.survival_ms)||0)/1000);
+  if(scores.length>=2){
+    const delta=scores.at(-1)-scores.at(-2);
+    deltaEl.textContent=(delta>=0?'+':'')+delta.toFixed(2)+'s';
+    deltaEl.className='recent-delta '+(delta>0?'up':delta<0?'down':'');
+  }else{
+    deltaEl.textContent=scores[0].toFixed(2)+'s';
+    deltaEl.className='recent-delta';
+  }
+
+  const rect=canvas.getBoundingClientRect(),dpr=Math.min(window.devicePixelRatio||1,2);
+  const cssW=Math.max(240,Math.round(rect.width||520));
+  const mobile=cssW<440;
+  const cssH=mobile?118:132;
+  canvas.style.height=cssH+'px';
+  canvas.width=Math.round(cssW*dpr);
+  canvas.height=Math.round(cssH*dpr);
+
+  const c=canvas.getContext('2d');
+  c.setTransform(dpr,0,0,dpr,0,0);
+  c.clearRect(0,0,cssW,cssH);
+
+  const pad={l:8,r:8,t:12,b:20},w=cssW-16,h=cssH-32;
+  const min=Math.min(...scores),max=Math.max(...scores),spread=Math.max(1,max-min);
+  const low=Math.max(0,min-spread*.18),high=max+spread*.18,range=Math.max(1,high-low);
+  const x=i=>scores.length===1?cssW/2:pad.l+(i/(scores.length-1))*w;
+  const y=v=>pad.t+h-((v-low)/range)*h;
+
+  c.strokeStyle='rgba(255,255,255,.06)';
+  c.lineWidth=1;
+  for(let g=0;g<3;g++){
+    const yy=pad.t+(h/2)*g;
+    c.beginPath();c.moveTo(pad.l,yy);c.lineTo(cssW-pad.r,yy);c.stroke();
+  }
+
+  if(scores.length>1){
+    const grad=c.createLinearGradient(0,pad.t,0,pad.t+h);
+    grad.addColorStop(0,'rgba(41,215,238,.16)');
+    grad.addColorStop(1,'rgba(41,215,238,0)');
+    c.beginPath();c.moveTo(x(0),y(scores[0]));
+    for(let i=1;i<scores.length;i++)c.lineTo(x(i),y(scores[i]));
+    c.lineTo(x(scores.length-1),pad.t+h);c.lineTo(x(0),pad.t+h);c.closePath();
+    c.fillStyle=grad;c.fill();
+
+    c.beginPath();
+    scores.forEach((v,i)=>{if(i===0)c.moveTo(x(i),y(v));else c.lineTo(x(i),y(v))});
+    c.strokeStyle='#29d7ee';c.lineWidth=2.5;c.lineCap='round';c.lineJoin='round';c.stroke();
+  }
+
+  scores.forEach((v,i)=>{
+    c.beginPath();c.arc(x(i),y(v),i===scores.length-1?4.5:3.2,0,Math.PI*2);
+    c.fillStyle=i===scores.length-1?'#ffffff':'#92f3ff';c.fill();
+    c.strokeStyle='#0a1018';c.lineWidth=2;c.stroke();
+    c.fillStyle='#69778a';c.textAlign='center';c.textBaseline='alphabetic';c.font='9px system-ui';
+    c.fillText(String(i+1),x(i),cssH-5);
+  });
+}
+
+async function loadHomeInsights(){
+  if(!currentUser)return;
+  const {data,error}=await sb.from('safe_zone_runs')
+    .select('survival_ms,waves,created_at')
+    .eq('user_id',currentUser.id)
+    .order('created_at',{ascending:false})
+    .limit(5);
+  if(error)throw error;
+  homeInsightRows=(data||[]).slice().reverse();
+  renderHomeInsights();
+}
+
+let homeTrendResizeTimer=0;
+window.addEventListener('resize',()=>{
+  clearTimeout(homeTrendResizeTimer);
+  homeTrendResizeTimer=setTimeout(()=>{
+    if(!$('#homeScreen').classList.contains('hidden'))renderHomeInsights();
+  },120);
+});
+
 async function loadLeaderboard(){
   const target=$('#homeBoard');
   if(!currentUser){return}
@@ -598,6 +755,7 @@ async function loadLeaderboard(){
     currentBoard=[...best.values()].sort((a,b)=>b.survival_ms-a.survival_ms||b.waves-a.waves||new Date(a.created_at)-new Date(b.created_at));
     renderBoard(target,currentBoard.slice(0,10));
     await loadMyStats();
+    await loadHomeInsights();
   }catch(e){
     if(target)target.innerHTML='<div class="tiny">Sıralama şu an yüklenemedi.</div>';
     try{await loadMyStats()}catch{}
