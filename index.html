@@ -90,10 +90,89 @@ button,input{font:inherit}button{cursor:pointer}.hidden{display:none!important}
   .gamestatus{height:18px;min-height:18px;font-size:10px;padding:3px 2px 0}
 }
 
+
+/* v3 profesyonel mobil arayüz */
+.mobile-gate{display:none}
+.mobile-gate-card{width:min(90vw,360px);text-align:center;padding:12px}
+.mobile-gate-logo{width:92px;height:92px;border-radius:50%;margin:0 auto 22px;display:grid;place-items:center;border:8px solid var(--accent);box-shadow:0 0 0 1px rgba(146,243,255,.35),0 0 55px rgba(41,215,238,.18)}
+.mobile-gate-logo:after{content:"";width:22px;height:22px;border-radius:50%;background:#fff;box-shadow:0 0 18px rgba(255,255,255,.35)}
+.mobile-gate h1{font-size:42px;line-height:.9;letter-spacing:-.055em;margin:0 0 20px}
+.splash-line{width:94px;height:3px;margin:auto;border-radius:999px;background:linear-gradient(90deg,transparent,var(--accent),transparent);animation:splashPulse .9s ease-in-out infinite alternate}
+@keyframes splashPulse{from{opacity:.35;transform:scaleX(.65)}to{opacity:1;transform:scaleX(1)}}
+.home-top{align-items:center}
+.profile-chip{display:flex;align-items:center;gap:10px;border:0;background:transparent;color:var(--text);padding:2px 4px 2px 0;text-align:left}
+.profile-chip-text b{display:block;font-size:14px}
+.profile-chip-text span{display:block;font-size:11px;color:var(--muted);margin-top:2px}
+.settings-btn{width:44px;height:44px;border-radius:14px;border:1px solid var(--line);background:var(--panel2);color:var(--text);font-size:20px}
+.home-dashboard{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(320px,.95fr);gap:16px}
+.home-main{padding:28px;min-height:390px;display:flex;flex-direction:column;justify-content:center}
+.home-title{font-size:clamp(52px,8vw,86px);font-weight:950;line-height:.86;letter-spacing:-.058em}
+.home-quick-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:28px}
+.quick-stat{border:1px solid var(--line);background:#0a1018;border-radius:15px;padding:13px}
+.quick-stat span{display:block;font-size:9px;letter-spacing:.09em;color:var(--muted)}
+.quick-stat b{display:block;font-size:23px;margin-top:4px}
+.home-main .playbtn{margin-top:18px}
+.home-board{margin-top:0}
+.profile-page{padding:22px}
+.profile-page-head{display:grid;grid-template-columns:auto 1fr auto;gap:14px;align-items:center;margin-bottom:20px}
+.profile-avatar{width:58px;height:58px;font-size:20px}
+.profile-stats{display:grid;grid-template-columns:repeat(5,1fr);gap:9px}
+.profile-stat{padding:13px;border-radius:14px;background:#0d141e;border:1px solid var(--line);min-width:0}
+.profile-stat b{display:block;font-size:18px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.profile-stat span{display:block;margin-top:4px;font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.member-number{font-size:28px;font-weight:950;color:var(--accent2)}
+.member-caption{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em}
+.profile-name{font-size:20px;font-weight:900}
+.setting-row{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:13px;border:1px solid var(--line);border-radius:14px;background:#0a1018}
+.setting-row b{display:block;font-size:14px}
+.setting-row span{display:block;font-size:11px;color:var(--muted);margin-top:4px;line-height:1.45}
+.toggle-btn{min-width:78px;height:38px;border-radius:999px;border:1px solid rgba(41,215,238,.4);background:rgba(41,215,238,.1);color:var(--accent2);font-weight:900}
+.toggle-btn.off{border-color:var(--line);background:#111821;color:var(--muted)}
+.full-btn{width:100%}
+.record-badge{display:inline-flex;margin:9px auto 2px;padding:7px 12px;border-radius:999px;border:1px solid rgba(41,215,238,.38);background:rgba(41,215,238,.09);color:var(--accent2);font-size:11px;font-weight:950;letter-spacing:.12em}
+.gamewrap{flex:1;display:flex;align-items:center;justify-content:center}
+.gamebar .stat{font-size:13px;font-weight:800;letter-spacing:.04em}
+.gamebar .stat b{font-size:23px;margin-top:2px;letter-spacing:-.02em}
+@media(max-width:820px){
+  body:not(.mobile-entered) .app{display:none}
+  body:not(.mobile-entered) .mobile-gate{display:grid;position:fixed;inset:0;z-index:60;place-items:center;padding:max(18px,env(safe-area-inset-top)) 16px max(18px,env(safe-area-inset-bottom));background:radial-gradient(circle at 50% 20%,#101827 0,#070a10 50%,#05070b 100%)}
+  .home-dashboard{grid-template-columns:1fr;gap:10px}
+  .home-main{min-height:0;padding:20px}
+  .home-title{font-size:54px}
+  .home-quick-stats{margin-top:18px}
+  .home-board{min-height:0}
+  .profile-stats{grid-template-columns:repeat(2,1fr)}
+  .profile-stat:last-child{grid-column:1/-1}
+}
+@media(max-width:600px){
+  .app{padding:8px 9px max(10px,env(safe-area-inset-bottom))}
+  .screen{min-height:calc(100dvh - 18px)}
+  .top{margin-bottom:8px}
+  .avatar{width:40px;height:40px}
+  .settings-btn{width:40px;height:40px}
+  .home-main{padding:17px}
+  .home-title{font-size:46px}
+  .home-quick-stats{grid-template-columns:repeat(3,1fr);gap:6px;margin-top:14px}
+  .quick-stat{padding:10px 7px;text-align:center}
+  .quick-stat span{font-size:8px}
+  .quick-stat b{font-size:19px}
+  .home-main .playbtn{height:55px;margin-top:12px}
+  .boardcard{padding:12px}
+  .row{padding:8px 9px}
+  .gameScreen{min-height:calc(100dvh - 18px)}
+  .gamebar{margin-bottom:5px;align-items:center}
+  .gamebar .stat{font-size:11px}
+  .gamebar .stat b{font-size:21px}
+  .gameactions button{height:36px;font-size:10px;padding:0 9px}
+  .gamewrap{width:100%;min-height:0;margin:0;border-radius:14px}
+  .gamewrap canvas{display:block;width:100%;height:auto;max-height:calc(100dvh - 84px);touch-action:none}
+  .gamestatus{height:19px;min-height:19px;padding:3px 2px 0;font-size:10px}
+}
+
 </style>
 </head>
 <body>
-<div id="mobileGate" class="mobile-gate"><div class="panel mobile-gate-card"><div class="mobile-gate-logo"></div><h1>GÜVENLİ<br>BÖLGE</h1><button id="mobileEnterBtn" class="primary" type="button">OYUNA GİR</button></div></div>
+<div id="mobileGate" class="mobile-gate"><div class="mobile-gate-card"><div class="mobile-gate-logo"></div><h1>GÜVENLİ<br>BÖLGE</h1><div class="splash-line"></div></div></div>
 <div id="loading" class="loading"><div class="loader"></div></div>
 <div class="app">
   <section id="authScreen" class="screen hidden">
@@ -128,45 +207,66 @@ button,input{font:inherit}button{cursor:pointer}.hidden{display:none!important}
   </section>
 
   <section id="homeScreen" class="screen hidden">
-    <div class="top">
-      <div class="identity"><div id="avatar" class="avatar">G</div><div class="idtext"><b id="homeUsername">-</b><span id="homeMemberTag" class="home-member-tag">Oyuncu #-</span></div></div>
-      <div class="topactions"><button id="accountBtn" class="iconbtn" type="button">Hesabım</button><button id="logoutBtn" class="iconbtn" type="button">Çıkış</button></div>
+    <div class="top home-top">
+      <button id="profileBtn" class="profile-chip" type="button">
+        <div id="avatar" class="avatar">G</div>
+        <div class="profile-chip-text"><b>Profil</b><span id="homeMemberTag">#-</span></div>
+      </button>
+      <button id="settingsBtn" class="settings-btn" type="button" aria-label="Ayarlar">⚙</button>
     </div>
-    <div class="homegrid">
-      <div class="panel homehero compact-home">
-        <h1>GÜVENLİ<br>BÖLGE</h1>
-        <div>
-          <div class="metrics">
-            <div class="metric"><div id="myBest" class="v">0.00s</div><div class="k">En iyi skor</div></div>
-            <div class="metric"><div id="myGames" class="v">0</div><div class="k">Oyun</div></div>
-            <div class="metric"><div id="myRank" class="v">-</div><div class="k">Global sıra</div></div>
-          </div>
-          <button id="playBtn" class="primary playbtn" type="button">OYUNA BAŞLA</button>
+
+    <div class="home-dashboard">
+      <div class="panel home-main">
+        <div class="home-title">GÜVENLİ<br>BÖLGE</div>
+        <div class="home-quick-stats">
+          <div class="quick-stat"><span>EN İYİ</span><b id="myBest">0.00s</b></div>
+          <div class="quick-stat"><span>GLOBAL</span><b id="myRank">-</b></div>
+          <div class="quick-stat"><span>OYUN</span><b id="myGames">0</b></div>
         </div>
+        <button id="playBtn" class="primary playbtn" type="button">OYUNA BAŞLA</button>
       </div>
-      <div class="panel boardcard" style="margin-top:0"><div class="cardtitle"><h3>GLOBAL SIRALAMA</h3><button id="homeRefreshBoard" class="refresh" type="button">Yenile</button></div><div id="homeBoard" class="board"><div class="tiny">Skorlar yükleniyor…</div></div></div>
+
+      <div class="panel boardcard home-board">
+        <div class="cardtitle"><h3>GLOBAL SIRALAMA</h3><button id="homeRefreshBoard" class="refresh" type="button">Yenile</button></div>
+        <div id="homeBoard" class="board"><div class="tiny">Skorlar yükleniyor…</div></div>
+      </div>
     </div>
   </section>
 
-  <section id="accountScreen" class="screen hidden">
-    <div class="top"><button id="accountBack" class="iconbtn" type="button">← Geri</button><div class="tiny">HESAP AYARLARI</div></div>
-    <div class="panel accountpanel">
-      <div class="profile-summary">
-        <div class="profile-head"><div><div id="profileUsernameDisplay" class="profile-name">-</div><div class="member-caption">Kayıt sırası</div></div><div id="profileMemberNo" class="member-number">#-</div></div>
-        <div class="profile-stats">
-          <div class="profile-stat"><b id="profileGames">0</b><span>Oyun sayısı</span></div>
-          <div class="profile-stat"><b id="profileBest">0.00s</b><span>En iyi skor</span></div>
-          <div class="profile-stat"><b id="profileWaves">0</b><span>En fazla çöküş</span></div>
-          <div class="profile-stat"><b id="profileTotal">0 sn</b><span>Toplam oyun süresi</span></div>
-          <div class="profile-stat"><b id="profileRank">-</b><span>Global sıra</span></div>
-        </div>
+  <section id="profileScreen" class="screen hidden">
+    <div class="top"><button id="profileBack" class="iconbtn" type="button">← Geri</button><div class="tiny">PROFİL</div></div>
+    <div class="panel profile-page">
+      <div class="profile-page-head">
+        <div id="profileAvatar" class="avatar profile-avatar">G</div>
+        <div><div id="profileUsernameDisplay" class="profile-name">-</div><div class="member-caption">Kayıt sırası</div></div>
+        <div id="profileMemberNo" class="member-number">#-</div>
       </div>
-      <h2 class="sectiontitle">Hesap ayarları</h2><p class="sectiondesc">Kullanıcı adın skor tablosunda görünür. Hesabın e-posta kullanmaz; giriş ve kurtarma yalnızca kullanıcı adı, şifre ve güvenlik sorusuyla yapılır.</p>
+      <div class="profile-stats">
+        <div class="profile-stat"><b id="profileGames">0</b><span>Oyun sayısı</span></div>
+        <div class="profile-stat"><b id="profileBest">0.00s</b><span>En iyi skor</span></div>
+        <div class="profile-stat"><b id="profileWaves">0</b><span>En fazla çöküş</span></div>
+        <div class="profile-stat"><b id="profileTotal">0 sn</b><span>Toplam oyun süresi</span></div>
+        <div class="profile-stat"><b id="profileRank">-</b><span>Global sıra</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="settingsScreen" class="screen hidden">
+    <div class="top"><button id="settingsBack" class="iconbtn" type="button">← Geri</button><div class="tiny">AYARLAR</div></div>
+    <div class="panel accountpanel">
+      <h2 class="sectiontitle">Hesap</h2>
       <form id="usernameForm" class="form"><div class="field"><label class="label">Kullanıcı adı</label><input id="accountUsername" class="input" maxlength="16" autocomplete="username" /></div><button class="secondary" type="submit">KULLANICI ADINI GÜNCELLE</button><div id="usernameMsg" class="msg"></div></form>
       <div class="divider"></div>
-      <h2 class="sectiontitle">Şifre değiştir</h2><form id="passwordForm" class="form"><div class="field"><label class="label">Mevcut şifre</label><input id="currentPassword" class="input" type="password" autocomplete="current-password" /></div><div class="field"><label class="label">Yeni şifre</label><input id="newPassword" class="input" type="password" minlength="8" autocomplete="new-password" /></div><div class="field"><label class="label">Yeni şifre tekrar</label><input id="newPassword2" class="input" type="password" minlength="8" autocomplete="new-password" /></div><button class="secondary" type="submit">ŞİFREYİ DEĞİŞTİR</button><div id="passwordMsg" class="msg"></div></form>
+      <h2 class="sectiontitle">Ses</h2>
+      <div class="setting-row"><div><b>Oyun sesleri</b><span>Başarılı geçişlerde ve oyun sonunda ses çal.</span></div><button id="soundToggle" class="toggle-btn" type="button">AÇIK</button></div>
       <div class="divider"></div>
-      <h2 class="sectiontitle">Kurtarma bilgisi</h2><p class="sectiondesc">Güvenlik sorusunu değiştirmek için mevcut şifreni doğrula.</p><form id="securityForm" class="form"><div class="field"><label class="label">Mevcut şifre</label><input id="securityPassword" class="input" type="password" autocomplete="current-password" required /></div><div class="field"><label class="label">Yeni güvenlik sorusu</label><select id="securityQuestion" class="input" required><option value="">Bir soru seç</option><option value="pet">İlk evcil hayvanının adı?</option><option value="place">Çocukken yaşadığın mahalle / semt?</option><option value="teacher">İlkokuldaki öğretmenlerinden birinin adı?</option><option value="nickname">Çocukluk lakabın?</option></select></div><div class="field"><label class="label">Yeni cevap</label><input id="securityAnswer" class="input" minlength="3" autocomplete="off" required /></div><button class="secondary" type="submit">KURTARMA BİLGİSİNİ GÜNCELLE</button><div id="securityMsg" class="msg"></div></form>
+      <h2 class="sectiontitle">Şifre değiştir</h2>
+      <form id="passwordForm" class="form"><div class="field"><label class="label">Mevcut şifre</label><input id="currentPassword" class="input" type="password" autocomplete="current-password" /></div><div class="field"><label class="label">Yeni şifre</label><input id="newPassword" class="input" type="password" minlength="8" autocomplete="new-password" /></div><div class="field"><label class="label">Yeni şifre tekrar</label><input id="newPassword2" class="input" type="password" minlength="8" autocomplete="new-password" /></div><button class="secondary" type="submit">ŞİFREYİ DEĞİŞTİR</button><div id="passwordMsg" class="msg"></div></form>
+      <div class="divider"></div>
+      <h2 class="sectiontitle">Kurtarma bilgisi</h2><p class="sectiondesc">Güvenlik sorusunu değiştirmek için mevcut şifreni doğrula.</p>
+      <form id="securityForm" class="form"><div class="field"><label class="label">Mevcut şifre</label><input id="securityPassword" class="input" type="password" autocomplete="current-password" required /></div><div class="field"><label class="label">Yeni güvenlik sorusu</label><select id="securityQuestion" class="input" required><option value="">Bir soru seç</option><option value="pet">İlk evcil hayvanının adı?</option><option value="place">Çocukken yaşadığın mahalle / semt?</option><option value="teacher">İlkokuldaki öğretmenlerinden birinin adı?</option><option value="nickname">Çocukluk lakabın?</option></select></div><div class="field"><label class="label">Yeni cevap</label><input id="securityAnswer" class="input" minlength="3" autocomplete="off" required /></div><button class="secondary" type="submit">KURTARMA BİLGİSİNİ GÜNCELLE</button><div id="securityMsg" class="msg"></div></form>
+      <div class="divider"></div>
+      <button id="logoutBtn" class="secondary full-btn" type="button">ÇIKIŞ YAP</button>
       <div class="divider"></div>
       <div class="dangerzone"><h3>Hesabı sil</h3><p>Bu işlem hesabını ve Güvenli Bölge skorlarını kalıcı olarak siler. Geri alınamaz.</p><button id="openDeleteBtn" class="danger" type="button">HESABI SİL</button></div>
     </div>
@@ -175,7 +275,6 @@ button,input{font:inherit}button{cursor:pointer}.hidden{display:none!important}
   <section id="gameScreen" class="screen gameScreen hidden">
     <div class="gamebar">
       <div class="gamestats">
-        <span class="stat game-user-stat">OYUNCU<b id="gameUsername">-</b></span>
         <span class="stat">SÜRE<b id="timeLabel">0.00s</b></span>
         <span class="stat">ÇÖKÜŞ<b id="waveLabel">0</b></span>
       </div>
@@ -185,7 +284,16 @@ button,input{font:inherit}button{cursor:pointer}.hidden{display:none!important}
     <div id="gameStatus" class="gamestatus">Hazır ol…</div>
   </section>
 
-  <section id="resultScreen" class="screen result hidden"><div class="panel resultcard"><div class="eyebrow">TUR BİTTİ</div><div id="finalTime" class="resulttime">0.00s</div><div class="resultmeta"><b id="finalUsername"></b> · <span id="finalWaves">0</span> çöküş</div><div id="resultMsg" class="msg" style="margin-top:14px"></div><div class="resultactions"><button id="retryBtn" class="primary" type="button">TEKRAR OYNA</button><button id="resultHomeBtn" class="secondary" type="button">ANA MENÜ</button></div></div></section>
+  <section id="resultScreen" class="screen result hidden">
+    <div class="panel resultcard">
+      <div class="eyebrow">TUR BİTTİ</div>
+      <div id="recordBadge" class="record-badge hidden"></div>
+      <div id="finalTime" class="resulttime">0.00s</div>
+      <div class="resultmeta"><b id="finalUsername"></b> · <span id="finalWaves">0</span> çöküş</div>
+      <div id="resultMsg" class="msg" style="margin-top:10px"></div>
+      <div class="resultactions"><button id="retryBtn" class="primary" type="button">TEKRAR OYNA</button><button id="resultHomeBtn" class="secondary" type="button">ANA MENÜ</button></div>
+    </div>
+  </section>
 
 </div>
 
@@ -201,11 +309,12 @@ const SUPABASE_URL='https://vysddydaqjxdfoaziyrv.supabase.co';
 const SUPABASE_KEY='sb_publishable_3QXB59ogdtiPnVHEMpvKIw_4dFLra_e';
 const sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
 const $=s=>document.querySelector(s);
-const screens=['authScreen','homeScreen','accountScreen','gameScreen','resultScreen'];
+const screens=['authScreen','homeScreen','profileScreen','settingsScreen','gameScreen','resultScreen'];
 let currentUser=null,currentProfile=null,currentBoard=[],allBoardRows=[],myStats=null,recoveryUsername='';
-let running=false,paused=false,elapsed=0,wave=0,raf=0,last=0,cycle=0,collapseAt=3.2,revealAt=2.15,safeIndex=-1,decoyIndex=-1,flash=0,shake=0,zones=[];
-const W=760,H=620,PLAYER_R=10,canvas=$('#gameCanvas'),ctx=canvas.getContext('2d');
-canvas.width=W;canvas.height=H;
+let running=false,paused=false,elapsed=0,wave=0,raf=0,last=0,cycle=0,collapseAt=3.2,revealAt=2.15,safeIndex=-1,decoyIndex=-1,flash=0,shake=0,zones=[],lastSafeZone=null;
+const MOBILE_GAME=window.matchMedia('(max-width:600px)').matches;
+const W=MOBILE_GAME?620:760,H=MOBILE_GAME?1000:620,PLAYER_R=10,canvas=$('#gameCanvas'),ctx=canvas.getContext('2d');
+canvas.width=W;canvas.height=H;canvas.style.aspectRatio=W+'/'+H;
 let player={x:W/2,y:H/2,tx:W/2,ty:H/2,moving:false,progress:0,sx:W/2,sy:H/2,targetZone:null,attachedZone:null};
 const rand=(a,b)=>a+Math.random()*(b-a),clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 
@@ -224,11 +333,10 @@ async function loadProfile(){
   const {data,error}=await sb.from('safe_zone_profiles').select('user_id,username,member_number,tutorial_seen,created_at').eq('user_id',currentUser.id).single();
   if(error)throw error;
   currentProfile=data;
-  $('#homeUsername').textContent=data.username;
-  $('#gameUsername').textContent=data.username;
   $('#avatar').textContent=(data.username[0]||'G').toUpperCase();
+  $('#profileAvatar').textContent=(data.username[0]||'G').toUpperCase();
   $('#accountUsername').value=data.username;
-  $('#homeMemberTag').textContent='Oyuncu #'+data.member_number;
+  $('#homeMemberTag').textContent='#'+data.member_number;
   $('#profileMemberNo').textContent='#'+data.member_number;
   $('#profileUsernameDisplay').textContent=data.username;
   return data
@@ -308,7 +416,7 @@ $('#forgotLookupForm').addEventListener('submit',async e=>{e.preventDefault();co
 
 $('#forgotResetForm').addEventListener('submit',async e=>{e.preventDefault();const answer=$('#forgotAnswer').value,p=$('#forgotNewPassword').value,p2=$('#forgotNewPassword2').value;if(p.length<8){setMsg($('#forgotMsg'),'Yeni şifre en az 8 karakter olmalı.','error');return}if(p!==p2){setMsg($('#forgotMsg'),'Şifreler eşleşmiyor.','error');return}setMsg($('#forgotMsg'),'');try{const r=await fetch(SUPABASE_URL+'/functions/v1/safe-zone-reset-password',{method:'POST',headers:{'apikey':SUPABASE_KEY,'Content-Type':'application/json'},body:JSON.stringify({username:recoveryUsername,answer,new_password:p})});const body=await r.json().catch(()=>({}));if(!r.ok)throw new Error(body.message||'Şifre yenilenemedi.');$('#forgotModal').classList.add('hidden');$('#loginUsername').value=recoveryUsername;$('#loginPassword').value='';resetForgotModal();setMsg($('#loginMsg'),'Şifren yenilendi. Yeni şifrenle giriş yapabilirsin.','ok')}catch(err){setMsg($('#forgotMsg'),err.message||'Şifre yenilenemedi.','error')}});
 
-$('#usernameForm').addEventListener('submit',async e=>{e.preventDefault();const u=$('#accountUsername').value.trim();if(!validUsername(u)){setMsg($('#usernameMsg'),'3-16 karakter; yalnızca harf, rakam ve _ kullan.','error');return}try{const {error}=await sb.from('safe_zone_profiles').update({username:u,updated_at:new Date().toISOString()}).eq('user_id',currentUser.id);if(error)throw error;currentProfile.username=u;$('#homeUsername').textContent=u;$('#gameUsername').textContent=u;$('#avatar').textContent=u[0].toUpperCase();setMsg($('#usernameMsg'),'Kullanıcı adı güncellendi.','ok');await loadLeaderboard()}catch(err){setMsg($('#usernameMsg'),err?.code==='23505'?'Bu kullanıcı adı alınmış.':'Kullanıcı adı güncellenemedi.','error')}});
+$('#usernameForm').addEventListener('submit',async e=>{e.preventDefault();const u=$('#accountUsername').value.trim();if(!validUsername(u)){setMsg($('#usernameMsg'),'3-16 karakter; yalnızca harf, rakam ve _ kullan.','error');return}try{const {error}=await sb.from('safe_zone_profiles').update({username:u,updated_at:new Date().toISOString()}).eq('user_id',currentUser.id);if(error)throw error;currentProfile.username=u;$('#avatar').textContent=u[0].toUpperCase();$('#profileAvatar').textContent=u[0].toUpperCase();$('#profileUsernameDisplay').textContent=u;setMsg($('#usernameMsg'),'Kullanıcı adı güncellendi.','ok');await loadLeaderboard()}catch(err){setMsg($('#usernameMsg'),err?.code==='23505'?'Bu kullanıcı adı alınmış.':'Kullanıcı adı güncellenemedi.','error')}});
 
 $('#passwordForm').addEventListener('submit',async e=>{e.preventDefault();const cur=$('#currentPassword').value,nw=$('#newPassword').value,nw2=$('#newPassword2').value;if(nw.length<8){setMsg($('#passwordMsg'),'Yeni şifre en az 8 karakter olmalı.','error');return}if(nw!==nw2){setMsg($('#passwordMsg'),'Yeni şifreler eşleşmiyor.','error');return}try{const {error:verify}=await sb.auth.signInWithPassword({email:currentUser.email,password:cur});if(verify)throw new Error('Mevcut şifre yanlış.');const {error}=await sb.auth.updateUser({password:nw});if(error)throw error;$('#currentPassword').value=$('#newPassword').value=$('#newPassword2').value='';setMsg($('#passwordMsg'),'Şifren güncellendi.','ok')}catch(err){setMsg($('#passwordMsg'),err.message||'Şifre değiştirilemedi.','error')}});
 
@@ -317,23 +425,58 @@ $('#securityForm').addEventListener('submit',async e=>{e.preventDefault();const 
 $('#deleteForm').addEventListener('submit',async e=>{e.preventDefault();if($('#deleteConfirm').value.trim().toUpperCase()!=='SIL'){setMsg($('#deleteMsg'),'Onay alanına SIL yazmalısın.','error');return}const password=$('#deletePassword').value;setMsg($('#deleteMsg'),'Hesap siliniyor…');try{const {data,error}=await sb.functions.invoke('safe-zone-delete-account',{body:{password}});if(error)throw error;if(!data?.ok)throw new Error(data?.message||'Hesap silinemedi.');currentUser=null;currentProfile=null;$('#deleteModal').classList.add('hidden');await sb.auth.signOut({scope:'local'}).catch(()=>{});switchAuth('login');show('authScreen');setMsg($('#loginMsg'),'Hesabın ve skorların kalıcı olarak silindi.','ok')}catch(err){setMsg($('#deleteMsg'),err.message||'Hesap silinemedi.','error')}});
 
 function resetForgotModal(){recoveryUsername='';$('#forgotLookupForm').classList.remove('hidden');$('#forgotResetForm').classList.add('hidden');$('#forgotUsername').value='';$('#forgotAnswer').value='';$('#forgotNewPassword').value='';$('#forgotNewPassword2').value='';$('#forgotQuestionText').textContent='';$('#forgotHelp').textContent='Önce kullanıcı adını yaz. Kayıt sırasında seçtiğin güvenlik sorusunu göstereceğiz.';setMsg($('#forgotLookupMsg'),'');setMsg($('#forgotMsg'),'')}
-$('#loginTab').onclick=()=>switchAuth('login');$('#registerTab').onclick=()=>switchAuth('register');$('#forgotBtn').onclick=()=>{resetForgotModal();$('#forgotModal').classList.remove('hidden')};$('#closeForgot').onclick=()=>{resetForgotModal();$('#forgotModal').classList.add('hidden')};$('#openDeleteBtn').onclick=()=>{setMsg($('#deleteMsg'),'');$('#deletePassword').value='';$('#deleteConfirm').value='';$('#deleteModal').classList.remove('hidden')};$('#closeDelete').onclick=()=>$('#deleteModal').classList.add('hidden');$('#accountBtn').onclick=()=>{show('accountScreen');loadMyStats().catch(()=>{})};$('#accountBack').onclick=()=>show('homeScreen');$('#logoutBtn').onclick=async()=>{await sb.auth.signOut();currentUser=null;currentProfile=null;myStats=null;switchAuth('login');show('authScreen')};$('#homeRefreshBoard').onclick=loadLeaderboard;
+$('#loginTab').onclick=()=>switchAuth('login');$('#registerTab').onclick=()=>switchAuth('register');$('#forgotBtn').onclick=()=>{resetForgotModal();$('#forgotModal').classList.remove('hidden')};$('#closeForgot').onclick=()=>{resetForgotModal();$('#forgotModal').classList.add('hidden')};$('#openDeleteBtn').onclick=()=>{setMsg($('#deleteMsg'),'');$('#deletePassword').value='';$('#deleteConfirm').value='';$('#deleteModal').classList.remove('hidden')};$('#closeDelete').onclick=()=>$('#deleteModal').classList.add('hidden');$('#profileBtn').onclick=()=>{show('profileScreen');loadMyStats().catch(()=>{})};$('#profileBack').onclick=()=>show('homeScreen');$('#settingsBtn').onclick=()=>show('settingsScreen');$('#settingsBack').onclick=()=>show('homeScreen');$('#logoutBtn').onclick=async()=>{await sb.auth.signOut();currentUser=null;currentProfile=null;myStats=null;switchAuth('login');show('authScreen')};$('#homeRefreshBoard').onclick=loadLeaderboard;
 
-function zoneCount(){return wave<5?4:wave<12?5:6}function cycleDuration(){return Math.max(1.55,3.2-wave*.085)}function revealLead(){return Math.max(.42,1.05-wave*.035)}function zoneSpeed(){return 28+wave*3.2}function safeMultiplier(){return wave<10?1:wave<20?1.75:wave<30?2.15:2.45}
-function createZones(){const next=[];for(let i=0;i<zoneCount();i++){const r=rand(40,55);next.push({x:rand(r+24,W-r-24),y:rand(r+24,H-r-24),r,vx:rand(-1,1)*zoneSpeed(),vy:rand(-1,1)*zoneSpeed(),pulse:rand(0,Math.PI*2),fakePulse:0})}zones=next;if(wave===0&&zones.length){player.x=zones[0].x;player.y=zones[0].y;player.tx=player.x;player.ty=player.y;player.attachedZone=zones[0];player.targetZone=null}}
-function prepareCycle(){cycle=0;collapseAt=cycleDuration();revealAt=collapseAt-revealLead();safeIndex=Math.floor(Math.random()*zones.length);decoyIndex=-1;if(wave>=7&&zones.length>2&&Math.random()<Math.min(.72,.18+wave*.035)){do{decoyIndex=Math.floor(Math.random()*zones.length)}while(decoyIndex===safeIndex);zones[decoyIndex].fakePulse=.24}$('#gameStatus').textContent=wave>=10?'Hazır ol… güvenli bölge artık daha hızlı.':'Hazır ol… güvenli bölge birazdan belli olacak.'}
+function zoneCount(){if(MOBILE_GAME)return wave<5?5:wave<12?6:wave<22?7:8;return wave<5?4:wave<12?5:wave<24?6:7}
+function cycleDuration(){return Math.max(1.55,3.2-wave*.085)}
+function revealLead(){return Math.max(.48,1.08-wave*.033)}
+function zoneSpeed(){return (MOBILE_GAME?40:34)+wave*3.5}
+function safeMultiplier(){return wave<10?1:wave<20?1.6:wave<30?1.95:2.2}
+function createZones(){
+  const next=[],count=zoneCount();
+  for(let i=0;i<count;i++){
+    const r=rand(MOBILE_GAME?34:40,MOBILE_GAME?48:55);
+    let x=W/2,y=H/2,placed=false;
+    for(let a=0;a<60;a++){
+      const tx=rand(r+18,W-r-18),ty=rand(r+18,H-r-18);
+      if(next.every(z=>Math.hypot(z.x-tx,z.y-ty)>z.r+r+16)){x=tx;y=ty;placed=true;break}
+    }
+    if(!placed){x=rand(r+18,W-r-18);y=rand(r+18,H-r-18)}
+    const angle=rand(0,Math.PI*2),speed=zoneSpeed();
+    next.push({x,y,r,vx:Math.cos(angle)*speed,vy:Math.sin(angle)*speed,pulse:rand(0,Math.PI*2),fakePulse:0})
+  }
+  zones=next;lastSafeZone=null;
+  if(wave===0&&zones.length){player.x=zones[0].x;player.y=zones[0].y;player.tx=player.x;player.ty=player.y;player.attachedZone=zones[0];player.targetZone=null}
+}
+function prepareCycle(){
+  cycle=0;collapseAt=cycleDuration();revealAt=collapseAt-revealLead();
+  let candidates=zones.map((z,i)=>({z,i})).filter(o=>o.z!==player.attachedZone&&o.z!==lastSafeZone);
+  if(!candidates.length)candidates=zones.map((z,i)=>({z,i})).filter(o=>o.z!==player.attachedZone);
+  if(!candidates.length)candidates=zones.map((z,i)=>({z,i}));
+  const pick=candidates[Math.floor(Math.random()*candidates.length)];
+  safeIndex=pick.i;lastSafeZone=pick.z;
+  decoyIndex=-1;
+  if(wave>=7&&zones.length>2&&Math.random()<Math.min(.72,.18+wave*.035)){do{decoyIndex=Math.floor(Math.random()*zones.length)}while(decoyIndex===safeIndex);zones[decoyIndex].fakePulse=.24}
+  $('#gameStatus').textContent='Güvenli bölgeyi bekle…'
+}
 function resetGame(){elapsed=0;wave=0;cycle=0;flash=0;shake=0;player.moving=false;player.targetZone=null;player.attachedZone=null;createZones();prepareCycle();updateHud()}
 function updateHud(){$('#timeLabel').textContent=elapsed.toFixed(2)+'s';$('#waveLabel').textContent=wave}
-function startGame(){if(!currentUser||!currentProfile)return;cancelAnimationFrame(raf);resetGame();running=true;paused=false;$('#pauseBtn').textContent='Duraklat';$('#gameUsername').textContent=currentProfile.username;show('gameScreen');draw();last=performance.now();raf=requestAnimationFrame(loop)}
+function startGame(){if(!currentUser||!currentProfile)return;cancelAnimationFrame(raf);resetGame();running=true;paused=false;$('#pauseBtn').textContent='Duraklat';show('gameScreen');draw();last=performance.now();raf=requestAnimationFrame(loop)}
 function stopGameToHome(){running=false;paused=false;cancelAnimationFrame(raf);show('homeScreen');loadLeaderboard()}
 function togglePause(){if(!running)return;paused=!paused;$('#pauseBtn').textContent=paused?'Devam Et':'Duraklat';if(!paused){last=performance.now();raf=requestAnimationFrame(loop)}else draw()}
 function pointInZone(x,y,z,m=0){const dx=x-z.x,dy=y-z.y;return dx*dx+dy*dy<=Math.pow(z.r-m,2)}
 function dashTo(z){if(!running||paused)return;player.sx=player.x;player.sy=player.y;player.tx=z.x;player.ty=z.y;player.targetZone=z;player.attachedZone=null;player.progress=0;player.moving=true}
-canvas.addEventListener('pointerdown',e=>{if(!running||paused)return;const r=canvas.getBoundingClientRect(),x=(e.clientX-r.left)*W/r.width,y=(e.clientY-r.top)*H/r.height;let picked=null,d0=Infinity;for(const z of zones){const d=(x-z.x)**2+(y-z.y)**2;if(d<=Math.pow(z.r+14,2)&&d<d0){picked=z;d0=d}}if(picked)dashTo(picked)});
+canvas.addEventListener('pointerdown',e=>{if(!running||paused||cycle<revealAt)return;const r=canvas.getBoundingClientRect(),x=(e.clientX-r.left)*W/r.width,y=(e.clientY-r.top)*H/r.height;let picked=null,d0=Infinity;for(const z of zones){const d=(x-z.x)**2+(y-z.y)**2;if(d<=Math.pow(z.r+16,2)&&d<d0){picked=z;d0=d}}if(picked)dashTo(picked)});
+let soundEnabled=localStorage.getItem('safe_zone_sound')!=='off',audioCtx=null;
+function updateSoundButton(){const b=$('#soundToggle');if(!b)return;b.textContent=soundEnabled?'AÇIK':'KAPALI';b.classList.toggle('off',!soundEnabled)}
+function tone(freq,duration=.09,delay=0,volume=.055){if(!soundEnabled)return;try{audioCtx=audioCtx||new (window.AudioContext||window.webkitAudioContext)();const t=audioCtx.currentTime+delay,o=audioCtx.createOscillator(),g=audioCtx.createGain();o.type='sine';o.frequency.setValueAtTime(freq,t);g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(volume,t+.012);g.gain.exponentialRampToValueAtTime(.0001,t+duration);o.connect(g);g.connect(audioCtx.destination);o.start(t);o.stop(t+duration+.02)}catch{}}
+function playPassSound(){tone(520,.08,0,.05);tone(720,.11,.065,.045)}
+function playFailSound(){tone(220,.14,0,.05);tone(150,.18,.09,.04)}
+$('#soundToggle').onclick=()=>{soundEnabled=!soundEnabled;localStorage.setItem('safe_zone_sound',soundEnabled?'on':'off');updateSoundButton();if(soundEnabled)tone(620,.08)};updateSoundButton();
 async function saveRun(){const ms=Math.round(elapsed*1000);const {error}=await sb.from('safe_zone_runs').insert({user_id:currentUser.id,survival_ms:ms,waves:wave});if(error)throw error}
-async function endGame(){if(!running)return;running=false;paused=false;cancelAnimationFrame(raf);$('#finalTime').textContent=elapsed.toFixed(2)+'s';$('#finalWaves').textContent=wave;$('#finalUsername').textContent=currentProfile.username;setMsg($('#resultMsg'),'Skorun kaydediliyor…');show('resultScreen');try{await saveRun();setMsg($('#resultMsg'),'Skor hesabına kaydedildi.','ok');await loadLeaderboard()}catch(err){setMsg($('#resultMsg'),'Skor kaydedilemedi. İnternet bağlantını kontrol et.','error')}}
-function collapse(){const safe=zones[safeIndex],survived=pointInZone(player.x,player.y,safe,4);flash=1;shake=survived?5:15;if(navigator.vibrate)navigator.vibrate(survived?15:[35,25,35]);if(!survived){endGame();return}wave++;$('#gameStatus').textContent='GÜVENDESİN';if(wave%3===0){createZones();const closest=zones.reduce((a,b)=>((b.x-player.x)**2+(b.y-player.y)**2)<((a.x-player.x)**2+(a.y-player.y)**2)?b:a);player.x=closest.x;player.y=closest.y;player.tx=player.x;player.ty=player.y;player.moving=false;player.targetZone=null;player.attachedZone=closest}prepareCycle()}
-function update(dt){elapsed+=dt;cycle+=dt;if(flash>0)flash=Math.max(0,flash-dt*3.8);if(shake>0)shake=Math.max(0,shake-dt*32);const base=zoneSpeed(),revealed=cycle>=revealAt;zones.forEach((z,i)=>{z.pulse+=dt*3;if(z.fakePulse>0)z.fakePulse=Math.max(0,z.fakePulse-dt);const target=base*((revealed&&i===safeIndex&&wave>=10)?safeMultiplier():1),cur=Math.hypot(z.vx,z.vy)||1;z.vx=z.vx/cur*target;z.vy=z.vy/cur*target;z.x+=z.vx*dt;z.y+=z.vy*dt;if(z.x<z.r+12){z.x=z.r+12;z.vx=Math.abs(z.vx)}if(z.x>W-z.r-12){z.x=W-z.r-12;z.vx=-Math.abs(z.vx)}if(z.y<z.r+12){z.y=z.r+12;z.vy=Math.abs(z.vy)}if(z.y>H-z.r-12){z.y=H-z.r-12;z.vy=-Math.abs(z.vy)}});if(player.moving){if(player.targetZone){player.tx=player.targetZone.x;player.ty=player.targetZone.y}player.progress+=dt/Math.max(.095,.19-wave*.0025);const t=clamp(player.progress,0,1),ease=1-Math.pow(1-t,3);player.x=player.sx+(player.tx-player.sx)*ease;player.y=player.sy+(player.ty-player.sy)*ease;if(t>=1){player.moving=false;player.attachedZone=player.targetZone;player.targetZone=null}}else if(player.attachedZone&&zones.includes(player.attachedZone)){player.x=player.attachedZone.x;player.y=player.attachedZone.y;player.tx=player.x;player.ty=player.y}if(cycle>=revealAt&&cycle<collapseAt){const left=collapseAt-cycle;$('#gameStatus').textContent=(wave>=10?'HAREKETLİ GÜVENLİ BÖLGE — ':'ÇÖKÜŞ: ')+left.toFixed(2)+'s'}if(cycle>=collapseAt)collapse();updateHud()}
+async function endGame(){if(!running)return;running=false;paused=false;cancelAnimationFrame(raf);playFailSound();const ms=Math.round(elapsed*1000),previousGames=Number(myStats?.games_played||0),previousBest=Number(myStats?.best_survival_ms||0);$('#finalTime').textContent=elapsed.toFixed(2)+'s';$('#finalWaves').textContent=wave;$('#finalUsername').textContent=currentProfile.username;setMsg($('#resultMsg'),'');const badge=$('#recordBadge');badge.classList.add('hidden');badge.textContent='';show('resultScreen');try{await saveRun();if(previousGames===0){badge.textContent='İLK REKOR';badge.classList.remove('hidden')}else if(ms>previousBest){badge.textContent='YENİ REKOR';badge.classList.remove('hidden')}await loadLeaderboard()}catch(err){setMsg($('#resultMsg'),'Skor kaydedilemedi. İnternet bağlantını kontrol et.','error')}}
+function collapse(){const safe=zones[safeIndex],survived=pointInZone(player.x,player.y,safe,4);flash=1;shake=survived?5:15;if(navigator.vibrate)navigator.vibrate(survived?15:[35,25,35]);if(!survived){endGame();return}playPassSound();wave++;player.x=safe.x;player.y=safe.y;player.tx=safe.x;player.ty=safe.y;player.moving=false;player.targetZone=null;player.attachedZone=safe;$('#gameStatus').textContent='GÜVENDESİN';prepareCycle()}
+function update(dt){elapsed+=dt;cycle+=dt;if(flash>0)flash=Math.max(0,flash-dt*3.8);if(shake>0)shake=Math.max(0,shake-dt*32);const base=zoneSpeed(),revealed=cycle>=revealAt;zones.forEach((z,i)=>{z.pulse+=dt*3;if(z.fakePulse>0)z.fakePulse=Math.max(0,z.fakePulse-dt);const target=base*((revealed&&i===safeIndex&&wave>=10)?safeMultiplier():1),cur=Math.hypot(z.vx,z.vy)||1;z.vx=z.vx/cur*target;z.vy=z.vy/cur*target;z.x+=z.vx*dt;z.y+=z.vy*dt;if(z.x<z.r+12){z.x=z.r+12;z.vx=Math.abs(z.vx)}if(z.x>W-z.r-12){z.x=W-z.r-12;z.vx=-Math.abs(z.vx)}if(z.y<z.r+12){z.y=z.r+12;z.vy=Math.abs(z.vy)}if(z.y>H-z.r-12){z.y=H-z.r-12;z.vy=-Math.abs(z.vy)}});if(player.moving){if(player.targetZone){player.tx=player.targetZone.x;player.ty=player.targetZone.y}player.progress+=dt/Math.max(.095,.19-wave*.0025);const t=clamp(player.progress,0,1),ease=1-Math.pow(1-t,3);player.x=player.sx+(player.tx-player.sx)*ease;player.y=player.sy+(player.ty-player.sy)*ease;if(t>=1){player.moving=false;player.attachedZone=player.targetZone;player.targetZone=null}}else if(player.attachedZone&&zones.includes(player.attachedZone)){player.x=player.attachedZone.x;player.y=player.attachedZone.y;player.tx=player.x;player.ty=player.y}if(cycle>=revealAt&&cycle<collapseAt){const left=collapseAt-cycle;$('#gameStatus').textContent='GÜVENLİ BÖLGE AÇIK — '+left.toFixed(2)+'s'}if(cycle>=collapseAt)collapse();updateHud()}
 function drawZone(z,i){const revealed=cycle>=revealAt,isSafe=revealed&&i===safeIndex,isDecoy=z.fakePulse>0&&i===decoyIndex&&!isSafe,r=z.r*(1+Math.sin(z.pulse)*.05);ctx.beginPath();ctx.arc(z.x,z.y,r,0,Math.PI*2);ctx.fillStyle=isSafe?'rgba(34,211,238,.16)':'rgba(255,255,255,.055)';ctx.fill();ctx.lineWidth=isSafe?7:2;ctx.strokeStyle=isSafe?'rgba(34,211,238,.98)':isDecoy?'rgba(250,204,21,.9)':'rgba(255,255,255,.22)';ctx.stroke();if(isSafe){ctx.beginPath();ctx.arc(z.x,z.y,r+13+Math.sin(z.pulse*1.7)*4,0,Math.PI*2);ctx.strokeStyle='rgba(34,211,238,.28)';ctx.lineWidth=4;ctx.stroke();if(wave>=10){ctx.beginPath();ctx.moveTo(z.x,z.y);ctx.lineTo(z.x-z.vx*.11,z.y-z.vy*.11);ctx.strokeStyle='rgba(34,211,238,.32)';ctx.lineWidth=8;ctx.stroke()}}if(isDecoy){ctx.beginPath();ctx.arc(z.x,z.y,r+10,0,Math.PI*2);ctx.strokeStyle='rgba(250,204,21,.35)';ctx.lineWidth=4;ctx.stroke()}}
 function draw(){ctx.clearRect(0,0,W,H);const ox=shake?(Math.random()-.5)*shake:0,oy=shake?(Math.random()-.5)*shake:0;ctx.save();ctx.translate(ox,oy);ctx.fillStyle='#05070b';ctx.fillRect(-30,-30,W+60,H+60);const g=ctx.createRadialGradient(W/2,H/2,40,W/2,H/2,520);g.addColorStop(0,'rgba(25,38,55,.36)');g.addColorStop(1,'rgba(2,6,23,0)');ctx.fillStyle=g;ctx.fillRect(0,0,W,H);for(let x=0;x<W;x+=38){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.strokeStyle='rgba(255,255,255,.025)';ctx.stroke()}for(let y=0;y<H;y+=38){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.strokeStyle='rgba(255,255,255,.025)';ctx.stroke()}zones.forEach(drawZone);if(player.moving){ctx.beginPath();ctx.moveTo(player.sx,player.sy);ctx.lineTo(player.x,player.y);ctx.strokeStyle='rgba(255,255,255,.18)';ctx.lineWidth=4;ctx.stroke()}ctx.beginPath();ctx.arc(player.x,player.y,PLAYER_R+6,0,Math.PI*2);ctx.fillStyle='rgba(255,255,255,.08)';ctx.fill();ctx.beginPath();ctx.arc(player.x,player.y,PLAYER_R,0,Math.PI*2);ctx.fillStyle='#fff';ctx.fill();if(running&&cycle>=revealAt){const remaining=Math.max(0,collapseAt-cycle),progress=remaining/revealLead();ctx.beginPath();ctx.arc(W/2,H/2,31,-Math.PI/2,-Math.PI/2+Math.PI*2*progress);ctx.strokeStyle=remaining<.35?'#fb7185':'rgba(255,255,255,.9)';ctx.lineWidth=6;ctx.stroke();ctx.textAlign='center';ctx.fillStyle='#fff';ctx.font='700 18px system-ui';ctx.fillText(remaining.toFixed(1),W/2,H/2+6)}if(paused){ctx.fillStyle='rgba(0,0,0,.56)';ctx.fillRect(0,0,W,H);ctx.textAlign='center';ctx.fillStyle='#fff';ctx.font='700 30px system-ui';ctx.fillText('DURAKLATILDI',W/2,H/2)}if(flash>0){ctx.fillStyle=`rgba(255,255,255,${flash*.28})`;ctx.fillRect(0,0,W,H)}ctx.restore()}
 function loop(now){if(!running||paused)return;const dt=Math.min(.033,Math.max(0,(now-last)/1000));last=now;update(dt);draw();if(running)raf=requestAnimationFrame(loop)}
@@ -345,7 +488,7 @@ $('#playBtn').onclick=requestStartGame;
 $('#tutorialLaterBtn').onclick=()=>$('#tutorialModal').classList.add('hidden');
 $('#tutorialStartBtn').onclick=async()=>{if(!currentUser||!currentProfile)return;$('#tutorialModal').classList.add('hidden');currentProfile.tutorial_seen=true;localStorage.setItem(tutorialStorageKey(),'1');try{await sb.from('safe_zone_profiles').update({tutorial_seen:true,updated_at:new Date().toISOString()}).eq('user_id',currentUser.id)}catch{}startGame()};
 $('#pauseBtn').onclick=togglePause;$('#quitBtn').onclick=stopGameToHome;$('#retryBtn').onclick=startGame;$('#resultHomeBtn').onclick=()=>{show('homeScreen');loadLeaderboard()};
-const mobileGate=$('#mobileGate');if(!window.matchMedia('(max-width:820px)').matches)document.body.classList.add('mobile-entered');$('#mobileEnterBtn').onclick=()=>document.body.classList.add('mobile-entered');
+const mobileGate=$('#mobileGate');if(window.matchMedia('(max-width:820px)').matches){setTimeout(()=>document.body.classList.add('mobile-entered'),1050)}else{document.body.classList.add('mobile-entered')}
 
 sb.auth.onAuthStateChange((event,session)=>{if(event==='SIGNED_OUT'){currentUser=null;currentProfile=null}else if(session?.user){currentUser=session.user}});
 refreshAuthState();
