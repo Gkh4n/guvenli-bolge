@@ -507,7 +507,7 @@ button:disabled{opacity:.55;cursor:not-allowed}
 .leaderboard-load-more{width:100%;margin-top:11px;min-height:44px}
 .board-empty{padding:20px 4px;text-align:center}
 @media(max-width:600px){
-  .home-board .board .row:nth-child(n+11){display:none}
+  .home-board .board .row:nth-child(n+6){display:none}
   .leaderboard-page{padding:12px}
   .leaderboard-page-title{font-size:20px}
   .leaderboard-scroll{max-height:calc(100dvh - 205px)}
@@ -725,7 +725,7 @@ button:disabled{opacity:.55;cursor:not-allowed}
       </div>
 
       <div class="panel boardcard home-board">
-        <div class="cardtitle"><div><h3>GLOBAL SIRALAMA</h3><span class="board-subtitle">En iyi 10 oyuncu</span></div><button id="homeRefreshBoard" class="refresh" type="button">Yenile</button></div>
+        <div class="cardtitle"><div><h3>GLOBAL SIRALAMA</h3><span class="board-subtitle">En iyi 5 oyuncu</span></div><button id="homeRefreshBoard" class="refresh" type="button">Yenile</button></div>
         <div id="homeBoard" class="board"><div class="tiny">Skorlar yükleniyor…</div></div>
         <button id="leaderboardBtn" class="board-more-btn" type="button"><span>TÜM SIRALAMAYI GÖR</span><b aria-hidden="true">→</b></button>
       </div>
@@ -1268,7 +1268,7 @@ async function loadLeaderboard(){
   if(!currentUser)return;
   if(target)target.innerHTML='<div class="tiny">Skorlar yükleniyor…</div>';
   try{
-    const rows=await fetchLeaderboardPage(10,0);
+    const rows=await fetchLeaderboardPage(5,0);
     renderBoard(target,rows);
     leaderboardTotal=Number(rows[0]?.total_players||0);
     await loadMyStats();
