@@ -2247,7 +2247,7 @@ body::-webkit-scrollbar,
 #pauseBtn:disabled{opacity:.38;cursor:default}
 
 
-/* v29 hızlı başlangıç geri sayımı — HAZIR OL 1 sn + 3-2-1, animasyonsuz */
+/* v29 başlangıç geri sayımı — HAZIR OL 1 sn + 3-2-1 birer saniye, animasyonsuz */
 .start-countdown{
   position:absolute;
   inset:0;
@@ -3689,9 +3689,9 @@ async function runStartCountdown(){
   const readyLabel=String(t('ready')||'HAZIR OL').replace(/…/g,'').trim().toUpperCase();
   const steps=[
     [readyLabel,1000],
-    ['3',400],
-    ['2',400],
-    ['1',400]
+    ['3',1000],
+    ['2',1000],
+    ['1',1000]
   ];
   for(const [label,delay] of steps){
     value.textContent=label;
