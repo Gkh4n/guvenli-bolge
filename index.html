@@ -2296,6 +2296,12 @@ Object.assign(I18N.fr,{scorePendingReview:'Ton score est en cours de vérificati
 Object.assign(I18N.es,{scorePendingReview:'Tu puntuación está en revisión. No aparecerá en la clasificación global hasta que sea aprobada.'});
 
 
+Object.assign(I18N.tr,{loginBusy:'GİRİŞ YAPILIYOR…'});
+Object.assign(I18N.en,{loginBusy:'SIGNING IN…'});
+Object.assign(I18N.de,{loginBusy:'ANMELDUNG…'});
+Object.assign(I18N.fr,{loginBusy:'CONNEXION…'});
+Object.assign(I18N.es,{loginBusy:'INICIANDO SESIÓN…'});
+
 const UA=navigator.userAgent||'';
 const IS_ANDROID_WEBVIEW=/\bwv\b/i.test(UA);
 const HAS_NATIVE_INSETS=/GuvenliBolgeApp\/2/i.test(UA);
@@ -2966,7 +2972,7 @@ async function refreshAuthState(){
 
 async function loginWithUsername(username,password){guestMode=false;const r=await fetch(SUPABASE_URL+'/functions/v1/safe-zone-login',{method:'POST',headers:{'apikey':SUPABASE_KEY,'Content-Type':'application/json'},body:JSON.stringify({username,password})});const body=await r.json().catch(()=>({}));if(!r.ok)throw new Error(currentLang==='tr'?(body.message||t('loginFailed')):t('loginFailed'));const {error}=await sb.auth.setSession({access_token:body.access_token,refresh_token:body.refresh_token});if(error)throw error;const {data:{user}}=await sb.auth.getUser();currentUser=user;await enterAuthenticatedHome()}
 
-$('#loginForm').addEventListener('submit',async e=>{e.preventDefault();const btn=$('#loginSubmit'),u=$('#loginUsername').value.trim(),p=$('#loginPassword').value;if(!validUsername(u)){setMsg($('#loginMsg'),t('invalidUsername'),'error');return}setBusy(btn,true,t('loginBtn'));setMsg($('#loginMsg'),'');try{await loginWithUsername(u,p);$('#loginPassword').value=''}catch(err){setMsg($('#loginMsg'),currentLang==='tr'?(err.message||t('loginFailed')):t('loginFailed'),'error')}finally{setBusy(btn,false,t('loginBtn'))}});
+$('#loginForm').addEventListener('submit',async e=>{e.preventDefault();const btn=$('#loginSubmit'),u=$('#loginUsername').value.trim(),p=$('#loginPassword').value;if(!validUsername(u)){setMsg($('#loginMsg'),t('invalidUsername'),'error');return}setBusy(btn,true,t('loginBtn'),t('loginBusy'));setMsg($('#loginMsg'),'');try{await loginWithUsername(u,p);$('#loginPassword').value=''}catch(err){setMsg($('#loginMsg'),currentLang==='tr'?(err.message||t('loginFailed')):t('loginFailed'),'error')}finally{setBusy(btn,false,t('loginBtn'))}});
 
 $('#registerForm').addEventListener('submit',async e=>{e.preventDefault();const btn=$('#registerSubmit'),username=$('#regUsername').value.trim(),password=$('#regPassword').value,password2=$('#regPassword2').value;if(!validUsername(username)){setMsg($('#registerMsg'),t('invalidUsername'),'error');return}if(!usernameAllowed(username)){setMsg($('#registerMsg'),t('usernameNotAllowed'),'error');return}if(password.length<8){setMsg($('#registerMsg'),t('passwordMin8'),'error');return}if(password!==password2){setMsg($('#registerMsg'),t('passwordsMismatch'),'error');return}setBusy(btn,true,t('createAccount'));setMsg($('#registerMsg'),'');try{const r=await fetch(SUPABASE_URL+'/functions/v1/safe-zone-register',{method:'POST',headers:{'apikey':SUPABASE_KEY,'Content-Type':'application/json'},body:JSON.stringify({username,password,recovery_mode:'code'})});const body=await r.json().catch(()=>({}));if(!r.ok)throw new Error(body?.code==='username_not_allowed'?t('usernameNotAllowed'):(currentLang==='tr'?(body.message||t('accountCreateFailed')):t('accountCreateFailed')));if(!body.recovery_code)throw new Error(t('recoveryCreateFailed'));await loginWithUsername(username,password);$('#regPassword').value=$('#regPassword2').value='';showRecoveryCode(body.recovery_code,t('recoveryNowTitle'),t('recoveryNowHelp'))}catch(err){setMsg($('#registerMsg'),err?.message||t('accountCreateFailed'),'error')}finally{setBusy(btn,false,t('createAccount'))}});
 
