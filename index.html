@@ -2247,7 +2247,7 @@ body::-webkit-scrollbar,
 #pauseBtn:disabled{opacity:.38;cursor:default}
 
 
-/* v29 hızlı başlangıç geri sayımı — toplam 1.5 sn, animasyonsuz */
+/* v29 hızlı başlangıç geri sayımı — HAZIR OL 1 sn + 3-2-1, animasyonsuz */
 .start-countdown{
   position:absolute;
   inset:0;
@@ -3688,10 +3688,10 @@ async function runStartCountdown(){
   overlay.classList.remove('hidden');
   const readyLabel=String(t('ready')||'HAZIR OL').replace(/…/g,'').trim().toUpperCase();
   const steps=[
-    [readyLabel,240],
-    ['3',420],
-    ['2',420],
-    ['1',420]
+    [readyLabel,1000],
+    ['3',400],
+    ['2',400],
+    ['1',400]
   ];
   for(const [label,delay] of steps){
     value.textContent=label;
@@ -3731,7 +3731,7 @@ async function startGame(){
   show('gameScreen');
   draw();
 
-  // 1.5 sn'lik kısa geri sayım ile sunucu hazırlığını aynı anda çalıştır.
+  // HAZIR OL 1 sn + kısa 3-2-1 geri sayımı ile sunucu hazırlığını aynı anda çalıştır.
   const countdownPromise=runStartCountdown();
   const sessionPromise=guestMode
     ? Promise.resolve(null)
