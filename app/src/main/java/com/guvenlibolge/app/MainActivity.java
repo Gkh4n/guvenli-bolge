@@ -18,6 +18,7 @@ import android.widget.FrameLayout;
 
 public class MainActivity extends Activity {
     private static final String GAME_URL = "https://gkh4n.github.io/guvenli-bolge/";
+    private static final String APP_WEB_VERSION = "1.3.3";
     private WebView webView;
 
     @Override
@@ -73,6 +74,7 @@ public class MainActivity extends Activity {
         settings.setSupportZoom(false);
         settings.setLoadWithOverviewMode(true);
         settings.setUseWideViewPort(true);
+        settings.setCacheMode(WebSettings.LOAD_NO_CACHE);
         settings.setUserAgentString(settings.getUserAgentString() + " GuvenliBolgeApp/2");
 
         webView.setWebChromeClient(new WebChromeClient());
@@ -108,8 +110,12 @@ public class MainActivity extends Activity {
                 || caps.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET));
     }
 
+    private String freshGameUrl() {
+        return GAME_URL + "?app=" + APP_WEB_VERSION + "&ts=" + System.currentTimeMillis();
+    }
+
     private void loadGame() {
-        if (hasNetwork()) webView.loadUrl(GAME_URL);
+        if (hasNetwork()) webView.loadUrl(freshGameUrl());
         else showOfflinePage();
     }
 
@@ -118,7 +124,7 @@ public class MainActivity extends Activity {
                 + "<style>body{margin:0;background:#070a10;color:#f5f7fb;font-family:sans-serif;display:grid;place-items:center;min-height:100vh;text-align:center;padding:28px;box-sizing:border-box}"
                 + "h1{font-size:28px;margin:0 0 10px}p{color:#8c99ab;line-height:1.6}button{margin-top:16px;border:0;border-radius:14px;padding:14px 22px;font-weight:800;background:#92f3ff;color:#081017}</style></head>"
                 + "<body><main><h1>Güvenli Bölge</h1><p>Oyuna bağlanmak için internet bağlantısı gerekiyor.</p>"
-                + "<button onclick=\"location.href='" + GAME_URL + "'\">Tekrar Dene</button></main></body></html>";
+                + "<button onclick=\"location.href='" + GAME_URL + "?app=" + APP_WEB_VERSION + "'\">Tekrar Dene</button></main></body></html>";
         webView.loadDataWithBaseURL(GAME_URL, html, "text/html", "UTF-8", null);
     }
 
