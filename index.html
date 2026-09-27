@@ -2241,6 +2241,11 @@ body::-webkit-scrollbar,
   .premium-launcher-arrow{width:31px;height:31px}
 }
 
+
+/* v28 anında oyun ekranına geçiş */
+.gameScreen.screen-enter{animation:none!important}
+#pauseBtn:disabled{opacity:.38;cursor:default}
+
 </style>
 </head>
 <body>
@@ -2824,7 +2829,12 @@ function show(id){
   screens.forEach(x=>$('#'+x).classList.toggle('hidden',x!==id));
   document.body.classList.toggle('game-active',id==='gameScreen');
   const el=$('#'+id);
-  if(el&&!REDUCED_MOTION){el.classList.remove('screen-enter');void el.offsetWidth;el.classList.add('screen-enter')}
+  if(!el)return;
+  if(id==='gameScreen'){
+    el.classList.remove('screen-enter');
+    return;
+  }
+  if(!REDUCED_MOTION){el.classList.remove('screen-enter');void el.offsetWidth;el.classList.add('screen-enter')}
 }
 function resetSubscreenScroll(id){
   const sc=$('#'+id+' .subscreen-scroll');
@@ -3641,11 +3651,31 @@ async function callRunService(body){
 async function startGame(){
   if((!guestMode&&(!currentUser||!currentProfile))||startGamePending)return;
   if(soundEnabled)getAudioCtx();
+
+  const originScreen=screens.find(id=>!$('#'+id)?.classList.contains('hidden'))||(guestMode?'authScreen':'homeScreen');
   startGamePending=true;
+
   const playBtn=$('#playBtn');
-  if(playBtn){playBtn.disabled=true;playBtn.setAttribute('aria-busy','true')}
+  if(playBtn)playBtn.setAttribute('aria-busy','true');
   setBusy($('#retryBtn'),true,t('retry'),t('startBusy'));
-  const guestBtn=$('#guestPlayBtn');if(guestBtn){guestBtn.disabled=true;const gb=guestBtn.querySelector('b');if(gb)gb.textContent=t('startBusy')}
+  const guestBtn=$('#guestPlayBtn');
+  if(guestBtn){guestBtn.disabled=true;const gb=guestBtn.querySelector('b');if(gb)gb.textContent=t('startBusy')}
+
+  // Kullanıcı dokunduğu anda oyun ekranına geç. Sunucu oturumu arka planda hazırlanır.
+  cancelAnimationFrame(raf);
+  cancelResumeCountdown();
+  resetGame();
+  running=false;
+  paused=false;
+  $('#pauseOverlay').classList.add('hidden');
+  $('#pauseBtn').disabled=true;
+  $('#resultAchievement').classList.add('hidden');
+  $('#guestResultBox').classList.add('hidden');
+  $('#gameStatus').textContent=t('startBusy');
+  $('#gameStatus').classList.remove('active','danger');
+  show('gameScreen');
+  draw();
+
   try{
     if(guestMode){
       activeRunSession=null;
@@ -3656,21 +3686,27 @@ async function startGame(){
       activeRunSession=run.session_id;
       achievementSnapshot=new Set(getAchievements().filter(a=>a.unlocked).map(a=>a.id));
     }
-    cancelAnimationFrame(raf);cancelResumeCountdown();resetGame();running=true;paused=false;
-    $('#pauseOverlay').classList.add('hidden');
+
+    running=true;
+    paused=false;
+    $('#pauseBtn').disabled=false;
+    $('#gameStatus').textContent=t('safeWait');
     startAmbientSound();
-    $('#resultAchievement').classList.add('hidden');
-    $('#guestResultBox').classList.add('hidden');
-    show('gameScreen');draw();last=performance.now();raf=requestAnimationFrame(loop);
+    last=performance.now();
+    raf=requestAnimationFrame(loop);
   }catch(e){
     activeRunSession=null;
+    running=false;
+    paused=false;
+    cancelAnimationFrame(raf);
+    $('#pauseBtn').disabled=false;
+    show(originScreen);
     showToast(currentLang==='tr'?(e?.message||t('startFailed')):t('startFailed'),'error');
   }finally{
     startGamePending=false;
-    const playBtn=$('#playBtn');
-    if(playBtn){playBtn.disabled=false;playBtn.removeAttribute('aria-busy')}
+    if(playBtn)playBtn.removeAttribute('aria-busy');
     setBusy($('#retryBtn'),false,t('retry'));
-    const guestBtn=$('#guestPlayBtn');if(guestBtn){guestBtn.disabled=false;const gb=guestBtn.querySelector('b');if(gb)gb.textContent=t('guestPlay')}
+    if(guestBtn){guestBtn.disabled=false;const gb=guestBtn.querySelector('b');if(gb)gb.textContent=t('guestPlay')}
   }
 }
 function cancelResumeCountdown(showMenu=false){
