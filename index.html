@@ -3425,37 +3425,21 @@ function renderBoard(target,rows,{append=false}={}){
     el.append(rankEl,center,score);target.appendChild(el)
   })
 }
-async function loadLeaderboard(soft=false){
-  const target=$('#homeBoard'),refresh=$('#homeRefreshBoard');
+async function loadLeaderboard(){
   if(!currentUser||homeBoardRefreshing)return;
   homeBoardRefreshing=true;
-  const hadRows=!!target?.querySelector('.row');
-  if(!soft&&!hadRows&&target)target.innerHTML='<div class="tiny">'+t('scoresLoading')+'</div>';
-  if(refresh){
-    refresh.disabled=true;
-    refresh.classList.add('is-refreshing');
-    refresh.setAttribute('aria-busy','true');
+  try{
+    await loadMyStats();
+  }catch(e){
+    console.warn('safe_zone_my_stats',e);
   }
   try{
-    const rows=await fetchLeaderboardPage(5,0);
-    renderBoard(target,rows);
-    leaderboardTotal=Number(rows[0]?.total_players||0);
+    await loadHomeInsights();
   }catch(e){
-    if(!soft&&!hadRows&&target)target.innerHTML='<div class="tiny">'+t('leaderboardUnavailable')+'</div>';
-    else showToast(t('leaderboardToast'),'error');
+    console.warn('safe_zone_my_achievement_metrics',e);
   }finally{
     homeBoardRefreshing=false;
-    if(refresh){
-      refresh.disabled=false;
-      refresh.classList.remove('is-refreshing');
-      refresh.removeAttribute('aria-busy');
-    }
   }
-
-  // Leaderboard is independent from personal stats/achievements.
-  // A secondary RPC failure must never erase an already loaded ranking.
-  try{await loadMyStats()}catch(e){console.warn('safe_zone_my_stats',e)}
-  try{await loadHomeInsights()}catch(e){console.warn('safe_zone_my_achievement_metrics',e)}
 }
 function updateLeaderboardSummary(){
   const shown=Math.min(leaderboardOffset,leaderboardTotal);
@@ -3557,7 +3541,7 @@ $('#recoveryCodeForm').addEventListener('submit',async e=>{e.preventDefault();co
 $('#deleteForm').addEventListener('submit',async e=>{e.preventDefault();if($('#deleteConfirm').value.trim().toUpperCase()!=='SIL'){setMsg($('#deleteMsg'),t('deleteConfirmSil'),'error');return}const password=$('#deletePassword').value;setMsg($('#deleteMsg'),t('deletingAccount'));try{const {data,error}=await sb.functions.invoke('safe-zone-delete-account',{body:{password}});if(error)throw error;if(!data?.ok)throw new Error(currentLang==='tr'?(data?.message||t('deleteFailed')):t('deleteFailed'));currentUser=null;currentProfile=null;$('#deleteModal').classList.add('hidden');await sb.auth.signOut({scope:'local'}).catch(()=>{});switchAuth('login');show('authScreen');setMsg($('#loginMsg'),t('accountDeleted'),'ok')}catch(err){setMsg($('#deleteMsg'),currentLang==='tr'?(err.message||t('deleteFailed')):t('deleteFailed'),'error')}});
 
 function resetForgotModal(){$('#forgotUsername').value='';$('#forgotRecoveryCode').value='';$('#forgotNewPassword').value='';$('#forgotNewPassword2').value='';setMsg($('#forgotMsg'),'')}
-$('#loginTab').onclick=()=>switchAuth('login');$('#registerTab').onclick=()=>switchAuth('register');$('#forgotBtn').onclick=()=>{resetForgotModal();$('#forgotModal').classList.remove('hidden')};$('#closeForgot').onclick=()=>{resetForgotModal();$('#forgotModal').classList.add('hidden')};$('#copyRecoveryCode').onclick=async()=>{const code=$('#recoveryCodeValue').textContent;try{await navigator.clipboard.writeText(code);showToast(t('copyCode'),'ok')}catch{showToast(t('copyManual'),'error')}};$('#closeRecoveryCode').onclick=()=>$('#recoveryCodeModal').classList.add('hidden');$('#openDeleteBtn').onclick=()=>{setMsg($('#deleteMsg'),'');$('#deletePassword').value='';$('#deleteConfirm').value='';$('#deleteModal').classList.remove('hidden')};$('#closeDelete').onclick=()=>$('#deleteModal').classList.add('hidden');$('#profileBtn').onclick=()=>{show('profileScreen');resetSubscreenScroll('profileScreen');Promise.all([loadMyStats(),loadScoreTrend()]).catch(()=>{})};$('#profileBack').onclick=()=>show('homeScreen');$('#achievementsBtn').onclick=()=>{show('achievementsScreen');resetSubscreenScroll('achievementsScreen');renderAchievements()};$('#achievementsBack').onclick=()=>show('homeScreen');$('#adminBtn').onclick=async()=>{if(!isAdmin&&!(await refreshAdminAccess()))return;show('adminScreen');resetSubscreenScroll('adminScreen');loadAdminDashboard()};$('#adminBack').onclick=()=>show('homeScreen');$('#adminRefresh').onclick=loadAdminDashboard;$('#settingsBtn').onclick=()=>{closeAllSettingsAccordions();show('settingsScreen');resetSubscreenScroll('settingsScreen')};$('#settingsBack').onclick=()=>{closeAllSettingsAccordions();show('homeScreen')};$('#logoutBtn').onclick=async()=>{await sb.auth.signOut();currentUser=null;currentProfile=null;myStats=null;isAdmin=false;adminDashboardData=null;$('#adminBtn')?.classList.add('hidden');switchAuth('login');show('authScreen')};if($('#homeRefreshBoard'))$('#homeRefreshBoard').onclick=()=>loadLeaderboard(true);$('#leaderboardBtn').onclick=()=>{show('leaderboardScreen');resetSubscreenScroll('leaderboardScreen');loadFullLeaderboard(true)};$('#leaderboardBack').onclick=()=>show('homeScreen');$('#leaderboardRefresh').onclick=()=>loadFullLeaderboard(true);$('#leaderboardLoadMore').onclick=()=>loadFullLeaderboard(false);
+$('#loginTab').onclick=()=>switchAuth('login');$('#registerTab').onclick=()=>switchAuth('register');$('#forgotBtn').onclick=()=>{resetForgotModal();$('#forgotModal').classList.remove('hidden')};$('#closeForgot').onclick=()=>{resetForgotModal();$('#forgotModal').classList.add('hidden')};$('#copyRecoveryCode').onclick=async()=>{const code=$('#recoveryCodeValue').textContent;try{await navigator.clipboard.writeText(code);showToast(t('copyCode'),'ok')}catch{showToast(t('copyManual'),'error')}};$('#closeRecoveryCode').onclick=()=>$('#recoveryCodeModal').classList.add('hidden');$('#openDeleteBtn').onclick=()=>{setMsg($('#deleteMsg'),'');$('#deletePassword').value='';$('#deleteConfirm').value='';$('#deleteModal').classList.remove('hidden')};$('#closeDelete').onclick=()=>$('#deleteModal').classList.add('hidden');$('#profileBtn').onclick=()=>{show('profileScreen');resetSubscreenScroll('profileScreen');Promise.all([loadMyStats(),loadScoreTrend()]).catch(()=>{})};$('#profileBack').onclick=()=>show('homeScreen');$('#achievementsBtn').onclick=()=>{show('achievementsScreen');resetSubscreenScroll('achievementsScreen');renderAchievements()};$('#achievementsBack').onclick=()=>show('homeScreen');$('#adminBtn').onclick=async()=>{if(!isAdmin&&!(await refreshAdminAccess()))return;show('adminScreen');resetSubscreenScroll('adminScreen');loadAdminDashboard()};$('#adminBack').onclick=()=>show('homeScreen');$('#adminRefresh').onclick=loadAdminDashboard;$('#settingsBtn').onclick=()=>{closeAllSettingsAccordions();show('settingsScreen');resetSubscreenScroll('settingsScreen')};$('#settingsBack').onclick=()=>{closeAllSettingsAccordions();show('homeScreen')};$('#logoutBtn').onclick=async()=>{await sb.auth.signOut();currentUser=null;currentProfile=null;myStats=null;isAdmin=false;adminDashboardData=null;$('#adminBtn')?.classList.add('hidden');switchAuth('login');show('authScreen')};$('#leaderboardBtn').onclick=()=>{show('leaderboardScreen');resetSubscreenScroll('leaderboardScreen');loadFullLeaderboard(true)};$('#leaderboardBack').onclick=()=>show('homeScreen');$('#leaderboardRefresh').onclick=()=>loadFullLeaderboard(true);$('#leaderboardLoadMore').onclick=()=>loadFullLeaderboard(false);
 
 function zoneCount(){if(MOBILE_GAME)return wave<5?5:wave<12?6:wave<22?7:8;return wave<5?4:wave<12?5:wave<24?6:7}
 function cycleDuration(){return Math.max(1.55,3.2-wave*.085)}
