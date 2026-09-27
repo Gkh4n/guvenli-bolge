@@ -4,6 +4,9 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover" />
 <meta name="theme-color" content="#070a10" />
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+<meta http-equiv="Pragma" content="no-cache" />
+<meta http-equiv="Expires" content="0" />
 <title>Güvenli Bölge</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -2755,12 +2758,9 @@ async function loadLeaderboard(soft=false){
     const rows=await fetchLeaderboardPage(5,0);
     renderBoard(target,rows);
     leaderboardTotal=Number(rows[0]?.total_players||0);
-    await loadMyStats();
-    await loadHomeInsights();
   }catch(e){
     if(!soft&&!hadRows&&target)target.innerHTML='<div class="tiny">'+t('leaderboardUnavailable')+'</div>';
     else showToast(t('leaderboardToast'),'error');
-    try{await loadMyStats()}catch{}
   }finally{
     homeBoardRefreshing=false;
     if(refresh){
@@ -2769,6 +2769,11 @@ async function loadLeaderboard(soft=false){
       refresh.removeAttribute('aria-busy');
     }
   }
+
+  // Leaderboard is independent from personal stats/achievements.
+  // A secondary RPC failure must never erase an already loaded ranking.
+  try{await loadMyStats()}catch(e){console.warn('safe_zone_my_stats',e)}
+  try{await loadHomeInsights()}catch(e){console.warn('safe_zone_my_achievement_metrics',e)}
 }
 function updateLeaderboardSummary(){
   const shown=Math.min(leaderboardOffset,leaderboardTotal);
