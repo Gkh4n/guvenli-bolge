@@ -3010,7 +3010,7 @@ async function startGame(){
       activeRunSession=null;
       achievementSnapshot=new Set();
     }else{
-      const run=await callRunService({action:'start',client_version:'web-1.0-polish'});
+      const run=await callRunService({action:'start',client_version:'web-1.3.3'});
       if(!run?.session_id)throw new Error(t('runSessionFailed'));
       activeRunSession=run.session_id;
       achievementSnapshot=new Set(getAchievements().filter(a=>a.unlocked).map(a=>a.id));
