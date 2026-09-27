@@ -2142,6 +2142,170 @@ body::-webkit-scrollbar,
   .premium-play-btn b{font-size:22px}
 }
 
+
+/* v26 sinematik oyuna başla alanı */
+.cinematic-play-btn{
+  position:relative!important;
+  isolation:isolate;
+  width:100%!important;
+  height:178px!important;
+  min-height:178px!important;
+  margin-top:20px!important;
+  padding:0!important;
+  display:grid!important;
+  place-items:center!important;
+  overflow:hidden!important;
+  border:1px solid rgba(255,170,82,.24)!important;
+  border-radius:20px!important;
+  background:
+    radial-gradient(circle at 50% 92%,rgba(255,126,31,.38) 0,rgba(255,126,31,.17) 12%,transparent 38%),
+    radial-gradient(circle at 50% 24%,rgba(56,82,106,.22),transparent 48%),
+    linear-gradient(180deg,#101821 0%,#0b1219 47%,#11100f 72%,#07090c 100%)!important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.035),
+    inset 0 -34px 60px rgba(0,0,0,.36),
+    0 16px 34px rgba(0,0,0,.20)!important;
+  color:#fff!important;
+  transform:none!important;
+}
+.cinematic-play-btn:active{
+  transform:scale(.986)!important;
+}
+.cinematic-play-btn:before{
+  content:"";
+  position:absolute;
+  z-index:-1;
+  left:50%;
+  top:51%;
+  width:238px;
+  height:238px;
+  transform:translate(-50%,-50%);
+  border:3px solid rgba(255,151,60,.94);
+  border-radius:50%;
+  box-shadow:
+    0 0 7px rgba(255,159,66,.82),
+    0 0 19px rgba(255,126,31,.55),
+    0 0 45px rgba(255,102,20,.24),
+    inset 0 0 16px rgba(255,149,51,.18);
+  pointer-events:none;
+}
+.cinematic-sky{
+  position:absolute;
+  z-index:-3;
+  inset:0;
+  background:
+    radial-gradient(circle at 12% 38%,rgba(120,148,175,.06) 0 1px,transparent 1.5px),
+    radial-gradient(circle at 83% 23%,rgba(255,183,110,.10) 0 1px,transparent 1.5px),
+    radial-gradient(circle at 67% 35%,rgba(255,183,110,.08) 0 1px,transparent 1.5px);
+  background-size:61px 61px,77px 77px,49px 49px;
+  opacity:.72;
+}
+.cinematic-orbit{
+  position:absolute;
+  z-index:-1;
+  left:50%;
+  top:51%;
+  transform:translate(-50%,-50%) rotate(-17deg);
+  border:1px solid rgba(255,158,70,.25);
+  border-radius:50%;
+  pointer-events:none;
+}
+.orbit-outer{
+  width:276px;
+  height:208px;
+}
+.orbit-inner{
+  width:260px;
+  height:158px;
+  transform:translate(-50%,-50%) rotate(19deg);
+  border-color:rgba(255,179,101,.13);
+}
+.cinematic-landscape{
+  position:absolute;
+  z-index:-2;
+  left:0;
+  right:0;
+  bottom:-1px;
+  width:100%;
+  height:70%;
+  opacity:.96;
+  pointer-events:none;
+}
+.cinematic-play-content{
+  position:relative;
+  z-index:3;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:13px;
+  transform:translateY(-3px);
+  text-shadow:0 2px 16px rgba(0,0,0,.55);
+}
+.cinematic-play-icon{
+  width:48px;
+  height:48px;
+  display:grid;
+  place-items:center;
+  filter:drop-shadow(0 0 12px rgba(255,159,66,.72));
+}
+.cinematic-play-icon svg{
+  width:34px;
+  height:39px;
+  overflow:visible;
+}
+.cinematic-play-icon path{
+  fill:#ffe2a6;
+  stroke:#fff3d1;
+  stroke-width:1.1;
+  stroke-linejoin:round;
+}
+.cinematic-play-label{
+  color:#fff4e4;
+  font-family:"Sora",Inter,system-ui,sans-serif;
+  font-size:14px;
+  line-height:1;
+  font-weight:750;
+  letter-spacing:.24em;
+  padding-left:.24em;
+  text-shadow:
+    0 0 12px rgba(255,151,60,.28),
+    0 2px 12px rgba(0,0,0,.58);
+}
+.cinematic-play-btn:hover{
+  border-color:rgba(255,176,94,.34)!important;
+  filter:brightness(1.025);
+}
+
+@media(max-width:600px){
+  .cinematic-play-btn{
+    height:164px!important;
+    min-height:164px!important;
+    margin-top:16px!important;
+    border-radius:17px!important;
+  }
+  .cinematic-play-btn:before{
+    width:216px;
+    height:216px;
+    border-width:2.6px;
+  }
+  .orbit-outer{width:248px;height:190px}
+  .orbit-inner{width:232px;height:146px}
+  .cinematic-play-content{gap:11px}
+  .cinematic-play-icon{width:43px;height:43px}
+  .cinematic-play-icon svg{width:30px;height:35px}
+  .cinematic-play-label{font-size:12px;letter-spacing:.21em;padding-left:.21em}
+}
+@media(max-width:390px){
+  .cinematic-play-btn{
+    height:152px!important;
+    min-height:152px!important;
+  }
+  .cinematic-play-btn:before{width:194px;height:194px}
+  .orbit-outer{width:225px;height:170px}
+  .orbit-inner{width:210px;height:132px}
+}
+
 </style>
 </head>
 <body>
@@ -2209,7 +2373,32 @@ body::-webkit-scrollbar,
           <span class="home-play-meta-separator" aria-hidden="true"></span>
           <div class="home-play-meta-item"><b id="heroWaves">0</b><span>TUR</span></div>
         </div>
-        <button id="playBtn" class="primary playbtn premium-play-btn" type="button"><span>OYUNA BAŞLA</span><b aria-hidden="true">→</b></button>
+        <button id="playBtn" class="playbtn premium-play-btn cinematic-play-btn" type="button" aria-label="Oyuna Başla">
+          <span class="cinematic-sky" aria-hidden="true"></span>
+          <span class="cinematic-orbit orbit-outer" aria-hidden="true"></span>
+          <span class="cinematic-orbit orbit-inner" aria-hidden="true"></span>
+          <svg class="cinematic-landscape" viewBox="0 0 900 280" preserveAspectRatio="none" aria-hidden="true">
+            <defs>
+              <linearGradient id="cinematicMountainFill" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#18202a"/>
+                <stop offset="100%" stop-color="#05080c"/>
+              </linearGradient>
+              <linearGradient id="cinematicCityFill" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#0d131a"/>
+                <stop offset="100%" stop-color="#030507"/>
+              </linearGradient>
+            </defs>
+            <path d="M0 209 L72 181 L118 192 L188 142 L251 196 L309 169 L365 201 L422 152 L478 193 L542 165 L610 199 L675 147 L727 183 L790 152 L838 188 L900 163 L900 280 L0 280 Z" fill="url(#cinematicMountainFill)"/>
+            <path d="M0 238 L38 229 L38 188 L50 188 L50 217 L61 217 L61 170 L74 170 L74 225 L99 225 L99 197 L111 197 L111 231 L144 231 L144 203 L158 203 L158 232 L194 232 L194 186 L209 186 L209 224 L220 224 L220 153 L236 153 L236 228 L271 228 L271 207 L287 207 L287 236 L628 236 L628 204 L644 204 L644 175 L659 175 L659 222 L679 222 L679 191 L695 191 L695 233 L724 233 L724 160 L742 160 L742 226 L758 226 L758 184 L775 184 L775 232 L809 232 L809 199 L825 199 L825 230 L850 230 L850 173 L866 173 L866 222 L900 222 L900 280 L0 280 Z" fill="url(#cinematicCityFill)"/>
+            <path d="M0 247 C120 231 196 252 304 238 C412 224 510 254 626 235 C731 219 803 243 900 230 L900 280 L0 280 Z" fill="#020405"/>
+          </svg>
+          <span class="cinematic-play-content">
+            <span class="cinematic-play-icon" aria-hidden="true">
+              <svg viewBox="0 0 36 42"><path d="M4 4.5v33L32 21 4 4.5Z"/></svg>
+            </span>
+            <span class="cinematic-play-label">OYUNA BAŞLA</span>
+          </span>
+        </button>
       </div>
 
       <div class="panel home-board home-league-card">
