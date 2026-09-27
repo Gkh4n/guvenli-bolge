@@ -6,7 +6,8 @@
 <meta name="theme-color" content="#070a10" />
 <title>Güvenli Bölge</title>
 <script>
-try{document.documentElement.dataset.theme=localStorage.getItem('safe_zone_theme')==='light'?'light':'dark'}catch(e){document.documentElement.dataset.theme='dark'}
+try{localStorage.removeItem('safe_zone_theme')}catch(e){}
+document.documentElement.dataset.theme='dark';
 </script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -2182,18 +2183,6 @@ html[data-theme="light"] .mobile-gate h1{
       </div>
 
       <div class="settings-separator"></div>
-      <div class="settings-static-block">
-        <div class="settings-block-head"><div><h2 id="themeSectionTitle" class="sectiontitle">Görünüm</h2><p id="themeSectionDesc">Uygulamanın görünümünü seç.</p></div></div>
-        <div class="setting-row compact-setting-row theme-setting-row">
-          <div><b id="themeSettingTitle">Tema</b><span id="themeSettingDesc">Aydınlık ve karanlık görünüm arasında geçiş yap.</span></div>
-          <div class="theme-segmented" role="group" aria-label="Tema">
-            <button id="themeDarkBtn" class="theme-choice" type="button" data-theme-choice="dark"><span class="theme-choice-icon" aria-hidden="true">●</span><span id="themeDarkLabel">Karanlık</span></button>
-            <button id="themeLightBtn" class="theme-choice" type="button" data-theme-choice="light"><span class="theme-choice-icon sun" aria-hidden="true">◌</span><span id="themeLightLabel">Aydınlık</span></button>
-          </div>
-        </div>
-      </div>
-
-      <div class="settings-separator"></div>
 
       <div class="settings-accordion" id="passwordAccordion">
         <button id="passwordAccordionBtn" class="settings-accordion-trigger" type="button" aria-expanded="false" aria-controls="passwordAccordionBody">
@@ -2338,39 +2327,15 @@ function collectStaticI18n(){
   document.querySelectorAll('[aria-label]').forEach(el=>{const key=ARIA_TR_KEYS[el.getAttribute('aria-label')];if(key)i18nAttrBindings.push({el,attr:'aria-label',key})});
 }
 const LANGUAGE_NAMES={tr:'Türkçe',en:'English',de:'Deutsch',fr:'Français',es:'Español'};
-let currentTheme=document.documentElement.dataset.theme==='light'?'light':'dark';
+let currentTheme='dark';
 function syncNativeTheme(){
-  try{if(window.SafeZoneNative&&typeof window.SafeZoneNative.setTheme==='function')window.SafeZoneNative.setTheme(currentTheme)}catch{}
-}
-function updateThemeUI(){
-  const title=$('#themeSectionTitle'),desc=$('#themeSectionDesc'),setting=$('#themeSettingTitle'),settingDesc=$('#themeSettingDesc');
-  const darkLabel=$('#themeDarkLabel'),lightLabel=$('#themeLightLabel');
-  if(title)title.textContent=t('themeSectionTitle');
-  if(desc)desc.textContent=t('themeSectionDesc');
-  if(setting)setting.textContent=t('themeSettingTitle');
-  if(settingDesc)settingDesc.textContent=t('themeSettingDesc');
-  if(darkLabel)darkLabel.textContent=t('themeDark');
-  if(lightLabel)lightLabel.textContent=t('themeLight');
-  document.querySelectorAll('[data-theme-choice]').forEach(btn=>{
-    const active=btn.dataset.themeChoice===currentTheme;
-    btn.classList.toggle('active',active);
-    btn.setAttribute('aria-pressed',String(active));
-  });
-}
-function applyTheme(theme,save=true){
-  currentTheme=theme==='light'?'light':'dark';
-  document.documentElement.dataset.theme=currentTheme;
-  if(save)localStorage.setItem('safe_zone_theme',currentTheme);
-  const color=currentTheme==='light'?'#eef3f7':'#070a10';
-  const meta=document.querySelector('meta[name="theme-color"]');
-  if(meta)meta.setAttribute('content',color);
-  updateThemeUI();
-  syncNativeTheme();
+  try{if(window.SafeZoneNative&&typeof window.SafeZoneNative.setTheme==='function')window.SafeZoneNative.setTheme('dark')}catch{}
 }
 function initThemeUI(){
-  $('#themeDarkBtn')?.addEventListener('click',()=>applyTheme('dark'));
-  $('#themeLightBtn')?.addEventListener('click',()=>applyTheme('light'));
-  applyTheme(currentTheme,false);
+  document.documentElement.dataset.theme='dark';
+  const meta=document.querySelector('meta[name="theme-color"]');
+  if(meta)meta.setAttribute('content','#070a10');
+  syncNativeTheme();
 }
 function updateLanguageTriggers(){
   const name=LANGUAGE_NAMES[currentLang]||LANGUAGE_NAMES.en;
@@ -2380,7 +2345,6 @@ function updateLanguageTriggers(){
   if(heroWords[0])heroWords[0].textContent=t('heroSkill1');
   if(heroWords[1])heroWords[1].textContent=t('heroSkill2');
   if(heroWords[2])heroWords[2].textContent=t('heroSkill3');
-  updateThemeUI();
 }
 function renderLanguagePicker(){
   updateLanguageTriggers();
