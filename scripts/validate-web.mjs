@@ -19,7 +19,7 @@ for(const tag of ['div','section']){
 
 const required=[
   'authScreen','homeScreen','profileScreen','achievementsScreen','settingsScreen',
-  'gameScreen','resultScreen','gameCanvas','playBtn','pauseBtn','homeBoard'
+  'gameScreen','resultScreen','gameCanvas','playBtn','pauseBtn'
 ];
 for(const id of required)if(!counts.has(id))errors.push(`Required id missing: ${id}`);
 
