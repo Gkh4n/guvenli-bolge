@@ -2246,6 +2246,36 @@ body::-webkit-scrollbar,
 .gameScreen.screen-enter{animation:none!important}
 #pauseBtn:disabled{opacity:.38;cursor:default}
 
+
+/* v29 hızlı başlangıç geri sayımı — toplam 1.5 sn, animasyonsuz */
+.start-countdown{
+  position:absolute;
+  inset:0;
+  z-index:7;
+  display:grid;
+  place-items:center;
+  background:rgba(3,8,14,.58);
+  pointer-events:none;
+}
+.start-countdown.hidden{display:none!important}
+.start-countdown span{
+  min-width:180px;
+  padding:18px 24px;
+  border:1px solid rgba(99,231,255,.18);
+  border-radius:18px;
+  background:rgba(8,17,26,.88);
+  color:#f3fbff;
+  font-family:"Sora",Inter,system-ui,sans-serif;
+  font-size:clamp(32px,9vw,64px);
+  line-height:1;
+  font-weight:800;
+  letter-spacing:.06em;
+  text-align:center;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.03),0 18px 44px rgba(0,0,0,.28);
+  animation:none!important;
+  transition:none!important;
+}
+
 </style>
 </head>
 <body>
@@ -2613,6 +2643,9 @@ body::-webkit-scrollbar,
     </div>
     <div class="gamewrap">
       <canvas id="gameCanvas" width="760" height="620"></canvas>
+      <div id="startCountdown" class="start-countdown hidden" aria-live="assertive">
+        <span id="startCountdownValue">HAZIR OL</span>
+      </div>
       <div id="pauseOverlay" class="game-overlay hidden">
         <div id="pauseMenuCard" class="game-overlay-card">
           <div class="game-overlay-kicker">OYUN DURAKLATILDI</div>
@@ -3648,6 +3681,29 @@ async function callRunService(body){
   if(!r.ok)throw new Error(currentLang==='tr'?(data.message||t('gameServerUnavailable')):t('gameServerUnavailable'));
   return data;
 }
+function waitMs(ms){return new Promise(resolve=>setTimeout(resolve,ms))}
+async function runStartCountdown(){
+  const overlay=$('#startCountdown'),value=$('#startCountdownValue');
+  if(!overlay||!value)return;
+  overlay.classList.remove('hidden');
+  const readyLabel=String(t('ready')||'HAZIR OL').replace(/…/g,'').trim().toUpperCase();
+  const steps=[
+    [readyLabel,240],
+    ['3',420],
+    ['2',420],
+    ['1',420]
+  ];
+  for(const [label,delay] of steps){
+    value.textContent=label;
+    await waitMs(delay);
+  }
+  value.textContent=t('start');
+}
+function hideStartCountdown(){
+  const overlay=$('#startCountdown');
+  if(overlay)overlay.classList.add('hidden');
+}
+
 async function startGame(){
   if((!guestMode&&(!currentUser||!currentProfile))||startGamePending)return;
   if(soundEnabled)getAudioCtx();
@@ -3661,7 +3717,6 @@ async function startGame(){
   const guestBtn=$('#guestPlayBtn');
   if(guestBtn){guestBtn.disabled=true;const gb=guestBtn.querySelector('b');if(gb)gb.textContent=t('startBusy')}
 
-  // Kullanıcı dokunduğu anda oyun ekranına geç. Sunucu oturumu arka planda hazırlanır.
   cancelAnimationFrame(raf);
   cancelResumeCountdown();
   resetGame();
@@ -3671,22 +3726,30 @@ async function startGame(){
   $('#pauseBtn').disabled=true;
   $('#resultAchievement').classList.add('hidden');
   $('#guestResultBox').classList.add('hidden');
-  $('#gameStatus').textContent=t('startBusy');
+  $('#gameStatus').textContent=t('ready');
   $('#gameStatus').classList.remove('active','danger');
   show('gameScreen');
   draw();
 
+  // 1.5 sn'lik kısa geri sayım ile sunucu hazırlığını aynı anda çalıştır.
+  const countdownPromise=runStartCountdown();
+  const sessionPromise=guestMode
+    ? Promise.resolve(null)
+    : callRunService({action:'start',client_version:'web-1.3.3'});
+
   try{
+    const [,run]=await Promise.all([countdownPromise,sessionPromise]);
+
     if(guestMode){
       activeRunSession=null;
       achievementSnapshot=new Set();
     }else{
-      const run=await callRunService({action:'start',client_version:'web-1.3.3'});
       if(!run?.session_id)throw new Error(t('runSessionFailed'));
       activeRunSession=run.session_id;
       achievementSnapshot=new Set(getAchievements().filter(a=>a.unlocked).map(a=>a.id));
     }
 
+    hideStartCountdown();
     running=true;
     paused=false;
     $('#pauseBtn').disabled=false;
@@ -3695,6 +3758,7 @@ async function startGame(){
     last=performance.now();
     raf=requestAnimationFrame(loop);
   }catch(e){
+    hideStartCountdown();
     activeRunSession=null;
     running=false;
     paused=false;
