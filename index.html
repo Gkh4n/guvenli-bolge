@@ -1997,6 +1997,151 @@ body::-webkit-scrollbar,
   .league-open-btn span{font-size:9px}
 }
 
+
+/* v25 ana ekran sade premium hiyerarşi
+   Rekor + global sıra yalnızca lig kartında; ana oyun kartı aksiyona odaklı. */
+.home-play-card{
+  position:relative;
+  isolation:isolate;
+  min-height:248px!important;
+  padding:27px 28px!important;
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:center!important;
+  overflow:hidden!important;
+  background:
+    radial-gradient(circle at 88% 34%,rgba(43,112,141,.13),transparent 34%),
+    linear-gradient(145deg,#0f1823 0%,#0b121b 58%,#0a1119 100%)!important;
+}
+.home-play-card:after{
+  content:"";
+  position:absolute;
+  z-index:-1;
+  right:-72px;
+  top:-118px;
+  width:310px;
+  height:310px;
+  border:1px solid rgba(99,231,255,.055);
+  border-radius:50%;
+  box-shadow:
+    0 0 0 42px rgba(99,231,255,.018),
+    0 0 0 84px rgba(99,231,255,.012);
+  pointer-events:none;
+}
+.home-play-ambient{
+  position:absolute;
+  z-index:-1;
+  right:6%;
+  bottom:-70px;
+  width:250px;
+  height:180px;
+  background:radial-gradient(ellipse,rgba(52,179,206,.10),transparent 68%);
+  filter:blur(12px);
+  pointer-events:none;
+}
+.home-play-card .skill-title{
+  margin:0!important;
+}
+.home-play-meta{
+  display:flex;
+  align-items:center;
+  gap:13px;
+  margin-top:24px;
+  min-height:31px;
+  width:max-content;
+  max-width:100%;
+  color:#8f9dad;
+}
+.home-play-meta-item{
+  display:flex;
+  align-items:baseline;
+  gap:7px;
+  min-width:0;
+}
+.home-play-meta-item b{
+  color:#eef7fc;
+  font-family:"Sora",Inter,system-ui,sans-serif;
+  font-size:16px;
+  line-height:1;
+  font-weight:750;
+  font-variant-numeric:tabular-nums;
+  letter-spacing:-.02em;
+}
+.home-play-meta-item span{
+  color:#718092;
+  font-size:9px;
+  line-height:1;
+  font-weight:850;
+  letter-spacing:.13em;
+}
+.home-play-meta-separator{
+  width:1px;
+  height:18px;
+  background:linear-gradient(180deg,transparent,rgba(126,153,181,.34),transparent);
+}
+.premium-play-btn{
+  width:100%;
+  height:64px!important;
+  margin-top:22px!important;
+  padding:0 23px!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:space-between!important;
+  border-radius:17px!important;
+  font-family:"Sora",Inter,system-ui,sans-serif;
+  font-size:13px!important;
+  font-weight:800!important;
+  letter-spacing:.055em!important;
+}
+.premium-play-btn b{
+  font-family:Inter,system-ui,sans-serif;
+  font-size:25px;
+  line-height:1;
+  font-weight:500;
+  transform:translateY(-1px);
+}
+
+/* Kişisel hedef kartında rekoru üçüncü kez tekrar etme. */
+#goalBestLabel{display:none!important}
+.goal-foot{justify-content:flex-end!important}
+
+/* Eski üçlü istatistik düzeni artık ana sayfada kullanılmıyor. */
+.home-quick-stats{display:none!important}
+
+@media(max-width:820px){
+  .home-play-card{
+    min-height:220px!important;
+    padding:22px!important;
+  }
+}
+@media(max-width:600px){
+  .home-play-card{
+    min-height:202px!important;
+    padding:18px 17px!important;
+    border-radius:19px!important;
+  }
+  .home-play-card:after{
+    right:-102px;
+    top:-126px;
+    width:280px;
+    height:280px;
+  }
+  .home-play-meta{
+    margin-top:18px;
+    gap:11px;
+  }
+  .home-play-meta-item b{font-size:14px}
+  .home-play-meta-item span{font-size:8px}
+  .premium-play-btn{
+    height:58px!important;
+    margin-top:16px!important;
+    padding:0 18px!important;
+    border-radius:15px!important;
+    font-size:12px!important;
+  }
+  .premium-play-btn b{font-size:22px}
+}
+
 </style>
 </head>
 <body>
@@ -2056,14 +2201,15 @@ body::-webkit-scrollbar,
     </header>
 
     <div class="home-dashboard">
-      <div class="panel home-main">
+      <div class="panel home-main home-play-card">
+        <div class="home-play-ambient" aria-hidden="true"></div>
         <div class="home-title skill-title"><span class="hero-skill-word" data-skill="1">ODAK</span><i aria-hidden="true">•</i><span class="hero-skill-word" data-skill="2">REFLEKS</span><i aria-hidden="true">•</i><span class="hero-skill-word" data-skill="3">ZAMANLAMA</span></div>
-        <div class="home-quick-stats">
-          <div class="quick-stat"><span>EN İYİ</span><b id="myBest">0.00s</b></div>
-          <div class="quick-stat"><span>GLOBAL</span><b id="myRank">-</b></div>
-          <div class="quick-stat"><span>OYUN</span><b id="myGames">0</b></div>
+        <div class="home-play-meta" aria-label="Oyuncu özeti">
+          <div class="home-play-meta-item"><b id="heroGames">0</b><span>OYUN</span></div>
+          <span class="home-play-meta-separator" aria-hidden="true"></span>
+          <div class="home-play-meta-item"><b id="heroWaves">0</b><span>TUR</span></div>
         </div>
-        <button id="playBtn" class="primary playbtn" type="button">OYUNA BAŞLA</button>
+        <button id="playBtn" class="primary playbtn premium-play-btn" type="button"><span>OYUNA BAŞLA</span><b aria-hidden="true">→</b></button>
       </div>
 
       <div class="panel home-board home-league-card">
@@ -2859,9 +3005,8 @@ async function loadMyStats(){
   const st=Array.isArray(data)?(data[0]||{}):(data||{});
   myStats=st;
   const games=Number(st.games_played||0),best=Number(st.best_survival_ms||0),waves=Number(st.max_waves||0),total=Number(st.total_survival_ms||0),rank=st.global_rank?('#'+st.global_rank):'-';
-  $('#myBest').textContent=(best/1000).toFixed(2)+'s';
-  $('#myGames').textContent=games;
-  $('#myRank').textContent=rank;
+  if($('#heroGames'))$('#heroGames').textContent=games;
+  if($('#heroWaves'))$('#heroWaves').textContent=waves;
   if($('#leagueRank'))$('#leagueRank').textContent=rank;
   if($('#leagueBest'))$('#leagueBest').textContent=(best/1000).toFixed(2)+'s';
   $('#profileGames').textContent=games;
