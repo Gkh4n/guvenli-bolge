@@ -36,7 +36,7 @@ button,input{font:inherit}button{cursor:pointer}.hidden{display:none!important}
 .gameScreen{display:flex;flex-direction:column;min-height:calc(100dvh - max(24px,env(safe-area-inset-top)) - max(28px,env(safe-area-inset-bottom)))}.gamebar{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:9px}.gamestats{display:flex;gap:15px;flex-wrap:wrap}.stat{font-size:11px;color:var(--muted)}.stat b{display:block;color:var(--text);font-size:16px;margin-top:1px}.gameactions{display:flex;gap:7px}.gameactions button{height:40px;padding:0 11px}.gamewrap{position:relative;overflow:hidden;border:1px solid var(--line);border-radius:20px;background:#000;margin:auto 0}.gamewrap canvas{display:block;width:100%;height:auto;aspect-ratio:760/620;touch-action:none}.gamestatus{min-height:22px;color:var(--muted);font-size:12px;padding:8px 3px 0;text-align:center}
 .result{min-height:calc(100dvh - 46px);display:grid;place-items:center}.resultcard{width:min(100%,520px);text-align:center;padding:30px}.resulttime{font-size:58px;font-weight:950;letter-spacing:-.04em;margin:8px 0 3px}.resultmeta{color:var(--muted);font-size:14px}.resultactions{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:22px}
 .modalback{position:fixed;inset:0;background:rgba(0,0,0,.72);backdrop-filter:blur(8px);display:grid;place-items:center;padding:16px;z-index:30}.modal{width:min(100%,460px);padding:21px}.modal h2{margin:0 0 6px;font-size:22px}.modal p{margin:0 0 16px;color:var(--muted);font-size:13px;line-height:1.55}.modalactions{display:flex;gap:8px;justify-content:flex-end;margin-top:14px}
-.loading{position:fixed;inset:0;background:#070a10;display:grid;place-items:center;z-index:50}.loader{width:36px;height:36px;border-radius:50%;border:3px solid #182333;border-top-color:var(--accent);animation:spin .8s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
+.loading{position:fixed;inset:0;background:#070a10;display:grid;place-items:center;z-index:50}.loader{width:24px;height:24px;border-radius:50%;border:2px solid #182333;border-top-color:var(--accent);animation:spin .7s linear infinite;opacity:.72}@keyframes spin{to{transform:rotate(360deg)}}
 @media(max-width:820px){.shell,.homegrid{grid-template-columns:1fr}.shell{min-height:auto}.hero{padding:10vh 4px 22px;justify-content:flex-start}.authpanel{align-self:auto}.homehero{min-height:300px}.app{padding-left:10px;padding-right:10px}.screen{min-height:calc(100dvh - 28px)}}
 @media(max-width:600px){.app{padding-top:max(10px,env(safe-area-inset-top));padding-bottom:max(12px,env(safe-area-inset-bottom))}.hero{padding-top:6vh}.brand{font-size:clamp(48px,16vw,72px)}.sub{font-size:14px}.featureline{margin-top:18px}.authpanel,.panel{border-radius:18px}.authpanel{padding:16px}.boardcard{padding:13px}.top{align-items:flex-start}.topactions{gap:5px}.iconbtn{padding:0 10px;height:38px;font-size:12px}.homehero{padding:20px}.metrics{grid-template-columns:1fr 1fr}.metric:last-child{grid-column:1/-1}.gameScreen{min-height:calc(100dvh - max(16px,env(safe-area-inset-top)) - max(16px,env(safe-area-inset-bottom)))}.gamebar{align-items:flex-start}.gamestats{gap:10px}.gameactions button{font-size:11px;height:36px;padding:0 9px}.gamewrap{border-radius:14px}.gamewrap canvas{max-height:calc(100dvh - 130px)}.gamestatus{font-size:11px;padding-top:5px}.resultcard{padding:23px 17px}.resulttime{font-size:50px}.resultactions{grid-template-columns:1fr}.row{grid-template-columns:25px minmax(0,1fr) auto;padding:9px}.score{font-size:13px}.authlinks{align-items:flex-start;flex-direction:column}}
 
@@ -3073,20 +3073,38 @@ async function loadFullLeaderboard(reset=false){
     refresh.disabled=false;more.disabled=false;leaderboardLoading=false;
   }
 }
-async function enterAuthenticatedHome(){await loadProfile();await loadLeaderboard();show('homeScreen');refreshAdminAccess().catch(()=>{})}
+async function enterAuthenticatedHome(){
+  // Ana ekranı veri isteklerini bekletmeden aç; profil ve sıralama arka planda dolsun.
+  show('homeScreen');
+  $('#loading').classList.add('hidden');
+
+  loadProfile()
+    .then(()=>{
+      loadLeaderboard().catch(()=>{});
+      refreshAdminAccess().catch(()=>{});
+    })
+    .catch(e=>{
+      console.warn('safe_zone_profile_boot',e);
+      showToast(t('serverUnavailable'),'error');
+    });
+}
 async function refreshAuthState(){
   try{
     const {data:{session},error}=await sb.auth.getSession();
     if(error)throw error;
     currentUser=session?.user||null;
-    if(currentUser)await enterAuthenticatedHome();
-    else show('authScreen');
+
+    if(currentUser){
+      enterAuthenticatedHome();
+    }else{
+      show('authScreen');
+      $('#loading').classList.add('hidden');
+    }
   }catch(e){
     currentUser=null;currentProfile=null;
     show('authScreen');
-    showToast(t('serverUnavailable'),'error');
-  }finally{
     $('#loading').classList.add('hidden');
+    showToast(t('serverUnavailable'),'error');
   }
 }
 
